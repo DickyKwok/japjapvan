@@ -1,0 +1,21 @@
+id,brand,name,category,origin,sku,keyword,landed_cad,sell_cad,weight_g,bulky,regulatory,uniqueness,repeat,preorder_fit,supplier,moq,lead_days,ca_trend,jp_trend,hk_trend,rising,stock,incoming,weekly_velocity,preorders,notes,score,selected,buy_qty
+biore-essence,Biore,UV Aqua Rich Watery Essence SPF50+,sunscreen,JP,SN-BI-ARE50,Biore Aqua Rich Essence,10.8,24,80,1,cnf,6,10,9,Kao Export Desk,24,16,88,95,90,true,22,48,18,31,Category captain. Restock weekly.,0.8474,1,72
+melano-cc,Rohto,Melano CC Intensive Essence,skincare,JP,SN-RO-MCC20,Melano CC,9.6,21,55,1,cnf,7,9,9,Rohto Asia,12,16,74,91,85,true,16,24,9.4,14,"Tiny, high margin, fast ship.",0.8122,1,24
+anessa-milk,Anessa,Perfect UV Sunscreen Milk SPF50+,sunscreen,JP,SN-AN-PUM60,Anessa Perfect UV,18.5,38,95,1,cnf,7,9,9,Shiseido Sun,12,18,79,93,88,true,8,12,7.8,15,Outdoor / sweat story.,0.8082,1,36
+fino-mask,Fino,Premium Touch Hair Mask 230g,hair,JP,SN-FI-PTM230,Fino Premium Touch,8.1,18,280,3,cnf,6,9,9,Shiseido Mass,12,16,84,90,86,true,12,24,10.5,13,Cult hair mask. Always keep.,0.7961,1,36
+curel-cream,Curel,Intensive Moisture Cream 40g,skincare,JP,SN-CU-IMC40,Curel moisture cream,14,29,90,1,cnf,7,9,9,Kao Export Desk,12,18,69,90,83,true,8,12,7.4,11,Sensitive-skin staple in Vancouver winters.,0.7867,1,36
+canmake-uv,Canmake,Mermaid Skin Gel UV SPF50+,sunscreen,JP,SN-CM-MSG40,Canmake Mermaid Skin,8.8,19,70,1,cnf,7,8,8,Ida Laboratories,12,18,68,84,79,true,9,0,6.2,8,Makeup + sun hybrid.,0.7818,1,36
+hada-lotion,Hada Labo,Gokujyun Premium Lotion 170ml,skincare,JP,SN-HL-GPL170,Hada Labo Gokujyun,11.5,24,220,2,cnf,5,9,9,Matsukiyo Export,12,18,81,92,78,true,18,24,11,16,Highest velocity hydrator.,0.7795,1,36
+pilot-frixion,Pilot,FriXion Ball Knock 0.5 5-pack,stationery,JP,SN-PI-FBK05,Pilot FriXion,7.2,16,45,1,none,5,8,9,Pilot Stationery,20,14,70,78,62,false,28,40,9.8,6,Always-on stationery hero.,0.7788,1,0
+zebra-sarasa,Zebra,Sarasa Clip Vintage 5-pack,stationery,JP,SN-ZE-SCV05,Zebra Sarasa Clip,6.9,15,40,1,none,6,8,9,Zebra Stationery,20,14,65,80,59,false,22,20,7.2,4,Vintage colours sell out.,0.7742,1,0
+uni-one,Uni-ball,Uni-ball One 0.38 8-colour,stationery,JP,SN-UN-ONE38,Uni-ball One,11.4,24,60,1,none,7,7,8,Mitsubishi Pencil,12,16,58,81,54,true,9,12,4.6,5,Pigment ink cult following.,0.7710,1,12
+heroine-mascara,Heroine Make,Long & Curl Mascara Advanced,makeup,JP,SN-HM-LCM,Heroine Make mascara,9.1,20,28,1,cnf,7,7,8,KISSME,12,18,64,88,80,true,7,12,4.8,6,Cult lash product.,0.7709,1,12
+skinaqua-tone,Skin Aqua,Tone Up UV Essence SPF50+,sunscreen,JP,SN-SA-TUE80,Skin Aqua Tone Up,9.4,20,95,1,cnf,7,8,8,Rohto Asia,12,16,63,80,73,true,6,12,5.5,7,Tone-up without makeup.,0.7642,1,24
+biore-gel,Biore,UV Aqua Rich Watery Gel SPF50+,sunscreen,JP,SN-BI-ARG90,Biore Aqua Rich Gel,11.1,24,110,1,cnf,6,9,9,Kao Export Desk,24,16,71,88,76,true,10,24,9.1,12,Gel fans convert from essence.,0.7538,1,24
+naturie-gel,Naturie,Hatomugi Skin Conditioning Gel,skincare,JP,SN-NA-HSG180,Naturie Hatomugi gel,7.9,17,210,2,cnf,6,8,9,Imju Export,12,18,66,79,71,true,7,12,6.6,8,"Summer gel, winter still moves.",0.7471,1,24
+kokuyo-campus,Kokuyo,Campus Dot Lined B5 5-pack,stationery,JP,SN-KO-CDB5,Kokuyo Campus notebook,8.8,19,520,4,none,6,8,8,Kokuyo,10,16,67,86,60,true,14,20,6.8,8,Students + planners.,0.7461,1,10
+dhc-oil,DHC,Deep Cleansing Oil 200ml,skincare,JP,SN-DHC-DCO200,DHC Deep Cleansing Oil,12.8,26,230,2,cnf,4,8,8,DHC Global,12,16,77,86,80,true,14,12,8.2,7,Classic first-order SKU.,0.7409,1,24
+midori-md,Midori,MD Notebook A5 Grid,stationery,JP,SN-MD-A5G,Midori MD Notebook,10.6,24,280,3,none,8,6,8,Designphil,8,18,53,71,44,true,6,8,2.9,4,Design-forward gift.,0.7398,1,8
+hobonichi-weeks,Hobonichi,Techo Weeks English 2027,stationery,JP,SN-HO-TW27,Hobonichi Weeks,28,52,180,2,none,8,6,10,1107 Inc,6,21,61,89,57,true,0,12,3.6,18,Seasonal drop. Pre-order engine.,0.7354,1,24
+tombow-mono,Tombow,MONO Dust Catch Eraser 3-pack,stationery,JP,SN-TO-MDC03,Tombow MONO eraser,4.2,11,50,1,none,5,7,8,Tombow,24,14,42,66,38,false,30,0,4.4,0,Impulse add-on.,0.7329,1,0
+tsubaki-oil,Tsubaki,Premium Repair Hair Oil 50ml,hair,JP,SN-TS-PRO50,Tsubaki hair oil,9.7,21,80,1,cnf,6,8,8,Shiseido Mass,12,16,59,82,70,false,7,0,4.1,3,Camellia oil story.,0.7309,1,24

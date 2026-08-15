@@ -1,0 +1,51 @@
+id,brand,name,category,origin,sku,keyword,landed_cad,sell_cad,weight_g,bulky,regulatory,uniqueness,repeat,preorder_fit,supplier,moq,lead_days,ca_trend,jp_trend,hk_trend,rising,stock,incoming,weekly_velocity,preorders,notes,score,selected,buy_qty
+biore-essence,Biore,UV Aqua Rich Watery Essence SPF50+,sunscreen,JP,SN-BI-ARE50,Biore Aqua Rich Essence,10.8,24,80,1,cnf,6,10,9,Kao Export Desk,24,16,88,95,90,true,22,48,18,31,Category captain. Restock weekly.,0.8474,1,72
+melano-cc,Rohto,Melano CC Intensive Essence,skincare,JP,SN-RO-MCC20,Melano CC,9.6,21,55,1,cnf,7,9,9,Rohto Asia,12,16,74,91,85,true,16,24,9.4,14,"Tiny, high margin, fast ship.",0.8122,1,24
+anessa-milk,Anessa,Perfect UV Sunscreen Milk SPF50+,sunscreen,JP,SN-AN-PUM60,Anessa Perfect UV,18.5,38,95,1,cnf,7,9,9,Shiseido Sun,12,18,79,93,88,true,8,12,7.8,15,Outdoor / sweat story.,0.8082,1,36
+fino-mask,Fino,Premium Touch Hair Mask 230g,hair,JP,SN-FI-PTM230,Fino Premium Touch,8.1,18,280,3,cnf,6,9,9,Shiseido Mass,12,16,84,90,86,true,12,24,10.5,13,Cult hair mask. Always keep.,0.7961,1,36
+curel-cream,Curel,Intensive Moisture Cream 40g,skincare,JP,SN-CU-IMC40,Curel moisture cream,14,29,90,1,cnf,7,9,9,Kao Export Desk,12,18,69,90,83,true,8,12,7.4,11,Sensitive-skin staple in Vancouver winters.,0.7867,1,36
+canmake-uv,Canmake,Mermaid Skin Gel UV SPF50+,sunscreen,JP,SN-CM-MSG40,Canmake Mermaid Skin,8.8,19,70,1,cnf,7,8,8,Ida Laboratories,12,18,68,84,79,true,9,0,6.2,8,Makeup + sun hybrid.,0.7818,1,36
+hada-lotion,Hada Labo,Gokujyun Premium Lotion 170ml,skincare,JP,SN-HL-GPL170,Hada Labo Gokujyun,11.5,24,220,2,cnf,5,9,9,Matsukiyo Export,12,18,81,92,78,true,18,24,11,16,Highest velocity hydrator.,0.7795,1,36
+pilot-frixion,Pilot,FriXion Ball Knock 0.5 5-pack,stationery,JP,SN-PI-FBK05,Pilot FriXion,7.2,16,45,1,none,5,8,9,Pilot Stationery,20,14,70,78,62,false,28,40,9.8,6,Always-on stationery hero.,0.7788,1,0
+zebra-sarasa,Zebra,Sarasa Clip Vintage 5-pack,stationery,JP,SN-ZE-SCV05,Zebra Sarasa Clip,6.9,15,40,1,none,6,8,9,Zebra Stationery,20,14,65,80,59,false,22,20,7.2,4,Vintage colours sell out.,0.7742,1,0
+uni-one,Uni-ball,Uni-ball One 0.38 8-colour,stationery,JP,SN-UN-ONE38,Uni-ball One,11.4,24,60,1,none,7,7,8,Mitsubishi Pencil,12,16,58,81,54,true,9,12,4.6,5,Pigment ink cult following.,0.7710,1,12
+heroine-mascara,Heroine Make,Long & Curl Mascara Advanced,makeup,JP,SN-HM-LCM,Heroine Make mascara,9.1,20,28,1,cnf,7,7,8,KISSME,12,18,64,88,80,true,7,12,4.8,6,Cult lash product.,0.7709,1,12
+skinaqua-tone,Skin Aqua,Tone Up UV Essence SPF50+,sunscreen,JP,SN-SA-TUE80,Skin Aqua Tone Up,9.4,20,95,1,cnf,7,8,8,Rohto Asia,12,16,63,80,73,true,6,12,5.5,7,Tone-up without makeup.,0.7642,1,24
+biore-gel,Biore,UV Aqua Rich Watery Gel SPF50+,sunscreen,JP,SN-BI-ARG90,Biore Aqua Rich Gel,11.1,24,110,1,cnf,6,9,9,Kao Export Desk,24,16,71,88,76,true,10,24,9.1,12,Gel fans convert from essence.,0.7538,1,24
+naturie-gel,Naturie,Hatomugi Skin Conditioning Gel,skincare,JP,SN-NA-HSG180,Naturie Hatomugi gel,7.9,17,210,2,cnf,6,8,9,Imju Export,12,18,66,79,71,true,7,12,6.6,8,"Summer gel, winter still moves.",0.7471,1,24
+kokuyo-campus,Kokuyo,Campus Dot Lined B5 5-pack,stationery,JP,SN-KO-CDB5,Kokuyo Campus notebook,8.8,19,520,4,none,6,8,8,Kokuyo,10,16,67,86,60,true,14,20,6.8,8,Students + planners.,0.7461,1,10
+dhc-oil,DHC,Deep Cleansing Oil 200ml,skincare,JP,SN-DHC-DCO200,DHC Deep Cleansing Oil,12.8,26,230,2,cnf,4,8,8,DHC Global,12,16,77,86,80,true,14,12,8.2,7,Classic first-order SKU.,0.7409,1,24
+midori-md,Midori,MD Notebook A5 Grid,stationery,JP,SN-MD-A5G,Midori MD Notebook,10.6,24,280,3,none,8,6,8,Designphil,8,18,53,71,44,true,6,8,2.9,4,Design-forward gift.,0.7398,1,8
+hobonichi-weeks,Hobonichi,Techo Weeks English 2027,stationery,JP,SN-HO-TW27,Hobonichi Weeks,28,52,180,2,none,8,6,10,1107 Inc,6,21,61,89,57,true,0,12,3.6,18,Seasonal drop. Pre-order engine.,0.7354,1,24
+tombow-mono,Tombow,MONO Dust Catch Eraser 3-pack,stationery,JP,SN-TO-MDC03,Tombow MONO eraser,4.2,11,50,1,none,5,7,8,Tombow,24,14,42,66,38,false,30,0,4.4,0,Impulse add-on.,0.7329,1,0
+tsubaki-oil,Tsubaki,Premium Repair Hair Oil 50ml,hair,JP,SN-TS-PRO50,Tsubaki hair oil,9.7,21,80,1,cnf,6,8,8,Shiseido Mass,12,16,59,82,70,false,7,0,4.1,3,Camellia oil story.,0.7309,1,24
+sk2-essence,SK-II,Facial Treatment Essence 230ml,skincare,JP,SN-SK2-FTE230,SK-II Facial Treatment Essence,148,248,420,3,cnf,6,8,8,Tokyo Cosme Wholesale,6,21,72,88,81,true,4,0,3.2,9,Hero prestige SKU. Pre-order in 6-packs.,0.6816,0,24
+hada-foam,Hada Labo,Gokujyun Foaming Wash 160ml,skincare,JP,SN-HL-FW160,Hada Labo foaming wash,9.2,19,200,2,cnf,5,8,8,Matsukiyo Export,12,18,64,85,70,false,10,0,6,4,Pair with lotion as a set.,0.6719,0,24
+shiseido-ultimune,Shiseido,Ultimune Power Infusing Concentrate,skincare,JP,SN-SH-ULT50,Shiseido Ultimune,68,118,180,2,cnf,4,7,7,Shiseido Duty,4,24,58,76,74,false,3,4,2.1,3,Gift-ready prestige.,0.6263,0,8
+fancl-oil,FANCL,Mild Cleansing Oil 120ml,skincare,JP,SN-FA-MCO120,FANCL cleansing oil,16,32,160,2,cnf,6,8,8,Fancl B2B,8,20,54,80,72,false,6,0,3.8,5,Preservative-free story sells.,0.6867,0,24
+kose-softymo,Kose,Softymo Speedy Cleansing Oil,skincare,JP,SN-KO-SSO230,Kose Softymo,8.4,18,250,3,cnf,5,8,8,Kose Export,12,18,61,84,69,false,9,0,5.1,3,"Value cleanser, bundle well.",0.6956,0,24
+senka-whip,Senka,Perfect Whip Face Wash,skincare,JP,SN-SE-PW120,Senka Perfect Whip,6.2,14,150,2,cnf,4,7,7,Shiseido Mass,24,16,49,82,64,false,20,0,4.2,2,Entry SKU for first-time buyers.,0.6743,0,24
+minon-lotion,Minon,Amino Moist Charging Lotion,skincare,JP,SN-MI-AML150,Minon Amino Moist,13.4,28,200,2,cnf,8,8,8,Daiichi Sankyo,8,22,52,77,61,true,4,8,3.4,6,Derm-backed sensitive line.,0.7290,0,16
+allie-uv,Allie,Extra UV Gel SPF50+,sunscreen,JP,SN-AL-EUG90,Allie Extra UV Gel,14.2,29,110,1,cnf,8,8,8,Kanebo Export,8,20,47,73,58,false,3,0,2.4,4,Less commoditized than Biore.,0.7051,0,16
+honey-shampoo,&honey,Melty Moist Shampoo 440ml,hair,JP,SN-HN-MMS440,&honey Melty Moist,13.6,28,480,4,cnf,7,8,7,Vicrea Export,8,20,62,87,75,true,5,8,3.9,6,Heavier unit. Sea freight only.,0.7088,0,16
+diane-repair,Moist Diane,Extra Damage Repair Treatment,hair,JP,SN-MD-EDR450,Moist Diane treatment,11.2,23,470,4,cnf,5,7,6,Native Export,8,20,41,74,55,false,4,0,1.8,1,Secondary hair line.,0.6056,0,8
+milbon-oil,Milbon,Smooth Luminous Smoothing Oil,hair,JP,SN-MB-SLO60,Milbon smoothing oil,22,46,90,1,cnf,8,7,8,Milbon Pro,4,24,44,68,51,true,2,4,1.6,3,"Salon prestige, high AOV.",0.7124,0,8
+refa-iron,ReFa,BEAUTECH Straight Iron,tools,JP,SN-RF-BSI01,ReFa hair iron,168,289,620,5,none,7,2,7,MTG Direct,2,28,56,81,72,false,1,2,0.8,2,Check voltage. Pre-order only.,0.5779,0,4
+yaman-brush,YA-MAN,Mysé Electric Scalp Brush,tools,JP,SN-YA-MSB01,YA-MAN scalp brush,92,168,340,4,none,8,2,7,YA-MAN Global,2,28,48,79,66,true,1,0,0.6,3,Head-spa trend in Vancouver.,0.6292,0,6
+pana-dryer,Panasonic,Nanoe Hair Dryer EH-NA0J,tools,JP,SN-PA-NA0J,Panasonic Nanoe dryer,118,199,780,6,none,6,2,6,Panasonic JP,2,30,51,83,70,false,0,2,0.5,1,Voltage adapter required.,0.5343,0,2
+salonia-iron,SALONIA,24mm Straight Iron,tools,JP,SN-SL-SI24,SALONIA straight iron,38,72,410,4,none,7,2,7,Salonia B2B,4,22,43,76,58,false,2,0,1.1,2,More accessible than ReFa.,0.5926,0,8
+mapepe-brush,MaPEPE,Scalp Massage Brush,tools,JP,SN-MP-SMB01,MaPEPE scalp brush,6.4,16,70,2,none,7,4,8,Ikemoto,12,16,38,64,42,true,14,0,3.3,2,"Cheap add-on, lifts AOV.",0.7133,0,12
+ikemoto-comb,Ikemoto,Camellia Oil Massage Comb,tools,JP,SN-IK-COC01,Ikemoto camellia comb,5.8,15,55,2,none,8,3,8,Ikemoto,12,16,29,55,33,false,11,0,1.9,1,Stationery-adjacent gift.,0.6759,0,0
+pentel-energel,Pentel,EnerGel Kuro 0.5 3-pack,stationery,JP,SN-PE-EGK05,Pentel EnerGel,6.1,14,38,1,none,5,7,8,Pentel JP,20,14,46,69,48,false,16,0,3.1,1,Workhorse gel pen.,0.7182,0,20
+lululun-mask,Lululun,Precious White Face Mask 7s,skincare,JP,SN-LL-PW07,Lululun face mask,6.8,15,120,2,cnf,4,8,8,LuLuLun,20,16,57,75,68,false,24,0,5.7,3,Easy bundle filler.,0.6951,0,20
+canmake-cheek,Canmake,Cream Cheek 16,makeup,JP,SN-CM-CC16,Canmake Cream Cheek,7.4,16,35,1,cnf,6,6,8,Ida Laboratories,12,18,55,82,71,false,8,12,3.5,4,Colour 16 is the hero.,0.6690,0,12
+shu-oil,Shu Uemura,Ultime8 Cleansing Oil 150ml,skincare,JP,SN-SU-U8-150,Shu Uemura cleansing oil,42,78,210,2,cnf,5,6,7,L'Oréal Luxe JP,4,24,40,62,69,false,2,0,1.2,2,HK demand stronger than CA.,0.5993,0,8
+obagi-c,Obagi,C10 Serum 12ml,skincare,JP,SN-OB-C10,Obagi C10,28,54,50,1,cnf,8,7,8,Rohto Derm,6,22,36,71,48,true,3,6,1.5,3,Derm-clinic cachet.,0.6789,0,6
+rohto-lycee,Rohto,Lycee Contact Eye Drops,daily,JP,SN-RO-LYC,Lycee eye drops,6.6,14,40,1,none,7,8,7,Rohto Asia,12,16,45,84,77,false,10,0,3.7,2,Check CA eye-drop import notes.,0.7013,0,12
+sana-soy,Sana,Nameraka Honpo Soy Milk Lotion,skincare,JP,SN-SA-NHL200,Sana Nameraka Honpo,9.8,20,230,2,cnf,6,7,8,Sana Cosme,12,18,39,73,52,false,5,0,2.2,2,Soy isoflavone story.,0.6412,0,12
+muji-oil,Muji,Sensitive Skin Cleansing Oil,skincare,JP,SN-MU-SSO200,Muji cleansing oil,10.2,21,230,2,cnf,3,6,6,Ryohin Keikaku,8,20,50,68,61,false,4,0,2,1,Muji CA stores compete.,0.6251,0,8
+attenir-oil,Attenir,Skin Clear Cleanse Oil Aroma,skincare,JP,SN-AT-SCO175,Attenir cleansing oil,17.5,36,200,2,cnf,8,7,8,Attenir,6,22,34,70,46,true,2,6,1.4,4,Quiet luxury cleanser.,0.6719,0,6
+decorté-lipo,Decorté,Liposome Advanced Repair Serum,skincare,JP,SN-DE-LAR50,Decorté Liposome,86,148,160,2,cnf,7,6,8,Kose Prestige,3,24,46,77,72,true,1,3,1.1,4,"Prestige serum, HK-loved.",0.6388,0,6
+shiseido-whip,Shiseido,Senka Perfect Whip Collagen,skincare,JP,SN-SH-PWC120,Senka Perfect Whip Collagen,6.8,15,155,2,cnf,4,6,7,Shiseido Mass,24,16,33,61,48,false,8,0,1.6,0,Skip unless Senka set.,0.6131,0,0
+curel-spray,Curel,Deep Moisture Spray 150ml,skincare,JP,SN-CU-DMS150,Curel moisture spray,12.2,26,180,3,cnf,7,8,8,Kao Export Desk,12,18,48,72,64,true,5,0,2.8,5,Aerosol check on air cargo.,0.6680,0,24
+dprogram-lotion,d program,Moist Care Lotion MB,skincare,JP,SN-DP-MCL125,d program moist care,18.8,36,170,2,cnf,8,8,8,Shiseido Derm,6,22,37,74,55,false,3,6,1.7,3,Pharmacy derm line.,0.6549,0,6

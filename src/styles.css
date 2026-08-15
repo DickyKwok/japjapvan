@@ -1,0 +1,68 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme {
+  --color-bg: #f3eee4;
+  --color-bg-elevated: #faf6ee;
+  --color-surface: #fffdf8;
+  --color-fg: #1b1915;
+  --color-muted: #6b655b;
+  --color-subtle: #8c8578;
+  --color-primary: #2c4638;
+  --color-primary-fg: #f6f1e7;
+  --color-accent: #2c4638;
+  --color-border: #ddd4c4;
+  --color-border-strong: #c9bda8;
+  --color-ink: #1b1915;
+  --color-warn: #8a5a28;
+  --color-danger: #8b3a2a;
+  --color-ok: #2f5d42;
+  --color-chart: #3d5c4a;
+  --color-chart-2: #8a6a45;
+  --color-chart-3: #4d6d82;
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --font-display: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html,
+  body {
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    min-height: 100%;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  * {
+    border-color: var(--color-border);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
