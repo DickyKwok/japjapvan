@@ -1,14 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast, Toaster } from "sonner";
 import { AppShell } from "@/components/layout/app-shell";
+import { CriteriaBanner } from "@/components/criteria-banner";
+import { ProductThumb } from "@/components/product-thumb";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { PoLine, WeekPlan } from "@/data/types";
-import { defaultWeekPlan, planTotals, scoredCatalog } from "@/lib/catalog";
+import { planTotals } from "@/lib/catalog";
 import { downloadPoCsv } from "@/lib/export";
 import { loadWeekPlan, saveWeekPlan } from "@/lib/procurement-fns";
 import { suggestedQty } from "@/lib/scoring";
+import { useListing } from "@/lib/use-listing";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { cad, cadExact, isoWeekLabel } from "@/lib/utils";
 
@@ -18,9 +21,9 @@ const STATUSES: PoLine["status"][] = ["draft", "ordered", "in-transit", "receive
 
 function ProcurementPage() {
   const week = isoWeekLabel();
-  const catalog = useMemo(() => scoredCatalog(), []);
+  const { catalog, plan: suggested } = useListing();
   const { user, isPending } = useCurrentUserState();
-  const [plan, setPlan] = useState<WeekPlan>(() => defaultWeekPlan());
+  const [plan, setPlan] = useState<WeekPlan>(suggested);
   const [saving, setSaving] = useState(false);
   const [addId, setAddId] = useState("");
 
@@ -29,11 +32,13 @@ function ProcurementPage() {
     if (local) {
       try {
         setPlan(JSON.parse(local) as WeekPlan);
+        return;
       } catch {
         /* ignore */
       }
     }
-  }, [week]);
+    setPlan(suggested);
+  }, [week, suggested]);
 
   useEffect(() => {
     if (isPending || !user) return;
@@ -109,8 +114,7 @@ function ProcurementPage() {
             <p className="text-xs tracking-[0.16em] text-subtle uppercase">採購 · {week}</p>
             <h1 className="font-display text-3xl tracking-tight">Weekly buy sheet</h1>
             <p className="mt-1 text-sm text-muted">
-              Quantities from pre-orders + 5-week cover − stock − inbound. Round up to MOQ. All money on this
-              sheet is CAD (Vancouver landed / retail).
+              Built from SKUs the saved criteria still lists. All money on this sheet is CAD.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -122,6 +126,8 @@ function ProcurementPage() {
             </Button>
           </div>
         </div>
+
+        <CriteriaBanner />
 
         <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           <Kpi label="Lines" value={String(plan.lines.length)} />
@@ -156,11 +162,16 @@ function ProcurementPage() {
                 return (
                   <tr key={line.productId} className="border-b border-border/70 align-top last:border-0">
                     <td className="px-3 py-3">
-                      <p className="font-medium">{p.brand}</p>
-                      <p className="text-xs text-muted">{p.name}</p>
-                      <p className="mt-1 font-mono text-xs text-subtle">
-                        {p.sku} · {p.supplier}
-                      </p>
+                      <div className="flex items-start gap-3">
+                        <ProductThumb id={p.id} alt={`${p.brand} ${p.name}`} size="sm" />
+                        <div>
+                          <p className="font-medium">{p.brand}</p>
+                          <p className="text-xs text-muted">{p.name}</p>
+                          <p className="mt-1 font-mono text-xs text-subtle">
+                            {p.sku} · {p.supplier}
+                          </p>
+                        </div>
+                      </div>
                     </td>
                     <td className="px-3 py-3 text-xs text-muted">
                       <p>vel {p.weeklyVelocity}/wk</p>

@@ -1,20 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/layout/app-shell";
+import { CriteriaBanner } from "@/components/criteria-banner";
 import { Price } from "@/components/price";
 import { ProductThumb } from "@/components/product-thumb";
 import { SignalReason } from "@/components/signal-reason";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { shortlist } from "@/lib/catalog";
 import { downloadShopifyCsv } from "@/lib/export";
 import { wholesaleJpyFromLandedCad } from "@/lib/money";
 import { marginPct, WEIGHTS } from "@/lib/scoring";
+import { useListing } from "@/lib/use-listing";
 import { pct } from "@/lib/utils";
 
 export const Route = createFileRoute("/shortlist")({ component: ShortlistPage });
 
 function ShortlistPage() {
-  const picks = shortlist();
+  const { picks } = useListing();
   const brands = new Set(picks.map((p) => p.brand)).size;
 
   return (
@@ -24,8 +25,8 @@ function ShortlistPage() {
           <div>
             <h1 className="font-display text-3xl tracking-tight">Shortlist</h1>
             <p className="mt-1 max-w-xl text-sm text-muted">
-              {picks.length} SKUs · {brands} brands. Every row is here because a Google Trends signal passed — not
-              because we liked the packaging.
+              {picks.length} SKUs · {brands} brands. Ranked after the saved criteria gate — not because we liked
+              the packaging.
             </p>
           </div>
           <div className="flex flex-col items-start gap-2 md:items-end">
@@ -38,11 +39,13 @@ function ShortlistPage() {
           </div>
         </div>
 
+        <CriteriaBanner />
+
         <div className="grid gap-3 md:grid-cols-2">
           {picks.map((p, i) => (
             <article key={p.id} className="rounded-[var(--radius-lg)] border border-border bg-surface p-4">
               <div className="flex items-start gap-3">
-                <ProductThumb id={p.id} alt={`${p.brand} ${p.name}`} size="sm" />
+                <ProductThumb id={p.id} alt={`${p.brand} ${p.name}`} size="md" />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-3">
                     <div>

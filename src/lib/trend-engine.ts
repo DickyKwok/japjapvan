@@ -1,3 +1,5 @@
+import type { ListingCriteria } from "@/data/criteria";
+import { DEFAULT_CRITERIA } from "@/data/criteria";
 import type { Product } from "@/data/types";
 import type { ReverseSku } from "@/data/reverse";
 
@@ -10,7 +12,7 @@ export type TrendPoint = {
   HK: number;
 };
 
-export type SnapshotSource = "google-trends" | "calibrated-seed";
+export type SnapshotSource = "google-trends" | "wikipedia-pageviews" | "calibrated-seed";
 
 export type ProductSnapshot = {
   id: string;
@@ -35,7 +37,6 @@ export type SnapshotBundle = {
   products: Record<string, ProductSnapshot>;
 };
 
-/** Same djb2 in Python (`tools/fetch_trends.py`) so CLI + dashboard series match. */
 export function hash32(s: string) {
   let h = 5381;
   for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0;
@@ -90,13 +91,12 @@ export function buildSeries(opts: {
   now?: Date;
 }): TrendPoint[] {
   const weeks = opts.weeks ?? 26;
-  const seed = hash32(opts.id);
-  const gCa = targetGrowth(opts.id, opts.rising);
-  const gHk = opts.rising ? gCa * 0.7 : gCa * 0.5;
-  const thenCa = opts.ca / (1 + gCa / 100);
-  const thenHk = opts.hk / (1 + gHk / 100);
-  const thenJp = opts.jp / (1 + (opts.rising ? 6 : -2) / 100);
   const now = opts.now ?? new Date();
+  const seed = hash32(opts.id);
+  const caG = targetGrowth(opts.id, opts.rising);
+  const thenCa = clamp(opts.ca / (1 + caG / 100));
+  const thenJp = clamp(opts.jp / (1 + (opts.rising ? 8 : -4) / 100));
+  const thenHk = clamp(opts.hk / (1 + (opts.rising ? 6 : -3) / 100));
   const out: TrendPoint[] = [];
   for (let i = 0; i < weeks; i++) {
     const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
@@ -111,72 +111,74 @@ export function buildSeries(opts: {
   return out;
 }
 
-export const LIST_RULES = {
-  minJpIndex: 25,
-  minGrowthToList: 12,
-  stableIndex: 55,
-  stableFloor: -5,
-} as const;
-
-export function evaluateGate(latest: { CA: number; JP: number; HK: number }, caGrowth: number) {
-  const sourceAlive = latest.JP >= LIST_RULES.minJpIndex;
-  const growing = caGrowth >= LIST_RULES.minGrowthToList;
-  const stableDemand = latest.CA >= LIST_RULES.stableIndex && caGrowth >= LIST_RULES.stableFloor;
+export function evaluateGate(
+  latest: { CA: number; JP: number; HK: number },
+  caGrowth: number,
+  criteria: ListingCriteria = DEFAULT_CRITERIA,
+) {
+  const sourceAlive = latest.JP >= criteria.minJpIndex;
+  const growing = caGrowth >= criteria.minCaGrowth12w;
+  const stableDemand = latest.CA >= criteria.minCaIndex && caGrowth >= criteria.stableFloor;
   const eligible = sourceAlive && (growing || stableDemand);
   return { eligible, growing, stableDemand, sourceAlive };
 }
 
-export function buildReasons(keyword: string, latest: { CA: number; JP: number; HK: number }, caGrowth: number) {
-  const { eligible, growing, sourceAlive } = evaluateGate(latest, caGrowth);
+export function buildReasons(
+  keyword: string,
+  latest: { CA: number; JP: number; HK: number },
+  caGrowth: number,
+  criteria: ListingCriteria = DEFAULT_CRITERIA,
+) {
+  const { eligible, growing, sourceAlive } = evaluateGate(latest, caGrowth, criteria);
   const g = `${caGrowth > 0 ? "+" : ""}${caGrowth.toFixed(0)}%`;
   if (!sourceAlive) {
     return {
       eligible: false,
       gate: "watch" as const,
-      reason: `Watch — Japan source index ${latest.JP} is too thin to import.`,
-      whyListed: `Not listed. Japan Google Trends for "${keyword}" is only ${latest.JP}/100, so the SKU may be aging out of the source market.`,
+      reason: `Watch — Japan source index ${latest.JP} is below your JP ≥ ${criteria.minJpIndex} floor.`,
+      whyListed: `Not listed. Japan search index for “${keyword}” is ${latest.JP}/100. Your saved rule requires JP ≥ ${criteria.minJpIndex}.`,
     };
   }
   if (growing) {
     return {
       eligible: true,
       gate: "pass" as const,
-      reason: `Google Trends Canada ${g} over 12 weeks for "${keyword}"`,
-      whyListed: `Listed for Shopify because Canada search interest in "${keyword}" grew ${g} over the last 12 weeks (Google Trends, geo=CA). Japan source index is still ${latest.JP}/100.`,
+      reason: `Canada ${g} over 12 weeks for “${keyword}” (rule ≥ +${criteria.minCaGrowth12w}%)`,
+      whyListed: `Listed because Canada search interest in “${keyword}” grew ${g} over 12 weeks. Your rule lists a SKU at ≥ +${criteria.minCaGrowth12w}% while Japan stays ≥ ${criteria.minJpIndex} (now ${latest.JP}/100).`,
     };
   }
   if (eligible) {
     return {
       eligible: true,
       gate: "pass" as const,
-      reason: `Google Trends Canada index ${latest.CA}/100 (12-week change ${g}) for "${keyword}"`,
-      whyListed: `Listed for Shopify because "${keyword}" holds a high Canada search index (${latest.CA}/100) with a 12-week change of ${g}. Stable demand, not a spike.`,
+      reason: `Canada index ${latest.CA}/100 (12w ${g}) meets your ≥ ${criteria.minCaIndex} stable rule`,
+      whyListed: `Listed because “${keyword}” holds a Canada index of ${latest.CA}/100 with a 12-week change of ${g}. Your rule accepts stable demand at index ≥ ${criteria.minCaIndex} and change ≥ ${criteria.stableFloor}%.`,
     };
   }
   return {
     eligible: false,
     gate: "watch" as const,
-    reason: `Watch — Canada ${g}, index ${latest.CA}/100. Needs +${LIST_RULES.minGrowthToList}% or index ≥ ${LIST_RULES.stableIndex}.`,
-    whyListed: `Not listed on Shopify yet. Canada Google Trends for "${keyword}" is ${g} over 12 weeks at index ${latest.CA}/100. We only put a SKU on the shop when it is growing ≥ ${LIST_RULES.minGrowthToList}% or sitting at a high stable index.`,
+    reason: `Watch — Canada ${g}, index ${latest.CA}/100. Needs +${criteria.minCaGrowth12w}% or index ≥ ${criteria.minCaIndex}.`,
+    whyListed: `Not listed. Canada for “${keyword}” is ${g} at index ${latest.CA}/100. Your saved rule requires growth ≥ +${criteria.minCaGrowth12w}% or a stable index ≥ ${criteria.minCaIndex}.`,
   };
 }
 
 export function snapshotFromProduct(
   p: Pick<Product, "id" | "keyword" | "caTrend" | "jpTrend" | "hkTrend" | "rising">,
-  opts?: { source?: SnapshotSource; fetchedAt?: string; now?: Date },
+  opts?: { source?: SnapshotSource; fetchedAt?: string; now?: Date; series?: TrendPoint[] },
 ): ProductSnapshot {
-  const series = buildSeries({
-    id: p.id,
-    ca: p.caTrend,
-    jp: p.jpTrend,
-    hk: p.hkTrend,
-    rising: p.rising,
-    now: opts?.now,
-  });
+  const series =
+    opts?.series ??
+    buildSeries({
+      id: p.id,
+      ca: p.caTrend,
+      jp: p.jpTrend,
+      hk: p.hkTrend,
+      rising: p.rising,
+      now: opts?.now,
+    });
   const latest = series[series.length - 1] ?? { week: "", CA: p.caTrend, JP: p.jpTrend, HK: p.hkTrend };
   const caGrowth12w = growth12w(series, "CA");
-  const jpGrowth12w = growth12w(series, "JP");
-  const hkGrowth12w = growth12w(series, "HK");
   const copy = buildReasons(p.keyword, latest, caGrowth12w);
   return {
     id: p.id,
@@ -187,8 +189,8 @@ export function snapshotFromProduct(
     series,
     latest: { CA: latest.CA, JP: latest.JP, HK: latest.HK },
     caGrowth12w,
-    jpGrowth12w,
-    hkGrowth12w,
+    jpGrowth12w: growth12w(series, "JP"),
+    hkGrowth12w: growth12w(series, "HK"),
     ...copy,
   };
 }
@@ -220,7 +222,7 @@ export function snapshotFromReverse(p: ReverseSku, opts?: { fetchedAt?: string; 
     eligible: copy.eligible,
     gate: copy.gate,
     reason: copy.reason.replaceAll("Canada", "Hong Kong"),
-    whyListed: `Reverse lane: Hong Kong search for "${p.keyword}" is ${hkGrowth > 0 ? "+" : ""}${hkGrowth.toFixed(0)}% over 12 weeks (Google Trends, geo=HK).`,
+    whyListed: `Reverse lane: Hong Kong search for “${p.keyword}” is ${hkGrowth > 0 ? "+" : ""}${hkGrowth.toFixed(0)}% over 12 weeks.`,
   };
 }
 
@@ -235,7 +237,7 @@ export function buildBundle(
   return {
     generatedAt: fetchedAt,
     method:
-      "12-week Google Trends growth (CA / JP / HK). Live pytrends when available; otherwise calibrated series from last known index + rising flag, hashed so daily runs stay stable. A SKU is shop-eligible only if Japan source is alive and Canada is growing ≥12% or holding index ≥55.",
+      "12-week growth (CA / JP / HK). Prefers live Google Trends, then Wikipedia pageviews (en/ja/zh), else a calibrated seed. Shop listing is decided by the saved criteria, not by this file alone.",
     products: productsMap,
   };
 }

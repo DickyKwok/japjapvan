@@ -1,13 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/layout/app-shell";
+import { CriteriaBanner } from "@/components/criteria-banner";
 import { WeeklyRitual } from "@/components/ritual";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Price } from "@/components/price";
-import { defaultWeekPlan, planTotals, scoredCatalog, shortlist } from "@/lib/catalog";
+import { ProductThumb } from "@/components/product-thumb";
+import { planTotals } from "@/lib/catalog";
+import { useListing } from "@/lib/use-listing";
 import { wholesaleJpyFromLandedCad } from "@/lib/money";
-import { signalSummary } from "@/lib/signals";
-import { growthLabel, isoWeekLabel } from "@/lib/utils";
+import { growthLabel } from "@/lib/utils";
 import { marginPct } from "@/lib/scoring";
 import { ArrowUpRight, PackageCheck, TrendingUp } from "lucide-react";
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
@@ -15,11 +17,8 @@ import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recha
 export const Route = createFileRoute("/")({ component: Home });
 
 function Home() {
-  const catalog = scoredCatalog();
-  const picks = shortlist();
-  const plan = defaultWeekPlan();
+  const { catalog, picks, plan, summary } = useListing();
   const totals = planTotals(plan, catalog);
-  const signals = signalSummary();
   const avgMargin = picks.reduce((s, p) => s + marginPct(p), 0) / Math.max(1, picks.length);
   const byCat = Object.entries(
     picks.reduce<Record<string, number>>((acc, p) => {
@@ -36,34 +35,27 @@ function Home() {
             <p className="text-xs tracking-[0.18em] text-subtle uppercase">JapJapVan desk</p>
             <h1 className="mt-1 font-display text-4xl tracking-tight md:text-5xl">This week’s merch HQ</h1>
             <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted">
-              A product only reaches Shopify when Google Trends says so. Canada 12-week growth or a high stable
-              index, with Japan still alive. Prices on this desk are CAD (sell), JPY (wholesale), HKD (reverse).
+              SKUs are found by the saved criteria — demand series plus merchandising filters. Change the rule
+              and every desk updates. Prices are CAD (sell), JPY (wholesale), HKD (reverse).
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Link to="/procurement">
-              <Button>Open weekly 採購</Button>
+            <Link to="/criteria">
+              <Button>Edit listing rule</Button>
             </Link>
-            <Link to="/shortlist">
-              <Button variant="outline">Review shortlist</Button>
+            <Link to="/procurement">
+              <Button variant="outline">Open weekly 採購</Button>
             </Link>
           </div>
         </div>
 
+        <CriteriaBanner />
+
         <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <Stat label="Shopify-ready" value={String(signals.listed)} hint={`${signals.watch} still on watch`} />
-          <Stat label="Suggested buy" value={totals.cost} currency="CAD" hint={`${totals.units} units landed`} />
-          <Stat
-            label="If sold through"
-            value={totals.retail}
-            currency="CAD"
-            hint={`${Math.round(totals.margin * 100)}% blended margin`}
-          />
-          <Stat
-            label="Avg CA growth"
-            value={growthLabel(signals.avgGrowth)}
-            hint={`Signals refreshed ${signals.generatedAt.slice(0, 10)}`}
-          />
+          <Stat label="Shopify list" value={summary.listed} hint={`${summary.watch} on watch`} />
+          <Stat label="Live demand series" value={summary.live} hint={`${summary.seeded} still seed`} />
+          <Stat label="Week retail" value={totals.retail} hint={`${totals.units} units`} currency="CAD" />
+          <Stat label="Avg shortlist margin" value={`${Math.round(avgMargin * 100)}%`} hint="sell vs landed CAD" />
         </section>
 
         <section className="grid gap-4 lg:grid-cols-5">
@@ -94,13 +86,16 @@ function Home() {
             <h2 className="font-display text-xl">Why these SKUs</h2>
             <ul className="mt-4 space-y-3">
               {picks.slice(0, 5).map((p) => (
-                <li key={p.id} className="text-sm">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="font-medium">{p.brand}</p>
-                      <p className="text-xs text-muted">{p.signal.reason}</p>
+                <li key={p.id} className="flex items-start gap-3 text-sm">
+                  <ProductThumb id={p.id} alt={`${p.brand} ${p.name}`} size="sm" />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="font-medium">{p.brand}</p>
+                        <p className="text-xs text-muted">{p.signal.reason}</p>
+                      </div>
+                      <p className="tabular-nums text-xs text-ok">{growthLabel(p.signal.caGrowth12w)}</p>
                     </div>
-                    <p className="tabular-nums text-xs text-ok">{growthLabel(p.signal.caGrowth12w)}</p>
                   </div>
                 </li>
               ))}
@@ -119,9 +114,9 @@ function Home() {
               <div>
                 <h2 className="font-display text-xl">How a SKU gets on the shop</h2>
                 <p className="mt-2 text-sm leading-relaxed text-muted">
-                  Daily cron pulls Google Trends for each keyword in Canada, Japan, and Hong Kong. If Canada grew
-                  ≥ 12% in 12 weeks — or sits at index ≥ 55 without falling — and Japan is still alive, it can go on
-                  Shopify. Vancouver checkout is CAD. Japan wholesale is shown in JPY. Reverse lane is HKD.
+                  Demand series (live Wikipedia pageviews en/ja/zh, Google Trends when the endpoint answers, else
+                  a labelled seed) is scored against the saved criteria. Growth, Japan source heat, margin, weight
+                  and lead time all have to pass. Then it can go on Shopify.
                 </p>
               </div>
             </div>
@@ -141,20 +136,23 @@ function Home() {
               .sort((a, b) => b.signal.caGrowth12w - a.signal.caGrowth12w)
               .slice(0, 4)
               .map((p) => (
-                <article key={p.id} className="rounded-[var(--radius-lg)] border border-border bg-surface p-4">
-                  <div className="flex items-center justify-between">
-                    <p className="text-xs text-subtle">{p.brand}</p>
-                    <Badge tone="ok">
-                      <TrendingUp className="mr-1 size-3" /> CA {growthLabel(p.signal.caGrowth12w)}
-                    </Badge>
+                <article key={p.id} className="flex gap-3 rounded-[var(--radius-lg)] border border-border bg-surface p-4">
+                  <ProductThumb id={p.id} alt={`${p.brand} ${p.name}`} size="md" />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs text-subtle">{p.brand}</p>
+                      <Badge tone="ok">
+                        <TrendingUp className="mr-1 size-3" /> CA {growthLabel(p.signal.caGrowth12w)}
+                      </Badge>
+                    </div>
+                    <h3 className="mt-1 text-sm font-medium">{p.name}</h3>
+                    <p className="mt-2 text-xs text-muted">{p.signal.reason}</p>
+                    <p className="mt-2 text-xs text-subtle">
+                      <Price amount={p.sellCad} currency="CAD" />
+                      <span className="mx-1.5">·</span>
+                      <Price amount={wholesaleJpyFromLandedCad(p.landedCad)} currency="JPY" />
+                    </p>
                   </div>
-                  <h3 className="mt-1 text-sm font-medium">{p.name}</h3>
-                  <p className="mt-2 text-xs text-muted">{p.signal.reason}</p>
-                  <p className="mt-2 text-xs text-subtle">
-                    <Price amount={p.sellCad} currency="CAD" />
-                    <span className="mx-1.5">·</span>
-                    <Price amount={wholesaleJpyFromLandedCad(p.landedCad)} currency="JPY" />
-                  </p>
                 </article>
               ))}
           </div>

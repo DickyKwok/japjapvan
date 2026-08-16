@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Download, Images } from "lucide-react";
 import { AppShell } from "@/components/layout/app-shell";
+import { CriteriaBanner } from "@/components/criteria-banner";
 import { Price } from "@/components/price";
 import { ProductThumb } from "@/components/product-thumb";
 import { SignalReason } from "@/components/signal-reason";
@@ -10,11 +11,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CATEGORY_LABEL } from "@/data/products";
 import type { Category } from "@/data/types";
-import { scoredCatalog } from "@/lib/catalog";
 import { downloadCatalogCsv, downloadSearchPack } from "@/lib/export";
 import { wholesaleJpyFromLandedCad } from "@/lib/money";
 import { marginPct } from "@/lib/scoring";
-import { lastSignalsAt, signalSummary } from "@/lib/signals";
+import { lastSignalsAt } from "@/lib/signals";
+import { useListing } from "@/lib/use-listing";
 import { growthLabel, pct } from "@/lib/utils";
 
 export const Route = createFileRoute("/catalog")({ component: CatalogPage });
@@ -37,18 +38,18 @@ function CatalogPage() {
   const [cat, setCat] = useState<Category | "all">("all");
   const [gate, setGate] = useState<GateFilter>("shop");
   const [busy, setBusy] = useState<"csv" | "pack" | null>(null);
-  const summary = signalSummary();
+  const { catalog, summary } = useListing();
   const fetched = lastSignalsAt().slice(0, 10);
 
   const rows = useMemo(() => {
-    return scoredCatalog().filter((p) => {
+    return catalog.filter((p) => {
       if (gate === "shop" && !p.signal.eligible) return false;
       if (gate === "watch" && p.signal.eligible) return false;
       if (cat !== "all" && p.category !== cat) return false;
       const hay = `${p.brand} ${p.name} ${p.keyword} ${p.sku} ${p.signal.reason}`.toLowerCase();
       return hay.includes(q.toLowerCase());
     });
-  }, [q, cat, gate]);
+  }, [catalog, q, cat, gate]);
 
   function slug() {
     const bits = [gate, cat === "all" ? "all" : cat];
@@ -81,8 +82,8 @@ function CatalogPage() {
           <div>
             <h1 className="font-display text-3xl tracking-tight">Catalog</h1>
             <p className="mt-1 max-w-2xl text-sm text-muted">
-              A SKU only appears on the Shopify list when Canada Google Trends is growing or holding a high
-              index. {summary.listed} shop-ready · {summary.watch} watch · refreshed {fetched}.
+              Found by the saved criteria. {summary.listed} shop-ready · {summary.watch} watch · {summary.live} live
+              series · refreshed {fetched}.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -96,6 +97,8 @@ function CatalogPage() {
             </Button>
           </div>
         </div>
+
+        <CriteriaBanner />
 
         <div className="flex flex-wrap gap-1.5">
           {(
@@ -139,7 +142,7 @@ function CatalogPage() {
 
         {rows.length === 0 ? (
           <p className="rounded-[var(--radius-lg)] border border-border bg-surface px-4 py-10 text-center text-sm text-muted">
-            No SKUs match this search. A product only shows on Shopify list when its Google Trends signal passes.
+            No SKUs match this search and the saved criteria. Relax the rule on Criteria.
           </p>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

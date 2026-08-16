@@ -1,3 +1,4 @@
+import { DEFAULT_CRITERIA, type ListingCriteria } from "@/data/criteria";
 import { PRODUCTS } from "@/data/products";
 import type { PoLine, ScoredProduct, WeekPlan } from "@/data/types";
 import { rankProducts, suggestedQty } from "@/lib/scoring";
@@ -6,24 +7,23 @@ import { isoWeekLabel } from "@/lib/utils";
 
 export const TARGET_SHORTLIST = 20;
 
-export function scoredCatalog() {
-  return rankProducts(PRODUCTS, TARGET_SHORTLIST);
+export function scoredCatalog(criteria: ListingCriteria = DEFAULT_CRITERIA) {
+  return rankProducts(PRODUCTS, TARGET_SHORTLIST, criteria);
 }
 
-/** Only SKUs the Trends gate passed — these are the ones we put on Shopify. */
-export function shortlist(): ScoredProduct[] {
-  const eligible = PRODUCTS.filter((p) => signalFor(p).eligible);
-  const pool = eligible.length >= 15 ? eligible : PRODUCTS;
-  return rankProducts(pool, TARGET_SHORTLIST).filter((p) => p.score.selected);
+export function shortlist(criteria: ListingCriteria = DEFAULT_CRITERIA): ScoredProduct[] {
+  const eligible = PRODUCTS.filter((p) => signalFor(p, criteria).eligible);
+  const pool = eligible.length >= 8 ? eligible : PRODUCTS;
+  return rankProducts(pool, TARGET_SHORTLIST, criteria).filter((p) => p.score.selected);
 }
 
-export function watchlist(): ScoredProduct[] {
-  return scoredCatalog().filter((p) => !p.signal.eligible);
+export function watchlist(criteria: ListingCriteria = DEFAULT_CRITERIA): ScoredProduct[] {
+  return scoredCatalog(criteria).filter((p) => !p.signal.eligible);
 }
 
-export function defaultWeekPlan(): WeekPlan {
+export function defaultWeekPlan(criteria: ListingCriteria = DEFAULT_CRITERIA): WeekPlan {
   const lines: PoLine[] = [];
-  for (const p of shortlist()) {
+  for (const p of shortlist(criteria)) {
     const qty = suggestedQty(p);
     if (qty <= 0) continue;
     lines.push({ productId: p.id, qty, status: "draft", note: p.notes });

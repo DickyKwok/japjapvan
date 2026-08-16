@@ -1,6 +1,10 @@
+import { DEFAULT_CRITERIA, type ListingCriteria } from "@/data/criteria";
 import type { Product, ScoreBreakdown, ScoredProduct } from "@/data/types";
 import { signalFor } from "@/lib/signals";
 import { growthLabel } from "@/lib/utils";
+import { marginPct } from "@/lib/scoring-core";
+
+export { marginPct } from "@/lib/scoring-core";
 
 export const WEIGHTS = {
   trends: 0.25,
@@ -12,16 +16,12 @@ export const WEIGHTS = {
   brandDiversity: 0.1,
 };
 
-export function marginPct(p: Product) {
-  return (p.sellCad - p.landedCad) / p.sellCad;
-}
-
 function clamp01(n: number) {
   return Math.max(0, Math.min(1, n));
 }
 
-function trendScore(p: Product) {
-  const signal = signalFor(p);
+function trendScore(p: Product, criteria: ListingCriteria) {
+  const signal = signalFor(p, criteria);
   const demand = signal.latest.CA / 100;
   const sourceHot = Math.max(signal.latest.JP, signal.latest.HK) / 100;
   const growth = clamp01((signal.caGrowth12w + 20) / 80);
@@ -44,8 +44,12 @@ function regulatoryScore(p: Product) {
   return 1;
 }
 
-export function scoreProduct(p: Product, brandCount: Record<string, number>): ScoreBreakdown {
-  const t = trendScore(p);
+export function scoreProduct(
+  p: Product,
+  brandCount: Record<string, number>,
+  criteria: ListingCriteria = DEFAULT_CRITERIA,
+): ScoreBreakdown {
+  const t = trendScore(p, criteria);
   const m = marginScore(p);
   const s = shippingScore(p);
   const r = regulatoryScore(p);
@@ -53,7 +57,7 @@ export function scoreProduct(p: Product, brandCount: Record<string, number>): Sc
   const rp = p.repeat / 10;
   const brandPenalty = Math.max(0, (brandCount[p.brand] ?? 1) - 1) * 0.35;
   const b = clamp01(1 - brandPenalty);
-  const signal = signalFor(p);
+  const signal = signalFor(p, criteria);
 
   const total =
     t * WEIGHTS.trends +
@@ -65,10 +69,10 @@ export function scoreProduct(p: Product, brandCount: Record<string, number>): Sc
     b * WEIGHTS.brandDiversity;
 
   const reasons: string[] = [];
-  if (signal.caGrowth12w >= 12) {
-    reasons.push(`Canada Google Trends ${growthLabel(signal.caGrowth12w)} over 12 weeks`);
+  if (signal.caGrowth12w >= criteria.minCaGrowth12w) {
+    reasons.push(`Canada search ${growthLabel(signal.caGrowth12w)} over 12 weeks`);
   } else if (signal.eligible) {
-    reasons.push(`Canada Trends index ${signal.latest.CA}/100 (stable)`);
+    reasons.push(`Canada index ${signal.latest.CA}/100 (stable)`);
   }
   if (marginPct(p) >= 0.5) reasons.push("Gross margin ≥ 50%");
   if (p.uniqueness >= 8) reasons.push("Hard to find locally");
@@ -91,7 +95,11 @@ export function scoreProduct(p: Product, brandCount: Record<string, number>): Sc
   };
 }
 
-export function rankProducts(products: Product[], target = 20): ScoredProduct[] {
+export function rankProducts(
+  products: Product[],
+  target = 20,
+  criteria: ListingCriteria = DEFAULT_CRITERIA,
+): ScoredProduct[] {
   const brands: Record<string, number> = {};
   const greedy: ScoredProduct[] = [];
   const remaining = [...products];
@@ -99,7 +107,7 @@ export function rankProducts(products: Product[], target = 20): ScoredProduct[] 
   while (greedy.length < target && remaining.length) {
     const scored = remaining.map((p) => {
       const next = { ...brands, [p.brand]: (brands[p.brand] ?? 0) + 1 };
-      return { ...p, score: scoreProduct(p, next), signal: signalFor(p) };
+      return { ...p, score: scoreProduct(p, next, criteria), signal: signalFor(p, criteria) };
     });
     scored.sort((a, b) => {
       if (a.signal.eligible !== b.signal.eligible) return a.signal.eligible ? -1 : 1;
@@ -114,7 +122,7 @@ export function rankProducts(products: Product[], target = 20): ScoredProduct[] 
 
   const rest = remaining.map((p) => {
     const next = { ...brands, [p.brand]: (brands[p.brand] ?? 0) + 1 };
-    return { ...p, score: { ...scoreProduct(p, next), selected: false }, signal: signalFor(p) };
+    return { ...p, score: { ...scoreProduct(p, next, criteria), selected: false }, signal: signalFor(p, criteria) };
   });
 
   return [...greedy, ...rest].sort((a, b) => {

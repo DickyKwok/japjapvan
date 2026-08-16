@@ -1,11 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { AppShell } from "@/components/layout/app-shell";
+import { CriteriaBanner } from "@/components/criteria-banner";
 import { SignalReason } from "@/components/signal-reason";
+import { ProductThumb } from "@/components/product-thumb";
 import { Badge } from "@/components/ui/badge";
 import { PRODUCTS } from "@/data/products";
 import { seriesFor } from "@/data/trends";
 import { signalFor } from "@/lib/signals";
+import { useCriteriaStore } from "@/lib/criteria-store";
 import { growthLabel } from "@/lib/utils";
 import {
   CartesianGrid,
@@ -21,19 +24,21 @@ import {
 export const Route = createFileRoute("/trends")({ component: TrendsPage });
 
 function TrendsPage() {
+  const criteria = useCriteriaStore((s) => s.criteria);
+  const revision = useCriteriaStore((s) => s.revision);
   const ranked = useMemo(
     () =>
       [...PRODUCTS].sort((a, b) => {
-        const sa = signalFor(a);
-        const sb = signalFor(b);
+        const sa = signalFor(a, criteria);
+        const sb = signalFor(b, criteria);
         if (sa.eligible !== sb.eligible) return sa.eligible ? -1 : 1;
         return sb.caGrowth12w - sa.caGrowth12w;
       }),
-    [],
+    [criteria, revision],
   );
   const [id, setId] = useState(ranked[0]?.id ?? PRODUCTS[0].id);
   const product = PRODUCTS.find((p) => p.id === id) ?? PRODUCTS[0];
-  const signal = signalFor(product);
+  const signal = signalFor(product, criteria);
   const data = useMemo(() => seriesFor(product.keyword), [product.keyword]);
   const latest = data[data.length - 1];
 
@@ -43,29 +48,33 @@ function TrendsPage() {
         <div>
           <h1 className="font-display text-3xl tracking-tight">Bidirectional Trends</h1>
           <p className="mt-1 max-w-2xl text-sm text-muted">
-            Same keyword, three markets. A product is listed on Shopify only when Canada 12-week growth is ≥ +12%
-            or the Canada index holds ≥ 55 while Japan source stays alive.
+            Same keyword, three markets. Listing uses your saved rule: Canada ≥ +{criteria.minCaGrowth12w}% or
+            index ≥ {criteria.minCaIndex}, and Japan ≥ {criteria.minJpIndex}. Source is labelled on each SKU.
           </p>
         </div>
+        <CriteriaBanner />
 
-        <div className="grid gap-4 lg:grid-cols-[280px_1fr]">
+        <div className="grid gap-4 lg:grid-cols-[300px_1fr]">
           <div className="max-h-[70vh] overflow-auto rounded-[var(--radius-lg)] border border-border bg-surface">
             {ranked.map((p) => {
-              const s = signalFor(p);
+              const s = signalFor(p, criteria);
               return (
                 <button
                   key={p.id}
                   type="button"
                   onClick={() => setId(p.id)}
-                  className={`flex w-full flex-col items-start border-b border-border/70 px-3 py-2.5 text-left last:border-0 ${p.id === id ? "bg-bg-elevated" : ""}`}
+                  className={`flex w-full items-center gap-2 border-b border-border/70 px-3 py-2.5 text-left last:border-0 ${p.id === id ? "bg-bg-elevated" : ""}`}
                 >
-                  <span className="flex w-full items-center justify-between gap-2">
-                    <span className="text-xs text-subtle">{p.brand}</span>
-                    <span className={`text-[11px] tabular-nums ${s.eligible ? "text-ok" : "text-subtle"}`}>
-                      {growthLabel(s.caGrowth12w)}
+                  <ProductThumb id={p.id} alt={`${p.brand} ${p.name}`} size="sm" />
+                  <span className="min-w-0 flex-1">
+                    <span className="flex w-full items-center justify-between gap-2">
+                      <span className="text-xs text-subtle">{p.brand}</span>
+                      <span className={`text-[11px] tabular-nums ${s.eligible ? "text-ok" : "text-subtle"}`}>
+                        {growthLabel(s.caGrowth12w)}
+                      </span>
                     </span>
+                    <span className="block truncate text-sm">{p.name}</span>
                   </span>
-                  <span className="text-sm">{p.name}</span>
                 </button>
               );
             })}
@@ -74,9 +83,13 @@ function TrendsPage() {
           <div className="space-y-4">
             <div className="rounded-[var(--radius-xl)] border border-border bg-surface p-5">
               <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <p className="text-xs text-subtle">{product.keyword}</p>
-                  <h2 className="font-display text-2xl">{product.brand}</h2>
+                <div className="flex items-start gap-3">
+                  <ProductThumb id={product.id} alt={`${product.brand} ${product.name}`} size="md" />
+                  <div>
+                    <p className="text-xs text-subtle">{product.keyword}</p>
+                    <h2 className="font-display text-2xl">{product.brand}</h2>
+                    <p className="text-sm text-muted">{product.name}</p>
+                  </div>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <Badge>CA {latest.CA}</Badge>
@@ -117,8 +130,11 @@ function TrendsPage() {
               </p>
             </div>
             <div className="grid gap-3 md:grid-cols-3">
-              <Note title="Canada" body="Purchase-intent market. +12% over 12 weeks, or index ≥ 55 and not falling, is a buy." />
-              <Note title="Japan" body="Source heat. If JP collapses while we still stock, the SKU is aging out of Japan." />
+              <Note
+                title="Canada"
+                body={`Purchase-intent market. Your rule lists at +${criteria.minCaGrowth12w}% over 12 weeks, or index ≥ ${criteria.minCaIndex} and not falling.`}
+              />
+              <Note title="Japan" body={`Source heat. Your rule requires JP index ≥ ${criteria.minJpIndex}.`} />
               <Note title="Hong Kong" body="Proxy for Greater China diaspora taste and a reverse-lane signal later." />
             </div>
           </div>

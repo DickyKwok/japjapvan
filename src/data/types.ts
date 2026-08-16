@@ -57,7 +57,7 @@ export type ScoreBreakdown = {
 export type ProductSignal = {
   eligible: boolean;
   gate: "pass" | "watch";
-  source: "google-trends" | "calibrated-seed";
+  source: "google-trends" | "wikipedia-pageviews" | "calibrated-seed";
   fetchedAt: string;
   keyword: string;
   googleTrendsUrl: string;
@@ -67,6 +67,8 @@ export type ProductSignal = {
   latest: { CA: number; JP: number; HK: number };
   reason: string;
   whyListed: string;
+  filterPass: boolean;
+  criteriaVersion: number;
 };
 
 export type ScoredProduct = Product & { score: ScoreBreakdown; signal: ProductSignal };

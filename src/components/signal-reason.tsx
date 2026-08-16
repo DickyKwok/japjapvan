@@ -3,6 +3,12 @@ import { Badge } from "@/components/ui/badge";
 import type { ProductSignal } from "@/data/types";
 import { growthLabel } from "@/lib/utils";
 
+const SOURCE_LABEL: Record<ProductSignal["source"], string> = {
+  "google-trends": "Google Trends live",
+  "wikipedia-pageviews": "Wikipedia pageviews",
+  "calibrated-seed": "Seed fallback",
+};
+
 export function SignalReason({
   signal,
   compact,
@@ -19,7 +25,7 @@ export function SignalReason({
           {up ? <TrendingUp className="mr-1 size-3" /> : <TrendingDown className="mr-1 size-3" />}
           CA {growthLabel(signal.caGrowth12w)}
         </Badge>
-        <span className="text-[10px] tracking-wide text-subtle uppercase">{signal.source}</span>
+        <span className="text-[10px] tracking-wide text-subtle uppercase">{SOURCE_LABEL[signal.source]}</span>
       </div>
       <p className={compact ? "text-xs leading-relaxed text-muted" : "text-sm leading-relaxed text-muted"}>
         {compact ? signal.reason : signal.whyListed}

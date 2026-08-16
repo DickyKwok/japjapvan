@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CatalogRouteImport } from './routes/catalog'
+import { Route as CriteriaRouteImport } from './routes/criteria'
+import { Route as HistoryRouteImport } from './routes/history'
 import { Route as LanesRouteImport } from './routes/lanes'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PreordersRouteImport } from './routes/preorders'
@@ -29,6 +31,16 @@ const IndexRoute = IndexRouteImport.update({
 const CatalogRoute = CatalogRouteImport.update({
   id: '/catalog',
   path: '/catalog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CriteriaRoute = CriteriaRouteImport.update({
+  id: '/criteria',
+  path: '/criteria',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HistoryRoute = HistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LanesRoute = LanesRouteImport.update({
@@ -80,6 +92,8 @@ const ApiCronRefreshTrendsRoute = ApiCronRefreshTrendsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/catalog': typeof CatalogRoute
+  '/criteria': typeof CriteriaRoute
+  '/history': typeof HistoryRoute
   '/lanes': typeof LanesRoute
   '/login': typeof LoginRoute
   '/preorders': typeof PreordersRoute
@@ -93,6 +107,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/catalog': typeof CatalogRoute
+  '/criteria': typeof CriteriaRoute
+  '/history': typeof HistoryRoute
   '/lanes': typeof LanesRoute
   '/login': typeof LoginRoute
   '/preorders': typeof PreordersRoute
@@ -107,6 +123,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/catalog': typeof CatalogRoute
+  '/criteria': typeof CriteriaRoute
+  '/history': typeof HistoryRoute
   '/lanes': typeof LanesRoute
   '/login': typeof LoginRoute
   '/preorders': typeof PreordersRoute
@@ -122,6 +140,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/catalog'
+    | '/criteria'
+    | '/history'
     | '/lanes'
     | '/login'
     | '/preorders'
@@ -135,6 +155,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/catalog'
+    | '/criteria'
+    | '/history'
     | '/lanes'
     | '/login'
     | '/preorders'
@@ -148,6 +170,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/catalog'
+    | '/criteria'
+    | '/history'
     | '/lanes'
     | '/login'
     | '/preorders'
@@ -162,6 +186,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CatalogRoute: typeof CatalogRoute
+  CriteriaRoute: typeof CriteriaRoute
+  HistoryRoute: typeof HistoryRoute
   LanesRoute: typeof LanesRoute
   LoginRoute: typeof LoginRoute
   PreordersRoute: typeof PreordersRoute
@@ -187,6 +213,20 @@ declare module '@tanstack/react-router' {
       path: '/catalog'
       fullPath: '/catalog'
       preLoaderRoute: typeof CatalogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/criteria': {
+      id: '/criteria'
+      path: '/criteria'
+      fullPath: '/criteria'
+      preLoaderRoute: typeof CriteriaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/history': {
+      id: '/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof HistoryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/lanes': {
@@ -258,6 +298,8 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CatalogRoute: CatalogRoute,
+  CriteriaRoute: CriteriaRoute,
+  HistoryRoute: HistoryRoute,
   LanesRoute: LanesRoute,
   LoginRoute: LoginRoute,
   PreordersRoute: PreordersRoute,
