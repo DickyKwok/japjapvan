@@ -64,7 +64,13 @@ function ProductPage() {
               ) : (
                 <Badge tone="warn">{t("product.watch")}</Badge>
               )}
-              {p.signal ? <Badge tone="muted">CA {growthLabel(p.signal.caGrowth12w)}</Badge> : null}
+              {p.signal ? (
+                p.signal.hasLiveDemand ? (
+                  <Badge tone="muted">CA {growthLabel(p.signal.caGrowth12w)}</Badge>
+                ) : (
+                  <Badge tone="muted">{t("signal.nodata")}</Badge>
+                )
+              ) : null}
             </div>
             <Economics product={p} />
             {p.signal ? <SignalReason signal={p.signal} /> : null}

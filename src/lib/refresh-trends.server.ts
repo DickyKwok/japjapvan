@@ -3,7 +3,7 @@ import { dirname, join } from "node:path";
 import { PRODUCTS } from "@/data/products";
 import { REVERSE_SKUS } from "@/data/reverse";
 import { buildBundle, snapshotFromReverse, type SnapshotBundle } from "@/lib/trend-engine";
-import { setSignalBundle } from "@/lib/signals";
+import { applyLiveOverlay, setSignalBundle } from "@/lib/signals";
 
 const ROOT = process.cwd();
 
@@ -17,15 +17,16 @@ export type CronState = {
 
 export async function refreshTrendSnapshots(): Promise<{ bundle: SnapshotBundle; state: CronState }> {
   const extras = REVERSE_SKUS.map((p) => snapshotFromReverse(p));
-  const bundle = buildBundle(PRODUCTS, extras);
+  const bundle = applyLiveOverlay(buildBundle(PRODUCTS, extras));
   setSignalBundle(bundle);
 
   const listed = PRODUCTS.filter((p) => bundle.products[p.id]?.eligible).length;
+  const liveHits = PRODUCTS.filter((p) => bundle.products[p.id]?.hasLiveDemand).length;
   const state: CronState = {
     lastRunAt: bundle.generatedAt,
     listed,
     watch: PRODUCTS.length - listed,
-    liveHits: 0,
+    liveHits,
     total: PRODUCTS.length,
   };
 

@@ -161,7 +161,7 @@ function CatalogPage() {
                         <p className="text-xs text-subtle">{p.brand}</p>
                         <h2 className="text-sm font-medium leading-snug hover:underline">{p.name}</h2>
                       </div>
-                      <Badge tone="ink">{growthLabel(p.signal.caGrowth12w)}</Badge>
+                      <Badge tone="ink">{p.signal.hasLiveDemand ? growthLabel(p.signal.caGrowth12w) : t("signal.nodata")}</Badge>
                     </div>
                   </Link>
                   <div className="flex flex-wrap items-center gap-1.5">

@@ -57,13 +57,18 @@ export type ScoreBreakdown = {
   reasons: string[];
 };
 
+export type DemandSource = "google-trends" | "wikipedia-pageviews" | "rising-rss" | "none";
+
 export type ProductSignal = {
   eligible: boolean;
   gate: "pass" | "watch";
-  source: "google-trends" | "wikipedia-pageviews" | "calibrated-seed";
+  source: DemandSource;
+  hasLiveDemand: boolean;
   fetchedAt: string;
   keyword: string;
   googleTrendsUrl: string;
+  evidenceUrl: string;
+  evidenceLabel: string;
   caGrowth12w: number;
   jpGrowth12w: number;
   hkGrowth12w: number;

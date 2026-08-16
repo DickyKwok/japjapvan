@@ -23,6 +23,7 @@ type LiveFile = {
       source?: ProductSnapshot["source"];
       fetchedAt?: string;
       series?: TrendPoint[];
+      titles?: { en?: string; ja?: string; zh?: string };
     }
   >;
 };
@@ -33,17 +34,8 @@ export function setSignalBundle(bundle: SnapshotBundle) {
   memoryBundle = bundle;
 }
 
-function mergeSeries(seed: TrendPoint[], live: TrendPoint[]): TrendPoint[] {
-  const byWeek = new Map(seed.map((p) => [p.week, { ...p }]));
-  for (const point of live) {
-    const cur = byWeek.get(point.week) ?? { week: point.week, CA: point.CA, JP: point.JP, HK: point.HK };
-    if (point.CA > 0) cur.CA = point.CA;
-    if (point.JP > 0) cur.JP = point.JP;
-    if (point.HK > 0) cur.HK = point.HK;
-    byWeek.set(point.week, cur);
-  }
-  const weeks = [...byWeek.keys()].sort();
-  return weeks.slice(-26).map((w) => byWeek.get(w)!);
+export function applyLiveOverlay(bundle: SnapshotBundle): SnapshotBundle {
+  return overlayLive(bundle);
 }
 
 function overlayLive(bundle: SnapshotBundle): SnapshotBundle {
@@ -54,22 +46,39 @@ function overlayLive(bundle: SnapshotBundle): SnapshotBundle {
     if (!row.series?.length) continue;
     const existing = bundle.products[id];
     if (!existing) continue;
-    const series = mergeSeries(existing.series, row.series);
+    // Use the live series only — never blend with invented seed points.
+    const series = row.series;
     const latest = series[series.length - 1];
-    bundle.products[id] = {
-      ...existing,
-      source: row.source ?? "wikipedia-pageviews",
-      fetchedAt: row.fetchedAt ?? existing.fetchedAt,
-      series,
-      latest: { CA: latest.CA, JP: latest.JP, HK: latest.HK },
-      caGrowth12w: growth12w(series, "CA"),
-      jpGrowth12w: growth12w(series, "JP"),
-      hkGrowth12w: growth12w(series, "HK"),
-    };
+    const titles = row.titles;
+    const brand = titles?.en?.replaceAll("_", " ") ?? existing.keyword;
+    const evidenceUrl = titles?.en
+      ? `https://pageviews.wmcloud.org/?project=en.wikipedia.org&pages=${encodeURIComponent(titles.en)}`
+      : "";
+    const rebuilt = snapshotFromProduct(
+      {
+        id,
+        keyword: existing.keyword,
+        caTrend: latest.CA,
+        jpTrend: latest.JP,
+        hkTrend: latest.HK,
+        rising: true,
+      },
+      {
+        source: row.source ?? "wikipedia-pageviews",
+        fetchedAt: row.fetchedAt ?? existing.fetchedAt,
+        series,
+        evidenceUrl,
+        evidenceLabel: `Wikipedia · ${brand}`,
+        brandTitle: brand,
+      },
+    );
+    bundle.products[id] = rebuilt;
     hits += 1;
   }
   if (hits > 0) {
-    bundle.method = live.method ?? bundle.method;
+    bundle.method =
+      live.method ??
+      "Live Wikipedia pageviews only. Google Trends SKU phrases with no Canada volume are not used as +%.";
     bundle.generatedAt = live.generatedAt ?? bundle.generatedAt;
   }
   return bundle;

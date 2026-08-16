@@ -12,14 +12,17 @@ export type TrendPoint = {
   HK: number;
 };
 
-export type SnapshotSource = "google-trends" | "wikipedia-pageviews" | "calibrated-seed";
+export type SnapshotSource = "google-trends" | "wikipedia-pageviews" | "rising-rss" | "none";
 
 export type ProductSnapshot = {
   id: string;
   keyword: string;
   source: SnapshotSource;
+  hasLiveDemand: boolean;
   fetchedAt: string;
   googleTrendsUrl: string;
+  evidenceUrl: string;
+  evidenceLabel: string;
   series: TrendPoint[];
   latest: { CA: number; JP: number; HK: number };
   caGrowth12w: number;
@@ -115,7 +118,11 @@ export function evaluateGate(
   latest: { CA: number; JP: number; HK: number },
   caGrowth: number,
   criteria: ListingCriteria = DEFAULT_CRITERIA,
+  hasLiveDemand = false,
 ) {
+  if (!hasLiveDemand) {
+    return { eligible: false, growing: false, stableDemand: false, sourceAlive: false };
+  }
   const sourceAlive = latest.JP >= criteria.minJpIndex;
   const growing = caGrowth >= criteria.minCaGrowth12w;
   const stableDemand = latest.CA >= criteria.minCaIndex && caGrowth >= criteria.stableFloor;
@@ -123,106 +130,129 @@ export function evaluateGate(
   return { eligible, growing, stableDemand, sourceAlive };
 }
 
+export function unverifiedCopy(keyword: string) {
+  return {
+    eligible: false,
+    gate: "watch" as const,
+    reason: `Demand unverified — Google Trends has no Canada series for “${keyword}”.`,
+    whyListed: `Not listed on search growth. Google Trends Canada returns “not enough search data” for “${keyword}” (the empty chart you opened). We do not invent a +% to fill that gap. This SKU stays on watch until a real public series exists (Wikipedia pageviews for the brand, or a live Trends query with volume).`,
+  };
+}
+
 export function buildReasons(
   keyword: string,
   latest: { CA: number; JP: number; HK: number },
   caGrowth: number,
   criteria: ListingCriteria = DEFAULT_CRITERIA,
+  opts?: { hasLiveDemand?: boolean; source?: SnapshotSource; brandTitle?: string },
 ) {
-  const { eligible, growing, sourceAlive } = evaluateGate(latest, caGrowth, criteria);
+  const live = Boolean(opts?.hasLiveDemand);
+  if (!live) return unverifiedCopy(keyword);
+
+  const { eligible, growing, sourceAlive } = evaluateGate(latest, caGrowth, criteria, true);
   const g = `${caGrowth > 0 ? "+" : ""}${caGrowth.toFixed(0)}%`;
+  const brand = opts?.brandTitle || keyword;
+  const srcNote =
+    opts?.source === "wikipedia-pageviews"
+      ? `Wikipedia pageviews for “${brand}” (brand article — not the SKU phrase, which has no Google Trends volume in Canada)`
+      : opts?.source === "google-trends"
+        ? `Google Trends for “${keyword}”`
+        : `Live series for “${keyword}”`;
+
   if (!sourceAlive) {
     return {
       eligible: false,
       gate: "watch" as const,
-      reason: `Watch — Japan source index ${latest.JP} is below your JP ≥ ${criteria.minJpIndex} floor.`,
-      whyListed: `Not listed. Japan search index for “${keyword}” is ${latest.JP}/100. Your saved rule requires JP ≥ ${criteria.minJpIndex}.`,
+      reason: `Watch — Japan source index ${latest.JP} is below your JP ≥ ${criteria.minJpIndex} floor. Source: ${srcNote}.`,
+      whyListed: `Not listed. ${srcNote} shows Japan ${latest.JP}/100. Your rule requires JP ≥ ${criteria.minJpIndex}.`,
     };
   }
   if (growing) {
     return {
       eligible: true,
       gate: "pass" as const,
-      reason: `Canada ${g} over 12 weeks for “${keyword}” (rule ≥ +${criteria.minCaGrowth12w}%)`,
-      whyListed: `Listed because Canada search interest in “${keyword}” grew ${g} over 12 weeks. Your rule lists a SKU at ≥ +${criteria.minCaGrowth12w}% while Japan stays ≥ ${criteria.minJpIndex} (now ${latest.JP}/100).`,
+      reason: `${srcNote}: ${g} over 12 weeks (rule ≥ +${criteria.minCaGrowth12w}%)`,
+      whyListed: `Listed because ${srcNote} grew ${g} over 12 weeks. Your rule lists at ≥ +${criteria.minCaGrowth12w}% while Japan stays ≥ ${criteria.minJpIndex} (now ${latest.JP}/100). This is not a Google Trends SKU chart — that phrase has insufficient Canada volume.`,
     };
   }
   if (eligible) {
     return {
       eligible: true,
       gate: "pass" as const,
-      reason: `Canada index ${latest.CA}/100 (12w ${g}) meets your ≥ ${criteria.minCaIndex} stable rule`,
-      whyListed: `Listed because “${keyword}” holds a Canada index of ${latest.CA}/100 with a 12-week change of ${g}. Your rule accepts stable demand at index ≥ ${criteria.minCaIndex} and change ≥ ${criteria.stableFloor}%.`,
+      reason: `${srcNote}: index ${latest.CA}/100 (12w ${g}) meets ≥ ${criteria.minCaIndex} stable rule`,
+      whyListed: `Listed because ${srcNote} holds index ${latest.CA}/100 with a 12-week change of ${g}. Not Google Trends for the exact SKU phrase.`,
     };
   }
   return {
     eligible: false,
     gate: "watch" as const,
-    reason: `Watch — Canada ${g}, index ${latest.CA}/100. Needs +${criteria.minCaGrowth12w}% or index ≥ ${criteria.minCaIndex}.`,
-    whyListed: `Not listed. Canada for “${keyword}” is ${g} at index ${latest.CA}/100. Your saved rule requires growth ≥ +${criteria.minCaGrowth12w}% or a stable index ≥ ${criteria.minCaIndex}.`,
+    reason: `Watch — ${srcNote}: ${g}, index ${latest.CA}/100.`,
+    whyListed: `Not listed. ${srcNote} is ${g} at index ${latest.CA}/100. Rule needs ≥ +${criteria.minCaGrowth12w}% or index ≥ ${criteria.minCaIndex}.`,
   };
 }
 
 export function snapshotFromProduct(
   p: Pick<Product, "id" | "keyword" | "caTrend" | "jpTrend" | "hkTrend" | "rising">,
-  opts?: { source?: SnapshotSource; fetchedAt?: string; now?: Date; series?: TrendPoint[] },
+  opts?: {
+    source?: SnapshotSource;
+    fetchedAt?: string;
+    now?: Date;
+    series?: TrendPoint[];
+    evidenceUrl?: string;
+    evidenceLabel?: string;
+    brandTitle?: string;
+  },
 ): ProductSnapshot {
-  const series =
-    opts?.series ??
-    buildSeries({
-      id: p.id,
-      ca: p.caTrend,
-      jp: p.jpTrend,
-      hk: p.hkTrend,
-      rising: p.rising,
-      now: opts?.now,
-    });
-  const latest = series[series.length - 1] ?? { week: "", CA: p.caTrend, JP: p.jpTrend, HK: p.hkTrend };
-  const caGrowth12w = growth12w(series, "CA");
-  const copy = buildReasons(p.keyword, latest, caGrowth12w);
+  const live = Boolean(opts?.series && opts.series.length >= 16);
+  const series = live ? opts!.series! : [];
+  const latest = live
+    ? series[series.length - 1]
+    : { week: "", CA: 0, JP: 0, HK: 0 };
+  const caGrowth12w = live ? growth12w(series, "CA") : 0;
+  const source = live ? (opts?.source ?? "wikipedia-pageviews") : "none";
+  const copy = buildReasons(p.keyword, { CA: latest.CA, JP: latest.JP, HK: latest.HK }, caGrowth12w, DEFAULT_CRITERIA, {
+    hasLiveDemand: live,
+    source,
+    brandTitle: opts?.brandTitle,
+  });
   return {
     id: p.id,
     keyword: p.keyword,
-    source: opts?.source ?? "calibrated-seed",
+    source,
+    hasLiveDemand: live,
     fetchedAt: opts?.fetchedAt ?? new Date().toISOString(),
-    googleTrendsUrl: trendsExploreUrl(p.keyword, "CA"),
+    googleTrendsUrl: "",
+    evidenceUrl: live ? (opts?.evidenceUrl ?? "") : "",
+    evidenceLabel: live ? (opts?.evidenceLabel ?? "Live public series") : "No public series",
     series,
     latest: { CA: latest.CA, JP: latest.JP, HK: latest.HK },
     caGrowth12w,
-    jpGrowth12w: growth12w(series, "JP"),
-    hkGrowth12w: growth12w(series, "HK"),
+    jpGrowth12w: live ? growth12w(series, "JP") : 0,
+    hkGrowth12w: live ? growth12w(series, "HK") : 0,
     ...copy,
   };
 }
 
-export function snapshotFromReverse(p: ReverseSku, opts?: { fetchedAt?: string; now?: Date }): ProductSnapshot {
-  const series = buildSeries({
-    id: p.id,
-    ca: p.caTrend,
-    jp: p.jpTrend,
-    hk: p.hkTrend,
-    rising: p.rising,
-    now: opts?.now,
-  });
-  const last = series[series.length - 1] ?? { week: "", CA: p.caTrend, JP: p.jpTrend, HK: p.hkTrend };
-  const hkGrowth = growth12w(series, "HK");
-  const sellAsCa = { CA: last.HK, JP: last.CA, HK: last.JP };
-  const copy = buildReasons(p.keyword, sellAsCa, hkGrowth);
+export function snapshotFromReverse(p: ReverseSku, opts?: { fetchedAt?: string }): ProductSnapshot {
+  const copy = unverifiedCopy(p.keyword);
   return {
     id: p.id,
     keyword: p.keyword,
-    source: "calibrated-seed",
+    source: "none",
+    hasLiveDemand: false,
     fetchedAt: opts?.fetchedAt ?? new Date().toISOString(),
-    googleTrendsUrl: trendsExploreUrl(p.keyword, "HK"),
-    series,
-    latest: { CA: last.CA, JP: last.JP, HK: last.HK },
-    caGrowth12w: growth12w(series, "CA"),
-    jpGrowth12w: growth12w(series, "JP"),
-    hkGrowth12w: hkGrowth,
-    eligible: copy.eligible,
-    gate: copy.gate,
+    googleTrendsUrl: "",
+    evidenceUrl: "",
+    evidenceLabel: "No public series",
+    series: [],
+    latest: { CA: 0, JP: 0, HK: 0 },
+    caGrowth12w: 0,
+    jpGrowth12w: 0,
+    hkGrowth12w: 0,
+    eligible: false,
+    gate: "watch",
     reason: copy.reason.replaceAll("Canada", "Hong Kong"),
-    whyListed: `Reverse lane: Hong Kong search for “${p.keyword}” is ${hkGrowth > 0 ? "+" : ""}${hkGrowth.toFixed(0)}% over 12 weeks.`,
+    whyListed: `Reverse lane: no public Hong Kong search series for “${p.keyword}”. Not listed on invented growth.`,
   };
 }
 
@@ -237,7 +267,7 @@ export function buildBundle(
   return {
     generatedAt: fetchedAt,
     method:
-      "12-week growth (CA / JP / HK). Prefers live Google Trends, then Wikipedia pageviews (en/ja/zh), else a calibrated seed. Shop listing is decided by the saved criteria, not by this file alone.",
+      "Demand is live Wikipedia pageviews (brand article) only. Exact SKU Google Trends queries with no Canada volume are not used. No invented seed +%.",
     products: productsMap,
   };
 }

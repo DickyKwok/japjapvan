@@ -53,7 +53,7 @@ export function Economics({
         value={
           <span className="text-ok">
             <Price amount={profit} currency="CAD" />
-            <span className="ml-1 text-sm text-muted">{pct(margin)}</span>
+            <span className="ml-1.5 text-sm text-muted">{pct(margin)}</span>
           </span>
         }
       />

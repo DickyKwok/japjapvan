@@ -71,6 +71,14 @@ WIKI = {
     "mapepe-brush": ("Hairbrush", "ヘアブラシ", "髮刷"),
     "shiseido-whip": ("Shiseido", "資生堂", "資生堂"),
     "hada-labo": ("Hada_Labo", "肌ラボ", "肌研"),
+    "elixir-lotion": ("Shiseido", "資生堂", "資生堂"),
+    "transino-ii": ("Tranexamic_acid", "トランサミン", "氨甲環酸"),
+    "kewpie-mayo": ("Kewpie", "キユーピー", "丘比"),
+    "royce-nama": ("Royce'_Confect", "ロイズ", "Royce"),
+    "pocky-giant": ("Pocky", "ポッキー", "Pocky"),
+    "calbee-jagabee": ("Calbee", "カルビー", "卡樂B"),
+    "kate-liner": ("Kate_(cosmetics)", "ケイト_(化粧品)", "KATE"),
+    "haba-squa": ("Squalane", "スクワラン", "角鯊烷"),
 }
 
 
@@ -140,17 +148,24 @@ def main() -> None:
     fetched = datetime.now(timezone.utc).isoformat()
     products: dict[str, dict] = {}
 
+    existing: dict[str, dict] = {}
+    if OUT.exists():
+        try:
+            existing = json.loads(OUT.read_text()).get("products") or {}
+        except Exception:
+            existing = {}
+
     for pid, (en, ja, zh) in WIKI.items():
         print(pid, "…", flush=True)
         ca = weekly(pageviews("en.wikipedia", en, start_s, end_s))
-        time.sleep(0.12)
+        time.sleep(0.25)
         jp = weekly(pageviews("ja.wikipedia", ja, start_s, end_s))
-        time.sleep(0.12)
+        time.sleep(0.25)
         hk = weekly(pageviews("zh.wikipedia", zh, start_s, end_s))
-        time.sleep(0.12)
+        time.sleep(0.25)
         weeks = sorted(set(ca) | set(jp) | set(hk))
         if len(weeks) < 16:
-            print(f"  skip (only {len(weeks)} weeks)")
+            print(f"  skip (only {len(weeks)} weeks) — keep previous if any")
             continue
         series = norm_series(weeks[-26:], ca, jp, hk)
         products[pid] = {
@@ -161,19 +176,21 @@ def main() -> None:
         }
         print(f"  weeks={len(series)} last CA/JP/HK={series[-1]['CA']}/{series[-1]['JP']}/{series[-1]['HK']}")
 
+    merged = {**existing, **products}
+
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(
         json.dumps(
             {
                 "generatedAt": fetched,
-                "method": "Wikimedia pageviews REST API — en.wikipedia (CA proxy), ja.wikipedia (JP), zh.wikipedia (HK). Daily views bucketed to ISO weeks and scaled 0–100 vs the series peak. Google Trends live is attempted separately; 429/400 from trends.google.com is recorded as seed fallback.",
-                "products": products,
+                "method": "Wikimedia pageviews REST API only (en/ja/zh). Brand-level articles — not the SKU Google Trends phrase. We never invent a +% when Trends returns insufficient data.",
+                "products": merged,
             },
             ensure_ascii=False,
             indent=2,
         )
     )
-    print(f"wrote {len(products)} live series → {OUT}")
+    print(f"wrote {len(merged)} live series ({len(products)} fresh) → {OUT}")
 
 
 if __name__ == "__main__":

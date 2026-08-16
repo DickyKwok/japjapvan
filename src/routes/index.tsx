@@ -61,7 +61,9 @@ function Discover() {
                 <Badge>
                   <Flame className="mr-1 size-3" /> {t("disc.pick")}
                 </Badge>
-                <Badge tone="ok">CA {growthLabel(hero.signal.caGrowth12w)}</Badge>
+                <Badge tone={hero.signal.hasLiveDemand ? "ok" : "muted"}>
+                  {hero.signal.hasLiveDemand ? `CA ${growthLabel(hero.signal.caGrowth12w)}` : t("signal.nodata")}
+                </Badge>
                 {hero.preorders > 0 ? (
                   <Badge tone="warn">{t("disc.waiting", { n: hero.preorders })}</Badge>
                 ) : null}
@@ -121,7 +123,7 @@ function Discover() {
             <p className="mt-1 text-sm text-muted">{t("disc.newFindsLede")}</p>
             <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {fresh.map((p) => (
-                <ProductCard key={p.id} id={p.id} brand={p.brand} name={p.name} reason={p.notes} growth={p.signal.caGrowth12w} product={p} badge={t("product.newFind")} />
+                <ProductCard key={p.id} id={p.id} brand={p.brand} name={p.name} reason={p.notes} growth={p.signal.caGrowth12w} live={p.signal.hasLiveDemand} product={p} badge={t("product.newFind")} />
               ))}
             </div>
           </section>
@@ -139,6 +141,7 @@ function Discover() {
                 name={p.name}
                 reason={p.signal.reason}
                 growth={p.signal.caGrowth12w}
+                live={p.signal.hasLiveDemand}
                 product={p}
                 badge={p.preorders > 0 ? t("disc.waiting", { n: p.preorders }) : undefined}
               />
@@ -159,6 +162,7 @@ function Discover() {
                   name={p.name}
                   reason={p.signal.reason}
                   growth={p.signal.caGrowth12w}
+                  live={p.signal.hasLiveDemand}
                   product={p}
                   badge={t("product.watch")}
                 />
@@ -177,6 +181,7 @@ function ProductCard({
   name,
   reason,
   growth,
+  live,
   product,
   badge,
 }: {
@@ -185,9 +190,11 @@ function ProductCard({
   name: string;
   reason: string;
   growth: number;
+  live: boolean;
   product: { sellCad: number; landedCad: number };
   badge?: string;
 }) {
+  const { t } = useI18n();
   return (
     <Link to="/product/$id" params={{ id }} className="flex gap-3 border border-border bg-surface p-3 hover:border-primary/50">
       <ProductThumb id={id} alt={name} size="md" />
@@ -197,7 +204,7 @@ function ProductCard({
             <p className="text-[11px] text-subtle">{brand}</p>
             <p className="truncate text-sm font-medium">{name}</p>
           </div>
-          <Badge tone="ok">CA {growthLabel(growth)}</Badge>
+          <Badge tone={live ? "ok" : "muted"}>{live ? `CA ${growthLabel(growth)}` : t("signal.nodata")}</Badge>
         </div>
         {badge ? <Badge tone="warn">{badge}</Badge> : null}
         <p className="line-clamp-2 text-xs text-muted">{reason}</p>

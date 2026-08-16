@@ -38,10 +38,11 @@ export function risingData(): RisingBundle {
 export function skuRisers(geo: Geo, limit = 8) {
   return PRODUCTS.map((p) => {
     const snap = snapshotFor(p.id);
+    if (!snap?.hasLiveDemand) return { product: p, growth: 0, latest: 0, source: snap?.source ?? "none" };
     const growth =
       geo === "CA" ? (snap?.caGrowth12w ?? 0) : geo === "JP" ? (snap?.jpGrowth12w ?? 0) : (snap?.hkGrowth12w ?? 0);
     const latest = snap?.latest[geo] ?? 0;
-    return { product: p, growth, latest, source: snap?.source ?? "calibrated-seed" };
+    return { product: p, growth, latest, source: snap?.source ?? "none" };
   })
     .sort((a, b) => b.growth - a.growth)
     .slice(0, limit);

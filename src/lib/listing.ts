@@ -4,7 +4,6 @@ import { marginPct } from "@/lib/scoring-core";
 import {
   buildReasons,
   evaluateGate,
-  growth12w,
   type ProductSnapshot,
 } from "@/lib/trend-engine";
 
@@ -46,14 +45,29 @@ export function evaluateListing(
   snap: ProductSnapshot | undefined,
   criteria: ListingCriteria,
 ): ListingVerdict {
-  const latest = snap?.latest ?? { CA: p.caTrend, JP: p.jpTrend, HK: p.hkTrend };
-  const caGrowth =
-    snap?.caGrowth12w ??
-    (snap?.series ? growth12w(snap.series, "CA") : 0);
-  const gate = evaluateGate(latest, caGrowth, criteria);
-  const copy = buildReasons(p.keyword, latest, caGrowth, criteria);
+  const live = Boolean(snap?.hasLiveDemand);
+  const latest = live && snap ? snap.latest : { CA: 0, JP: 0, HK: 0 };
+  const caGrowth = live && snap ? snap.caGrowth12w : 0;
+  const gate = evaluateGate(latest, caGrowth, criteria, live);
+  const copy = buildReasons(p.keyword, latest, caGrowth, criteria, {
+    hasLiveDemand: live,
+    source: snap?.source ?? "none",
+    brandTitle: snap?.evidenceLabel || undefined,
+  });
   const filterFail = filterFailReason(p, criteria);
   const listed = gate.eligible && !filterFail;
+
+  if (!live) {
+    return {
+      listed: false,
+      gatePass: false,
+      filterPass: !filterFail,
+      filterFail,
+      caGrowth12w: 0,
+      reason: copy.reason,
+      whyListed: filterFail ? `${copy.whyListed} Also: ${filterFail}` : copy.whyListed,
+    };
+  }
 
   if (filterFail) {
     return {
@@ -64,7 +78,7 @@ export function evaluateListing(
       caGrowth12w: caGrowth,
       reason: `Held by criteria — ${filterFail}`,
       whyListed: gate.eligible
-        ? `Trends passed, but this SKU is held by your saved merchandising rule: ${filterFail}`
+        ? `Live demand passed, but this SKU is held by your merchandising rule: ${filterFail}`
         : `${copy.whyListed} Also held by merchandising: ${filterFail}`,
     };
   }
@@ -89,13 +103,16 @@ export function signalFromListing(
     eligible: verdict.listed,
     gate: verdict.listed ? "pass" : "watch",
     source: snap.source,
+    hasLiveDemand: snap.hasLiveDemand,
     fetchedAt: snap.fetchedAt,
     keyword: snap.keyword,
     googleTrendsUrl: snap.googleTrendsUrl,
-    caGrowth12w: snap.caGrowth12w,
-    jpGrowth12w: snap.jpGrowth12w,
-    hkGrowth12w: snap.hkGrowth12w,
-    latest: snap.latest,
+    evidenceUrl: snap.evidenceUrl,
+    evidenceLabel: snap.evidenceLabel,
+    caGrowth12w: snap.hasLiveDemand ? snap.caGrowth12w : 0,
+    jpGrowth12w: snap.hasLiveDemand ? snap.jpGrowth12w : 0,
+    hkGrowth12w: snap.hasLiveDemand ? snap.hkGrowth12w : 0,
+    latest: snap.hasLiveDemand ? snap.latest : { CA: 0, JP: 0, HK: 0 },
     reason: verdict.reason,
     whyListed: verdict.whyListed,
     filterPass: verdict.filterPass,
