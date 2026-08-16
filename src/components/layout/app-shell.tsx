@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { SignedIn, SignedOut, UserButton } from "@/lib/auth/gates";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
@@ -7,44 +6,29 @@ import { useI18n } from "@/lib/i18n";
 import { isoWeekLabel } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import {
-  ArrowLeftRight,
-  ClipboardList,
   Flame,
-  History,
-  LayoutDashboard,
-  LineChart,
-  Menu,
   Package,
   Settings2,
-  ShoppingBag,
-  Sparkles,
-  X,
 } from "lucide-react";
 
 const NAV = [
-  { to: "/", key: "nav.hq", icon: LayoutDashboard },
-  { to: "/catalog", key: "nav.catalog", icon: Package },
-  { to: "/trends", key: "nav.trends", icon: LineChart },
-  { to: "/rising", key: "nav.rising", icon: Flame },
-  { to: "/shortlist", key: "nav.shortlist", icon: Sparkles },
-  { to: "/criteria", key: "nav.criteria", icon: Settings2 },
-  { to: "/history", key: "nav.history", icon: History },
-  { to: "/procurement", key: "nav.procurement", icon: ClipboardList },
-  { to: "/preorders", key: "nav.preorders", icon: ShoppingBag },
-  { to: "/lanes", key: "nav.lanes", icon: ArrowLeftRight },
+  { to: "/", key: "nav.discover", icon: Flame },
+  { to: "/catalog", key: "nav.board", icon: Package },
+  { to: "/criteria", key: "nav.settings", icon: Settings2 },
 ] as const;
 
-const MOBILE_PRIMARY = [NAV[0], NAV[1], NAV[5], NAV[4]] as const;
+const MOBILE_PRIMARY = NAV;
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { isPending } = useCurrentUserState();
   const week = isoWeekLabel();
-  const [moreOpen, setMoreOpen] = useState(false);
   const { t } = useI18n();
 
   function isActive(to: string) {
-    return to === "/" ? pathname === "/" : pathname.startsWith(to);
+    if (to === "/") return pathname === "/";
+    if (to === "/catalog") return pathname.startsWith("/catalog") || pathname.startsWith("/product");
+    return pathname.startsWith(to);
   }
 
   return (
@@ -105,45 +89,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
           <main className="flex-1 px-4 py-6 pb-24 md:px-8 md:py-8 md:pb-8">{children}</main>
 
-          {moreOpen ? (
-            <div className="fixed inset-0 z-30 md:hidden">
-              <button
-                type="button"
-                aria-label={t("nav.close")}
-                className="absolute inset-0 bg-ink/50"
-                onClick={() => setMoreOpen(false)}
-              />
-              <div className="absolute inset-x-0 bottom-0 border-t border-border bg-surface px-4 pt-4 pb-[calc(5.5rem+env(safe-area-inset-bottom))]">
-                <div className="mb-3 flex items-center justify-between">
-                  <p className="text-sm font-medium">{t("nav.desks")}</p>
-                  <button type="button" className="grid size-10 place-items-center" onClick={() => setMoreOpen(false)}>
-                    <X className="size-4" />
-                  </button>
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  {NAV.map((item) => {
-                    const Icon = item.icon;
-                    return (
-                      <Link
-                        key={item.to}
-                        to={item.to}
-                        onClick={() => setMoreOpen(false)}
-                        className={cn(
-                          "flex min-h-12 items-center gap-2 border border-border px-3 text-sm",
-                          isActive(item.to) ? "bg-primary text-primary-fg" : "bg-bg text-fg",
-                        )}
-                      >
-                        <Icon className="size-4" />
-                        {t(item.key)}
-                      </Link>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          ) : null}
-
-          <nav className="sticky bottom-0 z-20 grid grid-cols-5 border-t border-border bg-bg-elevated/95 px-1 pt-1 pb-[max(0.25rem,env(safe-area-inset-bottom))] md:hidden">
+          <nav className="sticky bottom-0 z-20 grid grid-cols-3 border-t border-border bg-bg-elevated/95 px-1 pt-1 pb-[max(0.25rem,env(safe-area-inset-bottom))] md:hidden">
             {MOBILE_PRIMARY.map((item) => {
               const Icon = item.icon;
               return (
@@ -160,17 +106,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 </Link>
               );
             })}
-            <button
-              type="button"
-              onClick={() => setMoreOpen(true)}
-              className={cn(
-                "flex min-h-11 flex-col items-center justify-center gap-0.5 text-[10px]",
-                moreOpen ? "text-primary" : "text-subtle",
-              )}
-            >
-              <Menu className="size-4" />
-              {t("nav.more")}
-            </button>
           </nav>
         </div>
       </div>

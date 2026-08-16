@@ -39,6 +39,9 @@ export type Product = {
   weeklyVelocity: number;
   preorders: number;
   notes: string;
+  discovered?: boolean;
+  sourceTopic?: string;
+  sourceGeo?: "CA" | "JP" | "HK";
 };
 
 export type ScoreBreakdown = {

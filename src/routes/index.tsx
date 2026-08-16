@@ -1,213 +1,217 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowUpRight, Flame } from "lucide-react";
 import { AppShell } from "@/components/layout/app-shell";
-import { CriteriaBanner } from "@/components/criteria-banner";
-import { WeeklyRitual } from "@/components/ritual";
+import { Economics } from "@/components/economics";
+import { ProductThumb } from "@/components/product-thumb";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Price } from "@/components/price";
-import { ProductThumb } from "@/components/product-thumb";
-import { planTotals } from "@/lib/catalog";
 import { useListing } from "@/lib/use-listing";
 import { useI18n } from "@/lib/i18n";
-import { wholesaleJpyFromLandedCad } from "@/lib/money";
-import { growthLabel } from "@/lib/utils";
-import { marginPct } from "@/lib/scoring";
-import { ArrowUpRight, PackageCheck, TrendingUp } from "lucide-react";
 import { risingData } from "@/lib/rising";
-import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { growthLabel } from "@/lib/utils";
 
-export const Route = createFileRoute("/")({ component: Home });
+export const Route = createFileRoute("/")({ component: Discover });
 
-function Home() {
-  const { catalog, picks, plan, summary } = useListing();
+const MERCH = /skincare|serum|lotion|sunscreen|spf|uv|mask|cream|shampoo|hair|mascara|pen|notebook|snack|chocolate|pocky|mayo|cosme|護膚|防曬|文具|零食|コスメ|化粧水|日焼け止め/i;
+const SKIP = /ufc|mlb|election|甲子園|高校|vs |trump|rogan|低氣壓|火災|騎手/i;
+
+function Discover() {
+  const { catalog, picks, watch, summary } = useListing();
   const { t } = useI18n();
-  const totals = planTotals(plan, catalog);
-  const avgMargin = picks.reduce((s, p) => s + marginPct(p), 0) / Math.max(1, picks.length);
-  const byCat = Object.entries(
-    picks.reduce<Record<string, number>>((acc, p) => {
-      acc[p.category] = (acc[p.category] ?? 0) + 1;
-      return acc;
-    }, {}),
-  ).map(([name, n]) => ({ name: t(`cat.${name}`), n }));
+  const rising = risingData();
+  const picksSorted = picks.slice().sort((a, b) => b.signal.caGrowth12w - a.signal.caGrowth12w);
+  const hero = picksSorted[0];
+  const miss = watch
+    .filter((p) => p.signal.caGrowth12w >= 12)
+    .sort((a, b) => b.signal.caGrowth12w - a.signal.caGrowth12w)
+    .slice(0, 4);
+  const fresh = catalog.filter((p) => p.discovered).slice(0, 6);
 
   return (
     <AppShell>
       <div className="mx-auto max-w-6xl space-y-8">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="text-xs tracking-[0.18em] text-subtle uppercase">{t("hq.kicker")}</p>
-            <h1 className="mt-1 font-display text-4xl tracking-tight md:text-5xl">{t("hq.title")}</h1>
-            <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted">{t("hq.lede")}</p>
+            <p className="text-xs tracking-[0.18em] text-subtle uppercase">{t("disc.kicker")}</p>
+            <h1 className="mt-1 font-display text-4xl tracking-tight md:text-5xl">{t("disc.title")}</h1>
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted">{t("disc.lede")}</p>
           </div>
-          <div className="flex flex-wrap gap-2">
-            <Link to="/criteria">
-              <Button>{t("hq.editRule")}</Button>
-            </Link>
-            <Link to="/procurement">
-              <Button variant="outline">{t("hq.openBuy")}</Button>
-            </Link>
-          </div>
+          <Link to="/catalog">
+            <Button>
+              {t("disc.openBoard")} <ArrowUpRight className="size-4" />
+            </Button>
+          </Link>
         </div>
 
-        <CriteriaBanner />
-        <RisingStrip />
-
-        <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <Stat label={t("hq.shopList")} value={summary.listed} hint={`${summary.watch} ${t("hq.onWatch")}`} />
-          <Stat label={t("hq.liveSeries")} value={summary.live} hint={`${summary.seeded} ${t("hq.stillSeed")}`} />
-          <Stat label={t("hq.weekRetail")} value={totals.retail} hint={`${totals.units} ${t("hq.units")}`} currency="CAD" />
-          <Stat label={t("hq.avgMargin")} value={`${Math.round(avgMargin * 100)}%`} hint={t("hq.sellVsLanded")} />
+        <section className="grid gap-3 sm:grid-cols-3">
+          <Stat label={t("disc.listed")} value={summary.listed} hint={t("disc.listedHint")} />
+          <Stat label={t("disc.watch")} value={summary.watch} hint={t("disc.watchHint")} />
+          <Stat label={t("disc.fresh")} value={fresh.length} hint={t("disc.freshHint")} />
         </section>
 
-        <section className="grid gap-4 lg:grid-cols-5">
-          <div className="border border-border bg-surface p-5 lg:col-span-3">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-display text-xl">{t("hq.mix")}</h2>
-              <Badge>
-                {t("hq.avgMargin")} {Math.round(avgMargin * 100)}%
-              </Badge>
-            </div>
-            <div className="h-52">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={byCat} barSize={28}>
-                  <XAxis dataKey="name" tick={{ fontSize: 11, fill: "var(--color-muted)" }} axisLine={false} tickLine={false} />
-                  <YAxis hide />
-                  <Tooltip
-                    cursor={{ fill: "var(--color-bg)" }}
-                    contentStyle={{
-                      border: "1px solid var(--color-border)",
-                      borderRadius: 2,
-                      background: "var(--color-surface)",
-                    }}
-                  />
-                  <Bar dataKey="n" fill="var(--color-primary)" radius={[0, 0, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-          <div className="border border-border bg-surface p-5 lg:col-span-2">
-            <h2 className="font-display text-xl">{t("hq.why")}</h2>
-            <ul className="mt-4 space-y-3">
-              {picks.slice(0, 5).map((p) => (
-                <li key={p.id} className="flex items-start gap-3 text-sm">
-                  <ProductThumb id={p.id} alt={`${p.brand} ${p.name}`} size="sm" />
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="font-medium">{p.brand}</p>
-                        <p className="text-xs text-muted">{p.signal.reason}</p>
-                      </div>
-                      <p className="tabular-nums text-xs text-ok">{growthLabel(p.signal.caGrowth12w)}</p>
-                    </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-            <Link to="/trends" className="mt-4 inline-flex items-center gap-1 text-sm text-primary">
-              {t("hq.openTrends")} <ArrowUpRight className="size-3.5" />
-            </Link>
-          </div>
-        </section>
-
-        <div className="grid gap-4 lg:grid-cols-2">
-          <WeeklyRitual />
-          <section className="border border-border bg-bg-elevated p-5">
-            <div className="flex items-start gap-3">
-              <PackageCheck className="mt-0.5 size-5 text-primary" />
-              <div>
-                <h2 className="font-display text-xl">{t("hq.howTitle")}</h2>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{t("hq.howBody")}</p>
+        {hero ? (
+          <Link
+            to="/product/$id"
+            params={{ id: hero.id }}
+            className="grid gap-4 border border-primary/40 bg-surface p-4 md:grid-cols-[220px_1fr] md:p-5"
+          >
+            <ProductThumb id={hero.id} alt={hero.name} size="lg" className="aspect-square w-full" />
+            <div className="space-y-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge>
+                  <Flame className="mr-1 size-3" /> {t("disc.pick")}
+                </Badge>
+                <Badge tone="ok">CA {growthLabel(hero.signal.caGrowth12w)}</Badge>
+                {hero.preorders > 0 ? (
+                  <Badge tone="warn">{t("disc.waiting", { n: hero.preorders })}</Badge>
+                ) : null}
               </div>
+              <div>
+                <p className="text-xs text-subtle">{hero.brand}</p>
+                <h2 className="font-display text-2xl">{hero.name}</h2>
+                <p className="mt-1 text-sm text-muted">{hero.signal.reason}</p>
+              </div>
+              <Economics product={hero} compact />
+              <p className="text-xs text-subtle">{t("disc.tapDetail")}</p>
             </div>
-          </section>
-        </div>
+          </Link>
+        ) : null}
 
         <section>
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="font-display text-xl">{t("hq.fastest")}</h2>
-            <Link to="/catalog" className="text-sm text-muted hover:text-fg">
-              {t("hq.openCatalog")}
-            </Link>
+          <div className="mb-3 flex items-end justify-between">
+            <div>
+              <p className="text-xs tracking-wide text-subtle uppercase">{t("disc.markets")}</p>
+              <h2 className="font-display text-xl">{t("disc.now")}</h2>
+            </div>
           </div>
-          <div className="grid gap-3 md:grid-cols-2">
-            {picks
-              .slice()
-              .sort((a, b) => b.signal.caGrowth12w - a.signal.caGrowth12w)
-              .slice(0, 4)
-              .map((p) => (
-                <article key={p.id} className="flex gap-3 border border-border bg-surface p-4">
-                  <ProductThumb id={p.id} alt={`${p.brand} ${p.name}`} size="md" />
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center justify-between">
-                      <p className="text-xs text-subtle">{p.brand}</p>
-                      <Badge tone="ok">
-                        <TrendingUp className="mr-1 size-3" /> CA {growthLabel(p.signal.caGrowth12w)}
-                      </Badge>
-                    </div>
-                    <h3 className="mt-1 text-sm font-medium">{p.name}</h3>
-                    <p className="mt-2 text-xs text-muted">{p.signal.reason}</p>
-                    <p className="mt-2 text-xs text-subtle">
-                      <Price amount={p.sellCad} currency="CAD" />
-                      <span className="mx-1.5">·</span>
-                      <Price amount={wholesaleJpyFromLandedCad(p.landedCad)} currency="JPY" />
-                    </p>
-                  </div>
-                </article>
-              ))}
+          <div className="grid gap-3 lg:grid-cols-3">
+            {(["CA", "JP", "HK"] as const).map((geo) => {
+              const topics = rising.markets[geo].topics;
+              const merch = topics.filter((x) => MERCH.test(x.title) && !SKIP.test(x.title));
+              const shown = (merch.length ? merch : topics).slice(0, 4);
+              return (
+                <div key={geo} className="border border-border bg-surface p-4">
+                  <p className="text-xs text-subtle">{t(`market.${geo}`)}</p>
+                  <ol className="mt-3 space-y-2">
+                    {shown.map((topic, i) => {
+                      const merchHit = MERCH.test(topic.title) && !SKIP.test(topic.title);
+                      return (
+                        <li key={topic.title} className="flex items-start justify-between gap-2">
+                          <div className="min-w-0">
+                            <p className="text-[11px] text-subtle">#{String(i + 1).padStart(2, "0")}</p>
+                            <p className="text-sm font-medium leading-snug">{topic.title}</p>
+                            <p className="text-[11px] text-muted">
+                              {merchHit ? t("disc.merchFit") : t("disc.notMerch")}
+                            </p>
+                          </div>
+                          <Badge tone={merchHit ? "ok" : "muted"}>{topic.trafficLabel}</Badge>
+                        </li>
+                      );
+                    })}
+                  </ol>
+                </div>
+              );
+            })}
           </div>
         </section>
+
+        {fresh.length > 0 ? (
+          <section>
+            <h2 className="font-display text-xl">{t("disc.newFinds")}</h2>
+            <p className="mt-1 text-sm text-muted">{t("disc.newFindsLede")}</p>
+            <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {fresh.map((p) => (
+                <ProductCard key={p.id} id={p.id} brand={p.brand} name={p.name} reason={p.notes} growth={p.signal.caGrowth12w} product={p} badge={t("product.newFind")} />
+              ))}
+            </div>
+          </section>
+        ) : null}
+
+        <section>
+          <h2 className="font-display text-xl">{t("disc.picks")}</h2>
+          <p className="mt-1 text-sm text-muted">{t("disc.picksLede")}</p>
+          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            {picksSorted.slice(0, 6).map((p) => (
+              <ProductCard
+                key={p.id}
+                id={p.id}
+                brand={p.brand}
+                name={p.name}
+                reason={p.signal.reason}
+                growth={p.signal.caGrowth12w}
+                product={p}
+                badge={p.preorders > 0 ? t("disc.waiting", { n: p.preorders }) : undefined}
+              />
+            ))}
+          </div>
+        </section>
+
+        {miss.length > 0 ? (
+          <section>
+            <h2 className="font-display text-xl">{t("disc.miss")}</h2>
+            <p className="mt-1 text-sm text-muted">{t("disc.missLede")}</p>
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              {miss.map((p) => (
+                <ProductCard
+                  key={p.id}
+                  id={p.id}
+                  brand={p.brand}
+                  name={p.name}
+                  reason={p.signal.reason}
+                  growth={p.signal.caGrowth12w}
+                  product={p}
+                  badge={t("product.watch")}
+                />
+              ))}
+            </div>
+          </section>
+        ) : null}
       </div>
     </AppShell>
   );
 }
 
-function RisingStrip() {
-  const bundle = risingData();
-  const { t } = useI18n();
+function ProductCard({
+  id,
+  brand,
+  name,
+  reason,
+  growth,
+  product,
+  badge,
+}: {
+  id: string;
+  brand: string;
+  name: string;
+  reason: string;
+  growth: number;
+  product: { sellCad: number; landedCad: number };
+  badge?: string;
+}) {
   return (
-    <section className="border border-border bg-surface p-5">
-      <div className="mb-3 flex items-end justify-between gap-3">
-        <div>
-          <p className="text-xs tracking-wide text-subtle uppercase">{t("hq.topics")}</p>
-          <h2 className="font-display text-xl">{t("hq.goingUp")}</h2>
+    <Link to="/product/$id" params={{ id }} className="flex gap-3 border border-border bg-surface p-3 hover:border-primary/50">
+      <ProductThumb id={id} alt={name} size="md" />
+      <div className="min-w-0 flex-1 space-y-2">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <p className="text-[11px] text-subtle">{brand}</p>
+            <p className="truncate text-sm font-medium">{name}</p>
+          </div>
+          <Badge tone="ok">CA {growthLabel(growth)}</Badge>
         </div>
-        <Link to="/rising" className="inline-flex items-center gap-1 text-sm text-primary">
-          {t("hq.allMarkets")} <ArrowUpRight className="size-3.5" />
-        </Link>
+        {badge ? <Badge tone="warn">{badge}</Badge> : null}
+        <p className="line-clamp-2 text-xs text-muted">{reason}</p>
+        <Economics product={product} compact />
       </div>
-      <div className="grid gap-3 md:grid-cols-3">
-        {(["CA", "JP", "HK"] as const).map((geo) => {
-          const top = bundle.markets[geo].topics[0];
-          return (
-            <div key={geo}>
-              <p className="text-xs text-subtle">{t(`market.${geo}`)}</p>
-              <p className="mt-1 text-sm font-medium">{top?.title ?? "—"}</p>
-              <p className="text-xs text-muted">{top ? `${top.trafficLabel} ${t("hq.searches")}` : ""}</p>
-            </div>
-          );
-        })}
-      </div>
-    </section>
+    </Link>
   );
 }
 
-function Stat({
-  label,
-  value,
-  hint,
-  currency,
-}: {
-  label: string;
-  value: string | number;
-  hint: string;
-  currency?: "CAD" | "HKD" | "JPY";
-}) {
+function Stat({ label, value, hint }: { label: string; value: number; hint: string }) {
   return (
     <div className="border border-border bg-surface p-4">
       <p className="text-xs tracking-wide text-subtle uppercase">{label}</p>
-      <p className="mt-2 font-display text-3xl tabular-nums tracking-tight">
-        {currency && typeof value === "number" ? <Price amount={value} currency={currency} compact /> : value}
-      </p>
+      <p className="mt-1 font-display text-3xl tabular-nums">{value}</p>
       <p className="mt-1 text-xs text-muted">{hint}</p>
     </div>
   );

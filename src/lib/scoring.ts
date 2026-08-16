@@ -4,7 +4,7 @@ import { signalFor } from "@/lib/signals";
 import { growthLabel } from "@/lib/utils";
 import { marginPct } from "@/lib/scoring-core";
 
-export { marginPct } from "@/lib/scoring-core";
+export { marginPct, profitCad } from "@/lib/scoring-core";
 
 export const WEIGHTS = {
   trends: 0.25,

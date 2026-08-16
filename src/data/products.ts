@@ -1,6 +1,7 @@
 import type { Product } from "./types";
+import discoveredBundle from "./discovered-products.json";
 
-export const PRODUCTS: Product[] = [
+export const CORE_PRODUCTS: Product[] = [
   { id: "sk2-essence", brand: "SK-II", name: "Facial Treatment Essence 230ml", category: "skincare", origin: "JP", sku: "SN-SK2-FTE230", keyword: "SK-II Facial Treatment Essence", landedCad: 148, sellCad: 248, weightG: 420, bulky: 3, regulatory: "cnf", uniqueness: 6, repeat: 8, preorderFit: 8, supplier: "Tokyo Cosme Wholesale", moq: 6, leadDays: 21, caTrend: 72, jpTrend: 88, hkTrend: 81, rising: true, stock: 4, incoming: 0, weeklyVelocity: 3.2, preorders: 9, notes: "Hero prestige SKU. Pre-order in 6-packs." },
   { id: "hada-lotion", brand: "Hada Labo", name: "Gokujyun Premium Lotion 170ml", category: "skincare", origin: "JP", sku: "SN-HL-GPL170", keyword: "Hada Labo Gokujyun", landedCad: 11.5, sellCad: 24, weightG: 220, bulky: 2, regulatory: "cnf", uniqueness: 5, repeat: 9, preorderFit: 9, supplier: "Matsukiyo Export", moq: 12, leadDays: 18, caTrend: 81, jpTrend: 92, hkTrend: 78, rising: true, stock: 18, incoming: 24, weeklyVelocity: 11, preorders: 16, notes: "Highest velocity hydrator." },
   { id: "hada-foam", brand: "Hada Labo", name: "Gokujyun Foaming Wash 160ml", category: "skincare", origin: "JP", sku: "SN-HL-FW160", keyword: "Hada Labo foaming wash", landedCad: 9.2, sellCad: 19, weightG: 200, bulky: 2, regulatory: "cnf", uniqueness: 5, repeat: 8, preorderFit: 8, supplier: "Matsukiyo Export", moq: 12, leadDays: 18, caTrend: 64, jpTrend: 85, hkTrend: 70, rising: false, stock: 10, incoming: 0, weeklyVelocity: 6, preorders: 4, notes: "Pair with lotion as a set." },
@@ -52,6 +53,12 @@ export const PRODUCTS: Product[] = [
   { id: "curel-spray", brand: "Curel", name: "Deep Moisture Spray 150ml", category: "skincare", origin: "JP", sku: "SN-CU-DMS150", keyword: "Curel moisture spray", landedCad: 12.2, sellCad: 26, weightG: 180, bulky: 3, regulatory: "cnf", uniqueness: 7, repeat: 8, preorderFit: 8, supplier: "Kao Export Desk", moq: 12, leadDays: 18, caTrend: 48, jpTrend: 72, hkTrend: 64, rising: true, stock: 5, incoming: 0, weeklyVelocity: 2.8, preorders: 5, notes: "Aerosol check on air cargo." },
   { id: "dprogram-lotion", brand: "d program", name: "Moist Care Lotion MB", category: "skincare", origin: "JP", sku: "SN-DP-MCL125", keyword: "d program moist care", landedCad: 18.8, sellCad: 36, weightG: 170, bulky: 2, regulatory: "cnf", uniqueness: 8, repeat: 8, preorderFit: 8, supplier: "Shiseido Derm", moq: 6, leadDays: 22, caTrend: 37, jpTrend: 74, hkTrend: 55, rising: false, stock: 3, incoming: 6, weeklyVelocity: 1.7, preorders: 3, notes: "Pharmacy derm line." },
 ];
+
+const extra = ((discoveredBundle as { products?: Product[] }).products ?? []).filter(
+  (p) => !CORE_PRODUCTS.some((c) => c.id === p.id),
+);
+
+export const PRODUCTS: Product[] = [...CORE_PRODUCTS, ...extra];
 
 export const CATEGORY_LABEL: Record<Product["category"], string> = {
   skincare: "Skincare",

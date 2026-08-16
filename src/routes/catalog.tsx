@@ -1,9 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Download, Images } from "lucide-react";
 import { AppShell } from "@/components/layout/app-shell";
 import { CriteriaBanner } from "@/components/criteria-banner";
-import { Price } from "@/components/price";
+import { Economics } from "@/components/economics";
 import { ProductThumb } from "@/components/product-thumb";
 import { SignalReason } from "@/components/signal-reason";
 import { Badge } from "@/components/ui/badge";
@@ -11,8 +11,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { Category } from "@/data/types";
 import { downloadCatalogCsv, downloadSearchPack } from "@/lib/export";
-import { wholesaleJpyFromLandedCad } from "@/lib/money";
-import { marginPct } from "@/lib/scoring";
 import { lastSignalsAt } from "@/lib/signals";
 import { useListing } from "@/lib/use-listing";
 import { useI18n } from "@/lib/i18n";
@@ -152,32 +150,30 @@ function CatalogPage() {
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {rows.map((p) => (
-              <article key={p.id} className="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-surface">
-                <ProductThumb id={p.id} alt={`${p.brand} ${p.name}`} size="lg" className="h-44 rounded-none" />
+              <article key={p.id} className="overflow-hidden border border-border bg-surface">
+                <Link to="/product/$id" params={{ id: p.id }} className="block">
+                  <ProductThumb id={p.id} alt={`${p.brand} ${p.name}`} size="lg" className="h-44" />
+                </Link>
                 <div className="space-y-2 p-4">
-                  <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <p className="text-xs text-subtle">{p.brand}</p>
-                      <h2 className="text-sm font-medium leading-snug">{p.name}</h2>
+                  <Link to="/product/$id" params={{ id: p.id }} className="block">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <p className="text-xs text-subtle">{p.brand}</p>
+                        <h2 className="text-sm font-medium leading-snug hover:underline">{p.name}</h2>
+                      </div>
+                      <Badge tone="ink">{growthLabel(p.signal.caGrowth12w)}</Badge>
                     </div>
-                    <Badge tone="ink">{growthLabel(p.signal.caGrowth12w)}</Badge>
-                  </div>
+                  </Link>
                   <div className="flex flex-wrap items-center gap-1.5">
                     <Badge tone="muted">{t(`cat.${p.category}`)}</Badge>
                     {p.score.selected ? <Badge>{t("catalog.shortlist")}</Badge> : null}
+                    {p.discovered ? <Badge>{t("product.newFind")}</Badge> : null}
                   </div>
-                  <p className="text-xs text-muted">
-                    Sell <Price amount={p.sellCad} currency="CAD" />
-                    <span className="mx-1.5 text-subtle">·</span>
-                    Landed <Price amount={p.landedCad} currency="CAD" />
-                  </p>
-                  <p className="text-xs text-subtle">
-                    JP wholesale <Price amount={wholesaleJpyFromLandedCad(p.landedCad)} currency="JPY" />
-                    <span className="mx-1.5">·</span>
-                    {pct(marginPct(p))} margin
-                  </p>
+                  <Economics product={p} compact />
                   <SignalReason signal={p.signal} compact />
-                  <p className="font-mono text-[11px] text-subtle">{p.sku}</p>
+                  <Link to="/product/$id" params={{ id: p.id }} className="inline-block text-xs text-primary hover:underline">
+                    {t("product.open")}
+                  </Link>
                 </div>
               </article>
             ))}

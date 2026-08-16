@@ -38,10 +38,8 @@ function run(cmd, args) {
 
 async function refresh() {
   const stamp = new Date().toISOString();
-  const py = await run("python3", ["tools/fetch_trends.py"]);
-  const score = await run("python3", ["tools/score.py"]);
-  const shop = await run("python3", ["tools/shopify_export.py"]);
-  const line = `[${stamp}] trends=${py.code} score=${score.code} shopify=${shop.code}\n${py.out}\n`;
+  const py = await run("sh", ["tools/daily_refresh.sh"]);
+  const line = `[${stamp}] refresh=${py.code}\n${py.out}\n`;
   await mkdir(join(ROOT, "data"), { recursive: true });
   await writeFile(LOG, line, { flag: "a" }).catch(() => {});
   console.log(line);

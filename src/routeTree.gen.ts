@@ -21,6 +21,7 @@ import { Route as RisingRouteImport } from './routes/rising'
 import { Route as ShortlistRouteImport } from './routes/shortlist'
 import { Route as TrendsRouteImport } from './routes/trends'
 import { Route as ApiSignalsRouteImport } from './routes/api/signals'
+import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiCronRefreshTrendsRouteImport } from './routes/api/cron/refresh-trends'
 
@@ -84,6 +85,11 @@ const ApiSignalsRoute = ApiSignalsRouteImport.update({
   path: '/api/signals',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProductIdRoute = ProductIdRouteImport.update({
+  id: '/product/$id',
+  path: '/product/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -108,6 +114,7 @@ export interface FileRoutesByFullPath {
   '/shortlist': typeof ShortlistRoute
   '/trends': typeof TrendsRoute
   '/api/signals': typeof ApiSignalsRoute
+  '/product/$id': typeof ProductIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/cron/refresh-trends': typeof ApiCronRefreshTrendsRoute
 }
@@ -124,6 +131,7 @@ export interface FileRoutesByTo {
   '/shortlist': typeof ShortlistRoute
   '/trends': typeof TrendsRoute
   '/api/signals': typeof ApiSignalsRoute
+  '/product/$id': typeof ProductIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/cron/refresh-trends': typeof ApiCronRefreshTrendsRoute
 }
@@ -141,6 +149,7 @@ export interface FileRoutesById {
   '/shortlist': typeof ShortlistRoute
   '/trends': typeof TrendsRoute
   '/api/signals': typeof ApiSignalsRoute
+  '/product/$id': typeof ProductIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/cron/refresh-trends': typeof ApiCronRefreshTrendsRoute
 }
@@ -159,6 +168,7 @@ export interface FileRouteTypes {
     | '/shortlist'
     | '/trends'
     | '/api/signals'
+    | '/product/$id'
     | '/api/auth/$'
     | '/api/cron/refresh-trends'
   fileRoutesByTo: FileRoutesByTo
@@ -175,6 +185,7 @@ export interface FileRouteTypes {
     | '/shortlist'
     | '/trends'
     | '/api/signals'
+    | '/product/$id'
     | '/api/auth/$'
     | '/api/cron/refresh-trends'
   id:
@@ -191,6 +202,7 @@ export interface FileRouteTypes {
     | '/shortlist'
     | '/trends'
     | '/api/signals'
+    | '/product/$id'
     | '/api/auth/$'
     | '/api/cron/refresh-trends'
   fileRoutesById: FileRoutesById
@@ -208,6 +220,7 @@ export interface RootRouteChildren {
   ShortlistRoute: typeof ShortlistRoute
   TrendsRoute: typeof TrendsRoute
   ApiSignalsRoute: typeof ApiSignalsRoute
+  ProductIdRoute: typeof ProductIdRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiCronRefreshTrendsRoute: typeof ApiCronRefreshTrendsRoute
 }
@@ -298,6 +311,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSignalsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/product/$id': {
+      id: '/product/$id'
+      path: '/product/$id'
+      fullPath: '/product/$id'
+      preLoaderRoute: typeof ProductIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -328,6 +348,7 @@ const rootRouteChildren: RootRouteChildren = {
   ShortlistRoute: ShortlistRoute,
   TrendsRoute: TrendsRoute,
   ApiSignalsRoute: ApiSignalsRoute,
+  ProductIdRoute: ProductIdRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiCronRefreshTrendsRoute: ApiCronRefreshTrendsRoute,
 }
