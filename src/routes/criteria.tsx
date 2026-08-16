@@ -5,9 +5,9 @@ import { AppShell } from "@/components/layout/app-shell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ALL_CATEGORIES, ALL_ORIGINS, cloneCriteria, criteriaEqual, DEFAULT_CRITERIA, type ListingCriteria } from "@/data/criteria";
-import { CATEGORY_LABEL } from "@/data/products";
 import { useCriteriaStore } from "@/lib/criteria-store";
 import { signalSummary } from "@/lib/signals";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/criteria")({ component: CriteriaPage });
 
@@ -18,6 +18,7 @@ function CriteriaPage() {
   const reset = useCriteriaStore((s) => s.resetDefaults);
   const [draft, setDraft] = useState<ListingCriteria>(() => cloneCriteria(saved));
   const navigate = useNavigate();
+  const { t } = useI18n();
   const dirty = !criteriaEqual(draft, saved);
   const preview = useMemo(() => signalSummary(draft), [draft]);
   const current = useMemo(() => signalSummary(saved), [saved, revision]);
@@ -44,7 +45,7 @@ function CriteriaPage() {
 
   function onSave() {
     save(draft);
-    toast.success(`Saved rule v${revision + 1} — ${preview.listed} SKUs now listed`);
+    toast.success(t("criteria.savedToast", { n: revision + 1, listed: preview.listed }));
     window.setTimeout(() => navigate({ to: "/catalog" }), 400);
   }
 
@@ -53,35 +54,31 @@ function CriteriaPage() {
       <Toaster position="top-center" />
       <div className="mx-auto max-w-3xl space-y-6">
         <div>
-          <p className="text-xs tracking-[0.18em] text-subtle uppercase">How SKUs get found</p>
-          <h1 className="mt-1 font-display text-3xl tracking-tight">Listing criteria</h1>
-          <p className="mt-2 text-sm leading-relaxed text-muted">
-            Every desk — HQ, catalog, shortlist, 採購, pre-orders — uses this saved rule. Change it, save, and
-            the shop list recomputes. A SKU only appears when its demand series passes the Trends gate and the
-            merchandising filters.
-          </p>
+          <p className="text-xs tracking-[0.18em] text-subtle uppercase">{t("criteria.kicker")}</p>
+          <h1 className="mt-1 font-display text-3xl tracking-tight">{t("criteria.title")}</h1>
+          <p className="mt-2 text-sm leading-relaxed text-muted">{t("criteria.lede")}</p>
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2">
           <div className="rounded-[var(--radius-lg)] border border-border bg-surface p-4">
-            <p className="text-xs text-subtle">Live with saved rule v{revision}</p>
+            <p className="text-xs text-subtle">{t("criteria.live", { n: revision })}</p>
             <p className="mt-1 font-display text-3xl tabular-nums">{current.listed}</p>
             <p className="text-xs text-muted">{current.watch} on watch</p>
           </div>
           <div className="rounded-[var(--radius-lg)] border border-primary/30 bg-bg-elevated p-4">
-            <p className="text-xs text-subtle">Preview of this draft</p>
+            <p className="text-xs text-subtle">{t("criteria.preview")}</p>
             <p className="mt-1 font-display text-3xl tabular-nums">{preview.listed}</p>
             <p className="text-xs text-muted">
-              {preview.listed === current.listed ? "Same as saved" : `${preview.listed - current.listed > 0 ? "+" : ""}${preview.listed - current.listed} vs saved`}
+              {preview.listed === current.listed ? t("criteria.same") : t("criteria.vs", { n: `${preview.listed - current.listed > 0 ? "+" : ""}${preview.listed - current.listed}` })}
             </p>
           </div>
         </div>
 
         <section className="space-y-4 rounded-[var(--radius-xl)] border border-border bg-surface p-5">
-          <h2 className="font-display text-xl">Demand gate</h2>
+          <h2 className="font-display text-xl">{t("criteria.demand")}</h2>
           <SliderRow
-            label="Min Canada 12-week growth"
-            hint="Growing topics. A SKU at +40% lists if this is 12."
+            label={t("criteria.minGrowth")}
+            hint={t("criteria.minGrowthHint")}
             value={draft.minCaGrowth12w}
             min={0}
             max={80}
@@ -89,24 +86,24 @@ function CriteriaPage() {
             onChange={(n) => patch({ minCaGrowth12w: n })}
           />
           <SliderRow
-            label="Min Canada stable index"
-            hint="High-but-flat demand still lists if growth is not collapsing."
+            label={t("criteria.minIndex")}
+            hint={t("criteria.minIndexHint")}
             value={draft.minCaIndex}
             min={20}
             max={90}
             onChange={(n) => patch({ minCaIndex: n })}
           />
           <SliderRow
-            label="Min Japan source index"
-            hint="If Japan is dead, we do not import."
+            label={t("criteria.minJp")}
+            hint={t("criteria.minJpHint")}
             value={draft.minJpIndex}
             min={0}
             max={80}
             onChange={(n) => patch({ minJpIndex: n })}
           />
           <SliderRow
-            label="Stable-demand floor"
-            hint="Allowed 12-week change when using the high-index path."
+            label={t("criteria.floor")}
+            hint={t("criteria.floorHint")}
             value={draft.stableFloor}
             min={-20}
             max={10}
@@ -116,10 +113,10 @@ function CriteriaPage() {
         </section>
 
         <section className="space-y-4 rounded-[var(--radius-xl)] border border-border bg-surface p-5">
-          <h2 className="font-display text-xl">Merchandising filters</h2>
+          <h2 className="font-display text-xl">{t("criteria.merch")}</h2>
           <SliderRow
-            label="Min gross margin"
-            hint="(sell CAD − landed CAD) / sell CAD"
+            label={t("criteria.minMargin")}
+            hint={t("criteria.minMarginHint")}
             value={Math.round(draft.minMarginPct * 100)}
             min={0}
             max={60}
@@ -127,8 +124,8 @@ function CriteriaPage() {
             onChange={(n) => patch({ minMarginPct: n / 100 })}
           />
           <SliderRow
-            label="Max unit weight"
-            hint="Air-friendly SKUs first."
+            label={t("criteria.maxWeight")}
+            hint={t("criteria.maxWeightHint")}
             value={draft.maxWeightG}
             min={50}
             max={1000}
@@ -137,8 +134,8 @@ function CriteriaPage() {
             onChange={(n) => patch({ maxWeightG: n })}
           />
           <SliderRow
-            label="Max lead time"
-            hint="Pre-order cycle is about a month."
+            label={t("criteria.maxLead")}
+            hint={t("criteria.maxLeadHint")}
             value={draft.maxLeadDays}
             min={7}
             max={45}
@@ -146,8 +143,8 @@ function CriteriaPage() {
             onChange={(n) => patch({ maxLeadDays: n })}
           />
           <SliderRow
-            label="Min uniqueness"
-            hint="How hard it is to find locally in Vancouver."
+            label={t("criteria.minUnique")}
+            hint={t("criteria.minUniqueHint")}
             value={draft.minUniqueness}
             min={0}
             max={10}
@@ -155,7 +152,7 @@ function CriteriaPage() {
           />
 
           <div>
-            <p className="mb-2 text-xs text-subtle">Categories</p>
+            <p className="mb-2 text-xs text-subtle">{t("criteria.cats")}</p>
             <div className="flex flex-wrap gap-1.5">
               {ALL_CATEGORIES.map((c) => (
                 <button
@@ -164,13 +161,13 @@ function CriteriaPage() {
                   onClick={() => toggleCat(c)}
                   className={`h-8 rounded-full px-3 text-xs ${draft.categories.includes(c) ? "bg-fg text-bg" : "bg-bg-elevated text-muted"}`}
                 >
-                  {CATEGORY_LABEL[c]}
+                  {t(`cat.${c}`)}
                 </button>
               ))}
             </div>
           </div>
           <div>
-            <p className="mb-2 text-xs text-subtle">Origin</p>
+            <p className="mb-2 text-xs text-subtle">{t("criteria.origin")}</p>
             <div className="flex flex-wrap gap-1.5">
               {ALL_ORIGINS.map((o) => (
                 <button
@@ -188,7 +185,7 @@ function CriteriaPage() {
 
         <div className="flex flex-wrap items-center gap-2">
           <Button onClick={onSave} disabled={!dirty}>
-            Save and refresh all desks
+            {t("criteria.save")}
           </Button>
           <Button
             variant="outline"
@@ -196,19 +193,19 @@ function CriteriaPage() {
               setDraft(cloneCriteria(DEFAULT_CRITERIA));
             }}
           >
-            Load defaults
+            {t("criteria.load")}
           </Button>
           <Button
             variant="ghost"
             onClick={() => {
               reset();
               setDraft(cloneCriteria(DEFAULT_CRITERIA));
-              toast.success("Reset to defaults");
+              toast.success(t("criteria.resetToast"));
             }}
           >
-            Reset saved
+            {t("criteria.reset")}
           </Button>
-          {dirty ? <Badge tone="warn">Unsaved draft</Badge> : <Badge tone="ok">In sync with desks</Badge>}
+          {dirty ? <Badge tone="warn">{t("criteria.unsaved")}</Badge> : <Badge tone="ok">{t("criteria.synced")}</Badge>}
         </div>
       </div>
     </AppShell>

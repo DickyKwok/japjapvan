@@ -6,6 +6,7 @@ import { ProductThumb } from "@/components/product-thumb";
 import { Badge } from "@/components/ui/badge";
 import { PRODUCTS } from "@/data/products";
 import { MARKET_META, risingData, skuRisers } from "@/lib/rising";
+import { useI18n } from "@/lib/i18n";
 import { growthLabel } from "@/lib/utils";
 
 export const Route = createFileRoute("/rising")({ component: RisingPage });
@@ -17,17 +18,16 @@ function productById(id: string) {
 function RisingPage() {
   const bundle = risingData();
   const geos = ["CA", "JP", "HK"] as const;
+  const { t } = useI18n();
 
   return (
     <AppShell>
       <div className="mx-auto max-w-6xl space-y-6">
         <div>
-          <p className="text-xs tracking-[0.18em] text-subtle uppercase">主題 · 關鍵字</p>
-          <h1 className="mt-1 font-display text-3xl tracking-tight">Rising topics</h1>
+          <p className="text-xs tracking-[0.18em] text-subtle uppercase">{t("rising.kicker")}</p>
+          <h1 className="mt-1 font-display text-3xl tracking-tight">{t("rising.title")}</h1>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
-            Live Google Trends searches right now in Canada, Japan, and Hong Kong — plus our own SKU keywords that
-            are climbing over 12 weeks. Traffic numbers come from Google’s Trending RSS. Refreshed{" "}
-            {bundle.generatedAt.slice(0, 16).replace("T", " ")} UTC.
+            {t("rising.lede", { at: bundle.generatedAt.slice(0, 16).replace("T", " ") })}
           </p>
         </div>
         <CriteriaBanner />
@@ -41,9 +41,9 @@ function RisingPage() {
                 <div className="mb-3 flex items-start justify-between gap-2">
                   <div>
                     <p className="text-xs text-subtle">
-                      {meta.city} · {meta.lang}
+                      {t(`rising.meta.${geo.toLowerCase()}`)} · {meta.lang}
                     </p>
-                    <h2 className="font-display text-2xl">{meta.label}</h2>
+                    <h2 className="font-display text-2xl">{t(`market.${geo}`)}</h2>
                   </div>
                   <a
                     href={market.exploreUrl}
@@ -54,7 +54,7 @@ function RisingPage() {
                     Google Trends <ExternalLink className="size-3" />
                   </a>
                 </div>
-                <p className="mb-3 text-[11px] text-subtle">Source: {market.source} · {market.topics.length} topics</p>
+                <p className="mb-3 text-[11px] text-subtle">{t("rising.source", { source: market.source, n: market.topics.length })}</p>
                 <ol className="space-y-3">
                   {market.topics.map((t, i) => (
                     <li key={t.title} className="border-b border-border/60 pb-3 last:border-0 last:pb-0">
@@ -99,14 +99,12 @@ function RisingPage() {
         </div>
 
         <section>
-          <h2 className="font-display text-xl">Our catalog keywords climbing</h2>
-          <p className="mt-1 text-sm text-muted">
-            Same 12-week series that feeds the listing rule. A SKU still has to pass Criteria to go on Shopify.
-          </p>
+          <h2 className="font-display text-xl">{t("rising.catalogClimb")}</h2>
+          <p className="mt-1 text-sm text-muted">{t("rising.catalogLede")}</p>
           <div className="mt-4 grid gap-3 lg:grid-cols-3">
             {geos.map((geo) => (
               <div key={geo} className="rounded-[var(--radius-lg)] border border-border bg-surface p-4">
-                <p className="text-xs text-subtle">{MARKET_META[geo].label} 12-week growth</p>
+                <p className="text-xs text-subtle">{t("rising.growth", { market: t(`market.${geo}`) })}</p>
                 <ul className="mt-3 space-y-2">
                   {skuRisers(geo, 6).map((row) => (
                     <li key={row.product.id} className="flex items-center gap-2">
@@ -127,7 +125,7 @@ function RisingPage() {
         <p className="text-xs text-subtle">
           {bundle.method}{" "}
           <Link to="/history" className="text-primary hover:underline">
-            Version history
+            {t("rising.history")}
           </Link>
         </p>
       </div>

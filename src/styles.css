@@ -1,38 +1,40 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Palantir Foundry / Blueprint dark — official Foundry face is Source Sans;
+   orange is Blueprint Orange 4; radii stay near-square like Blueprint. */
 @theme {
-  --color-bg: #f3eee4;
-  --color-bg-elevated: #faf6ee;
-  --color-surface: #fffdf8;
-  --color-fg: #1b1915;
-  --color-muted: #6b655b;
-  --color-subtle: #8c8578;
-  --color-primary: #2c4638;
-  --color-primary-fg: #f6f1e7;
-  --color-accent: #2c4638;
-  --color-border: #ddd4c4;
-  --color-border-strong: #c9bda8;
-  --color-ink: #1b1915;
-  --color-warn: #8a5a28;
-  --color-danger: #8b3a2a;
-  --color-ok: #2f5d42;
-  --color-chart: #3d5c4a;
-  --color-chart-2: #8a6a45;
-  --color-chart-3: #4d6d82;
-  --radius-xs: 4px;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 18px;
-  --radius-xl: 24px;
-  --font-display: "Newsreader", "Iowan Old Style", Georgia, serif;
-  --font-sans: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --color-bg: #111418;
+  --color-bg-elevated: #1c2127;
+  --color-surface: #252a31;
+  --color-fg: #f6f7f9;
+  --color-muted: #a7b6c2;
+  --color-subtle: #738694;
+  --color-primary: #f29d49;
+  --color-primary-fg: #1c2127;
+  --color-accent: #f29d49;
+  --color-border: #2f343c;
+  --color-border-strong: #404854;
+  --color-ink: #101418;
+  --color-warn: #f29d49;
+  --color-danger: #e76a6e;
+  --color-ok: #3dcc91;
+  --color-chart: #f29d49;
+  --color-chart-2: #48aff0;
+  --color-chart-3: #3dcc91;
+  --radius-xs: 1px;
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+  --radius-xl: 4px;
+  --font-display: "Source Sans 3", "Source Sans Pro", "Segoe UI", system-ui, sans-serif;
+  --font-sans: "Source Sans 3", "Source Sans Pro", "Segoe UI", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
 }
 
 @layer base {
   :root {
-    color-scheme: light;
+    color-scheme: dark;
   }
 
   html,
@@ -41,10 +43,26 @@
     color: var(--color-fg);
     font-family: var(--font-sans);
     min-height: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
     margin: 0;
+  }
+
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    font-weight: 600;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
   }
 
   button:not(:disabled),

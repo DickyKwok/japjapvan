@@ -10,12 +10,14 @@ import { downloadShopifyCsv } from "@/lib/export";
 import { wholesaleJpyFromLandedCad } from "@/lib/money";
 import { marginPct, WEIGHTS } from "@/lib/scoring";
 import { useListing } from "@/lib/use-listing";
+import { useI18n } from "@/lib/i18n";
 import { pct } from "@/lib/utils";
 
 export const Route = createFileRoute("/shortlist")({ component: ShortlistPage });
 
 function ShortlistPage() {
   const { picks } = useListing();
+  const { t } = useI18n();
   const brands = new Set(picks.map((p) => p.brand)).size;
 
   return (
@@ -23,18 +25,17 @@ function ShortlistPage() {
       <div className="mx-auto max-w-6xl space-y-6">
         <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
-            <h1 className="font-display text-3xl tracking-tight">Shortlist</h1>
+            <h1 className="font-display text-3xl tracking-tight">{t("shortlist.title")}</h1>
             <p className="mt-1 max-w-xl text-sm text-muted">
-              {picks.length} SKUs · {brands} brands. Ranked after the saved criteria gate — not because we liked
-              the packaging.
+              {t("shortlist.lede", { n: picks.length, brands })}
             </p>
           </div>
           <div className="flex flex-col items-start gap-2 md:items-end">
             <p className="text-xs text-subtle">
-              Weights: Trends {WEIGHTS.trends * 100}% · Margin {WEIGHTS.margin * 100}% · Ship {WEIGHTS.shipping * 100}%
+              {t("shortlist.weights", { t: WEIGHTS.trends * 100, m: WEIGHTS.margin * 100, s: WEIGHTS.shipping * 100 })}
             </p>
             <Button variant="outline" onClick={() => downloadShopifyCsv(picks)}>
-              Export Shopify CSV
+              {t("shortlist.export")}
             </Button>
           </div>
         </div>

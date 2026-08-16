@@ -9,6 +9,7 @@ import { PRODUCTS } from "@/data/products";
 import { seriesFor } from "@/data/trends";
 import { signalFor } from "@/lib/signals";
 import { useCriteriaStore } from "@/lib/criteria-store";
+import { useI18n } from "@/lib/i18n";
 import { growthLabel } from "@/lib/utils";
 import {
   CartesianGrid,
@@ -26,6 +27,7 @@ export const Route = createFileRoute("/trends")({ component: TrendsPage });
 function TrendsPage() {
   const criteria = useCriteriaStore((s) => s.criteria);
   const revision = useCriteriaStore((s) => s.revision);
+  const { t } = useI18n();
   const ranked = useMemo(
     () =>
       [...PRODUCTS].sort((a, b) => {
@@ -46,10 +48,9 @@ function TrendsPage() {
     <AppShell>
       <div className="mx-auto max-w-6xl space-y-5">
         <div>
-          <h1 className="font-display text-3xl tracking-tight">Bidirectional Trends</h1>
+          <h1 className="font-display text-3xl tracking-tight">{t("trends.title")}</h1>
           <p className="mt-1 max-w-2xl text-sm text-muted">
-            Same keyword, three markets. Listing uses your saved rule: Canada ≥ +{criteria.minCaGrowth12w}% or
-            index ≥ {criteria.minCaIndex}, and Japan ≥ {criteria.minJpIndex}. Source is labelled on each SKU.
+            {t("trends.lede", { growth: criteria.minCaGrowth12w, index: criteria.minCaIndex, jp: criteria.minJpIndex })}
           </p>
         </div>
         <CriteriaBanner />
@@ -131,11 +132,11 @@ function TrendsPage() {
             </div>
             <div className="grid gap-3 md:grid-cols-3">
               <Note
-                title="Canada"
-                body={`Purchase-intent market. Your rule lists at +${criteria.minCaGrowth12w}% over 12 weeks, or index ≥ ${criteria.minCaIndex} and not falling.`}
+                title={t("trends.ca")}
+                body={t("trends.caBody", { growth: criteria.minCaGrowth12w, index: criteria.minCaIndex })}
               />
-              <Note title="Japan" body={`Source heat. Your rule requires JP index ≥ ${criteria.minJpIndex}.`} />
-              <Note title="Hong Kong" body="Proxy for Greater China diaspora taste and a reverse-lane signal later." />
+              <Note title={t("trends.jp")} body={t("trends.jpBody", { jp: criteria.minJpIndex })} />
+              <Note title={t("trends.hk")} body={t("trends.hkBody")} />
             </div>
           </div>
         </div>

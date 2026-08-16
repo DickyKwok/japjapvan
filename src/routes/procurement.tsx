@@ -14,6 +14,7 @@ import { suggestedQty } from "@/lib/scoring";
 import { useListing } from "@/lib/use-listing";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { cad, cadExact, isoWeekLabel } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/procurement")({ component: ProcurementPage });
 
@@ -26,6 +27,7 @@ function ProcurementPage() {
   const [plan, setPlan] = useState<WeekPlan>(suggested);
   const [saving, setSaving] = useState(false);
   const [addId, setAddId] = useState("");
+  const { t } = useI18n();
 
   useEffect(() => {
     const local = localStorage.getItem(`sn-plan-${week}`);
@@ -111,11 +113,9 @@ function ProcurementPage() {
       <div className="mx-auto max-w-6xl space-y-6">
         <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="text-xs tracking-[0.16em] text-subtle uppercase">採購 · {week}</p>
-            <h1 className="font-display text-3xl tracking-tight">Weekly buy sheet</h1>
-            <p className="mt-1 text-sm text-muted">
-              Built from SKUs the saved criteria still lists. All money on this sheet is CAD.
-            </p>
+            <p className="text-xs tracking-[0.16em] text-subtle uppercase">{t("proc.kicker", { week })}</p>
+            <h1 className="font-display text-3xl tracking-tight">{t("proc.title")}</h1>
+            <p className="mt-1 text-sm text-muted">{t("proc.lede")}</p>
           </div>
           <div className="flex flex-wrap gap-2">
             <Button variant="outline" onClick={() => downloadPoCsv(plan, catalog)}>

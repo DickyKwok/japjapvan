@@ -9,6 +9,7 @@ import { criteriaLabel } from "@/data/criteria";
 import { useCriteriaStore } from "@/lib/criteria-store";
 import { diffVersions, readHistory, seedHistoryIfEmpty, type ListingVersion } from "@/lib/history-store";
 import { growthLabel } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/history")({ component: HistoryPage });
 
@@ -21,6 +22,7 @@ function HistoryPage() {
   const criteria = useCriteriaStore((s) => s.criteria);
   const revision = useCriteriaStore((s) => s.revision);
   const [rows, setRows] = useState<ListingVersion[]>([]);
+  const { t } = useI18n();
 
   useEffect(() => {
     seedHistoryIfEmpty(criteria);
@@ -31,11 +33,8 @@ function HistoryPage() {
     <AppShell>
       <div className="mx-auto max-w-4xl space-y-5">
         <div>
-          <h1 className="font-display text-3xl tracking-tight">Listing history</h1>
-          <p className="mt-1 max-w-2xl text-sm text-muted">
-            Every saved criteria change and every as-of week is a version. We never overwrite the past — you can
-            see which SKUs entered or left the shop list and why the rule said so.
-          </p>
+          <h1 className="font-display text-3xl tracking-tight">{t("history.title")}</h1>
+          <p className="mt-1 max-w-2xl text-sm text-muted">{t("history.lede")}</p>
         </div>
         <CriteriaBanner />
 

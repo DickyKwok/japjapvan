@@ -2,6 +2,8 @@ import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-r
 import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import { AppErrorComponent } from "@/lib/error-component";
+import { useLocaleStore, LOCALES } from "@/lib/locale-store";
+import { useEffect } from "react";
 import appCss from "../styles.css?url";
 
 const APP_NAME = "JapJapVan";
@@ -10,6 +12,15 @@ const ogImage = host
   ? `https://og.grok.me/v1/card.png?host=${encodeURIComponent(host)}&title=${encodeURIComponent(APP_NAME)}`
   : undefined;
 
+function LocaleSync() {
+  const locale = useLocaleStore((s) => s.locale);
+  useEffect(() => {
+    const meta = LOCALES.find((l) => l.id === locale);
+    document.documentElement.lang = meta?.html ?? "en";
+  }, [locale]);
+  return null;
+}
+
 export const Route = createRootRoute({
   head: () => ({
     meta: [
@@ -17,11 +28,11 @@ export const Route = createRootRoute({
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: APP_NAME },
       { name: "apple-mobile-web-app-title", content: APP_NAME },
-      { name: "theme-color", content: "#2c4638" },
+      { name: "theme-color", content: "#111418" },
       { name: "twitter:card", content: "summary_large_image" },
       {
         name: "description",
-        content: "JapJapVan — Japan & Hong Kong goods for Vancouver. Trends, shortlist, weekly 採購.",
+        content: "JapJapVan — Japan & Hong Kong goods for Vancouver. Trends, shortlist, weekly procurement.",
       },
       ...(ogImage
         ? [
@@ -38,17 +49,18 @@ export const Route = createRootRoute({
       { rel: "apple-touch-icon", href: "/__grok/icon-180.png" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Source+Sans+3:wght@400;500;600&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap",
       },
     ],
   }),
   component: () => (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="antialiased" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
       <body>
         <PreviewHostBridge />
+        <LocaleSync />
         <AuthProvider>
           <Outlet />
         </AuthProvider>

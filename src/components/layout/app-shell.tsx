@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { SignedIn, SignedOut, UserButton } from "@/lib/auth/gates";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
+import { LocaleSwitch } from "@/components/locale-switch";
+import { useI18n } from "@/lib/i18n";
 import { isoWeekLabel } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import {
@@ -20,25 +22,26 @@ import {
 } from "lucide-react";
 
 const NAV = [
-  { to: "/", label: "HQ", icon: LayoutDashboard },
-  { to: "/catalog", label: "Catalog", icon: Package },
-  { to: "/trends", label: "Trends", icon: LineChart },
-  { to: "/rising", label: "Rising", icon: Flame },
-  { to: "/shortlist", label: "Shortlist", icon: Sparkles },
-  { to: "/criteria", label: "Criteria", icon: Settings2 },
-  { to: "/history", label: "History", icon: History },
-  { to: "/procurement", label: "採購", icon: ClipboardList },
-  { to: "/preorders", label: "Pre-orders", icon: ShoppingBag },
-  { to: "/lanes", label: "Lanes", icon: ArrowLeftRight },
+  { to: "/", key: "nav.hq", icon: LayoutDashboard },
+  { to: "/catalog", key: "nav.catalog", icon: Package },
+  { to: "/trends", key: "nav.trends", icon: LineChart },
+  { to: "/rising", key: "nav.rising", icon: Flame },
+  { to: "/shortlist", key: "nav.shortlist", icon: Sparkles },
+  { to: "/criteria", key: "nav.criteria", icon: Settings2 },
+  { to: "/history", key: "nav.history", icon: History },
+  { to: "/procurement", key: "nav.procurement", icon: ClipboardList },
+  { to: "/preorders", key: "nav.preorders", icon: ShoppingBag },
+  { to: "/lanes", key: "nav.lanes", icon: ArrowLeftRight },
 ] as const;
 
-const MOBILE_PRIMARY = [NAV[0], NAV[1], NAV[4], NAV[3]] as const;
+const MOBILE_PRIMARY = [NAV[0], NAV[1], NAV[5], NAV[4]] as const;
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { isPending } = useCurrentUserState();
   const week = isoWeekLabel();
   const [moreOpen, setMoreOpen] = useState(false);
+  const { t } = useI18n();
 
   function isActive(to: string) {
     return to === "/" ? pathname === "/" : pathname.startsWith(to);
@@ -47,10 +50,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-dvh bg-bg text-fg">
       <div className="flex min-h-dvh">
-        <aside className="hidden w-56 shrink-0 border-r border-border bg-bg-elevated/70 md:flex md:flex-col">
+        <aside className="hidden w-56 shrink-0 border-r border-border bg-bg-elevated md:flex md:flex-col">
           <div className="px-5 pt-6 pb-4">
             <p className="font-display text-xl tracking-tight">JapJapVan</p>
-            <p className="mt-1 text-xs text-muted">Tokyo · HK · Vancouver</p>
+            <p className="mt-1 text-xs text-muted">{t("nav.tagline")}</p>
           </div>
           <nav className="flex flex-1 flex-col gap-0.5 px-3">
             {NAV.map((item) => {
@@ -60,17 +63,19 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   key={item.to}
                   to={item.to}
                   className={cn(
-                    "flex h-10 items-center gap-2.5 rounded-[var(--radius-sm)] px-3 text-sm transition-colors duration-150",
+                    "flex h-10 items-center gap-2.5 px-3 text-sm transition-colors duration-150",
                     isActive(item.to) ? "bg-primary text-primary-fg" : "text-muted hover:bg-surface hover:text-fg",
                   )}
                 >
                   <Icon className="size-4" strokeWidth={1.75} />
-                  {item.label === "採購" ? "Weekly 採購" : item.label}
+                  {t(item.key)}
                 </Link>
               );
             })}
           </nav>
-          <div className="border-t border-border px-5 py-4 text-xs text-subtle">Cycle {week}</div>
+          <div className="border-t border-border px-5 py-4 text-xs text-subtle">
+            {t("nav.cycle")} {week}
+          </div>
         </aside>
 
         <div className="flex min-w-0 flex-1 flex-col">
@@ -78,15 +83,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <div className="md:hidden">
               <p className="font-display text-lg">JapJapVan</p>
             </div>
-            <p className="hidden text-sm text-muted md:block">Weekly merchandising & 採購 desk</p>
+            <p className="hidden text-sm text-muted md:block">{t("nav.header")}</p>
             <div className="flex items-center gap-3">
+              <LocaleSwitch />
               {isPending ? (
-                <div className="size-8 animate-pulse rounded-full bg-border" />
+                <div className="size-8 animate-pulse bg-border" />
               ) : (
                 <>
                   <SignedOut>
                     <Link to="/login" className="text-sm text-muted underline-offset-4 hover:text-fg hover:underline">
-                      Sign in
+                      {t("nav.signin")}
                     </Link>
                   </SignedOut>
                   <SignedIn>
@@ -103,13 +109,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <div className="fixed inset-0 z-30 md:hidden">
               <button
                 type="button"
-                aria-label="Close menu"
-                className="absolute inset-0 bg-ink/30"
+                aria-label={t("nav.close")}
+                className="absolute inset-0 bg-ink/50"
                 onClick={() => setMoreOpen(false)}
               />
-              <div className="absolute inset-x-0 bottom-0 rounded-t-[var(--radius-xl)] border-t border-border bg-surface px-4 pt-4 pb-[calc(5.5rem+env(safe-area-inset-bottom))]">
+              <div className="absolute inset-x-0 bottom-0 border-t border-border bg-surface px-4 pt-4 pb-[calc(5.5rem+env(safe-area-inset-bottom))]">
                 <div className="mb-3 flex items-center justify-between">
-                  <p className="text-sm font-medium">All desks</p>
+                  <p className="text-sm font-medium">{t("nav.desks")}</p>
                   <button type="button" className="grid size-10 place-items-center" onClick={() => setMoreOpen(false)}>
                     <X className="size-4" />
                   </button>
@@ -123,12 +129,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                         to={item.to}
                         onClick={() => setMoreOpen(false)}
                         className={cn(
-                          "flex min-h-12 items-center gap-2 rounded-[var(--radius-md)] border border-border px-3 text-sm",
+                          "flex min-h-12 items-center gap-2 border border-border px-3 text-sm",
                           isActive(item.to) ? "bg-primary text-primary-fg" : "bg-bg text-fg",
                         )}
                       >
                         <Icon className="size-4" />
-                        {item.label === "採購" ? "Weekly 採購" : item.label}
+                        {t(item.key)}
                       </Link>
                     );
                   })}
@@ -145,12 +151,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   key={item.to}
                   to={item.to}
                   className={cn(
-                    "flex min-h-11 flex-col items-center justify-center gap-0.5 rounded-[var(--radius-xs)] text-[10px]",
+                    "flex min-h-11 flex-col items-center justify-center gap-0.5 text-[10px]",
                     isActive(item.to) ? "text-primary" : "text-subtle",
                   )}
                 >
                   <Icon className="size-4" />
-                  {item.label}
+                  {t(item.key)}
                 </Link>
               );
             })}
@@ -158,12 +164,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               type="button"
               onClick={() => setMoreOpen(true)}
               className={cn(
-                "flex min-h-11 flex-col items-center justify-center gap-0.5 rounded-[var(--radius-xs)] text-[10px]",
+                "flex min-h-11 flex-col items-center justify-center gap-0.5 text-[10px]",
                 moreOpen ? "text-primary" : "text-subtle",
               )}
             >
               <Menu className="size-4" />
-              More
+              {t("nav.more")}
             </button>
           </nav>
         </div>

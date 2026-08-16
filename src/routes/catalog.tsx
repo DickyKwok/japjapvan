@@ -9,13 +9,13 @@ import { SignalReason } from "@/components/signal-reason";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CATEGORY_LABEL } from "@/data/products";
 import type { Category } from "@/data/types";
 import { downloadCatalogCsv, downloadSearchPack } from "@/lib/export";
 import { wholesaleJpyFromLandedCad } from "@/lib/money";
 import { marginPct } from "@/lib/scoring";
 import { lastSignalsAt } from "@/lib/signals";
 import { useListing } from "@/lib/use-listing";
+import { useI18n } from "@/lib/i18n";
 import { growthLabel, pct } from "@/lib/utils";
 
 export const Route = createFileRoute("/catalog")({ component: CatalogPage });
@@ -39,6 +39,7 @@ function CatalogPage() {
   const [gate, setGate] = useState<GateFilter>("shop");
   const [busy, setBusy] = useState<"csv" | "pack" | null>(null);
   const { catalog, summary } = useListing();
+  const { t } = useI18n();
   const fetched = lastSignalsAt().slice(0, 10);
 
   const rows = useMemo(() => {
@@ -80,20 +81,24 @@ function CatalogPage() {
       <div className="mx-auto max-w-6xl space-y-5">
         <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
-            <h1 className="font-display text-3xl tracking-tight">Catalog</h1>
+            <h1 className="font-display text-3xl tracking-tight">{t("catalog.title")}</h1>
             <p className="mt-1 max-w-2xl text-sm text-muted">
-              Found by the saved criteria. {summary.listed} shop-ready · {summary.watch} watch · {summary.live} live
-              series · refreshed {fetched}.
+              {t("catalog.lede", {
+                listed: summary.listed,
+                watch: summary.watch,
+                live: summary.live,
+                date: fetched,
+              })}
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
             <Button variant="outline" onClick={onCsv} disabled={!rows.length || busy !== null}>
               <Download className="size-4" />
-              {busy === "csv" ? "Preparing…" : "Download CSV"}
+              {busy === "csv" ? t("catalog.preparing") : t("catalog.csv")}
             </Button>
             <Button onClick={onPack} disabled={!rows.length || busy !== null}>
               <Images className="size-4" />
-              {busy === "pack" ? "Packing…" : "Download images"}
+              {busy === "pack" ? t("catalog.packing") : t("catalog.images")}
             </Button>
           </div>
         </div>
@@ -103,9 +108,9 @@ function CatalogPage() {
         <div className="flex flex-wrap gap-1.5">
           {(
             [
-              ["shop", `Shopify list (${summary.listed})`],
-              ["watch", `Watch (${summary.watch})`],
-              ["all", `All ${summary.total}`],
+              ["shop", t("catalog.shop", { n: summary.listed })],
+              ["watch", t("catalog.watch", { n: summary.watch })],
+              ["all", t("catalog.all", { n: summary.total })],
             ] as const
           ).map(([id, label]) => (
             <button
@@ -123,7 +128,7 @@ function CatalogPage() {
           <Input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Search brand, product, keyword, or reason"
+            placeholder={t("catalog.search")}
             className="md:max-w-sm"
           />
           <div className="flex flex-wrap gap-1.5">
@@ -134,7 +139,7 @@ function CatalogPage() {
                 onClick={() => setCat(c)}
                 className={`h-8 rounded-full px-3 text-xs ${cat === c ? "bg-fg text-bg" : "bg-surface text-muted"}`}
               >
-                {c === "all" ? "All" : CATEGORY_LABEL[c]}
+                {c === "all" ? t("catalog.allCats") : t(`cat.${c}`)}
               </button>
             ))}
           </div>
@@ -142,7 +147,7 @@ function CatalogPage() {
 
         {rows.length === 0 ? (
           <p className="rounded-[var(--radius-lg)] border border-border bg-surface px-4 py-10 text-center text-sm text-muted">
-            No SKUs match this search and the saved criteria. Relax the rule on Criteria.
+            {t("catalog.empty")}
           </p>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -158,8 +163,8 @@ function CatalogPage() {
                     <Badge tone="ink">{growthLabel(p.signal.caGrowth12w)}</Badge>
                   </div>
                   <div className="flex flex-wrap items-center gap-1.5">
-                    <Badge tone="muted">{CATEGORY_LABEL[p.category]}</Badge>
-                    {p.score.selected ? <Badge>shortlist</Badge> : null}
+                    <Badge tone="muted">{t(`cat.${p.category}`)}</Badge>
+                    {p.score.selected ? <Badge>{t("catalog.shortlist")}</Badge> : null}
                   </div>
                   <p className="text-xs text-muted">
                     Sell <Price amount={p.sellCad} currency="CAD" />

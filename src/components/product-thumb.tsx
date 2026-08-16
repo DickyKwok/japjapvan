@@ -21,7 +21,7 @@ export function ProductThumb({
       <div
         className={cn(
           dim,
-          "grid place-items-center rounded-[var(--radius-sm)] bg-bg-elevated text-[10px] tracking-wide text-subtle uppercase",
+          "grid place-items-center bg-bg-elevated text-[10px] tracking-wide text-subtle uppercase",
           className,
         )}
       >
@@ -34,7 +34,7 @@ export function ProductThumb({
     <img
       src={productImageUrl(id)}
       alt={alt}
-      className={cn(dim, "rounded-[var(--radius-sm)] bg-bg-elevated object-cover", className)}
+      className={cn(dim, "bg-bg-elevated object-cover", className)}
       onError={() => setOk(false)}
     />
   );

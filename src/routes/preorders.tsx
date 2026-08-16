@@ -7,12 +7,14 @@ import { ProductThumb } from "@/components/product-thumb";
 import { PRODUCTS } from "@/data/products";
 import { signalFor } from "@/lib/signals";
 import { useCriteriaStore } from "@/lib/criteria-store";
+import { useI18n } from "@/lib/i18n";
 import { growthLabel } from "@/lib/utils";
 
 export const Route = createFileRoute("/preorders")({ component: PreordersPage });
 
 function PreordersPage() {
   const criteria = useCriteriaStore((s) => s.criteria);
+  const { t } = useI18n();
   const rows = [...PRODUCTS].filter((p) => p.preorders > 0).sort((a, b) => b.preorders - a.preorders);
   const units = rows.reduce((s, p) => s + p.preorders, 0);
   const cash = rows.reduce((s, p) => s + p.preorders * p.sellCad, 0);
@@ -21,10 +23,9 @@ function PreordersPage() {
     <AppShell>
       <div className="mx-auto max-w-6xl space-y-5">
         <div>
-          <h1 className="font-display text-3xl tracking-tight">Pre-orders</h1>
+          <h1 className="font-display text-3xl tracking-tight">{t("pre.title")}</h1>
           <p className="mt-1 text-sm text-muted">
-            Customers pay now in CAD, we ship next month. {units} units committed ·{" "}
-            <Price amount={cash} currency="CAD" /> booked.
+            {t("pre.lede", { units, cash: "" })} <Price amount={cash} currency="CAD" />
           </p>
         </div>
         <CriteriaBanner />
