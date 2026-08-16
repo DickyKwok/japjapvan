@@ -12,6 +12,7 @@ import { wholesaleJpyFromLandedCad } from "@/lib/money";
 import { growthLabel } from "@/lib/utils";
 import { marginPct } from "@/lib/scoring";
 import { ArrowUpRight, PackageCheck, TrendingUp } from "lucide-react";
+import { MARKET_META, risingData } from "@/lib/rising";
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 export const Route = createFileRoute("/")({ component: Home });
@@ -50,6 +51,8 @@ function Home() {
         </div>
 
         <CriteriaBanner />
+
+        <RisingStrip />
 
         <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <Stat label="Shopify list" value={summary.listed} hint={`${summary.watch} on watch`} />
@@ -159,6 +162,35 @@ function Home() {
         </section>
       </div>
     </AppShell>
+  );
+}
+
+function RisingStrip() {
+  const bundle = risingData();
+  return (
+    <section className="rounded-[var(--radius-xl)] border border-border bg-surface p-5">
+      <div className="mb-3 flex items-end justify-between gap-3">
+        <div>
+          <p className="text-xs tracking-wide text-subtle uppercase">主題 · 關鍵字</p>
+          <h2 className="font-display text-xl">Going up now</h2>
+        </div>
+        <Link to="/rising" className="inline-flex items-center gap-1 text-sm text-primary">
+          All three markets <ArrowUpRight className="size-3.5" />
+        </Link>
+      </div>
+      <div className="grid gap-3 md:grid-cols-3">
+        {(["CA", "JP", "HK"] as const).map((geo) => {
+          const top = bundle.markets[geo].topics[0];
+          return (
+            <div key={geo}>
+              <p className="text-xs text-subtle">{MARKET_META[geo].label}</p>
+              <p className="mt-1 text-sm font-medium">{top?.title ?? "—"}</p>
+              <p className="text-xs text-muted">{top ? `${top.trafficLabel} searches` : ""}</p>
+            </div>
+          );
+        })}
+      </div>
+    </section>
   );
 }
 

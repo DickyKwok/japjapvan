@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import {
   ArrowLeftRight,
   ClipboardList,
+  Flame,
   History,
   LayoutDashboard,
   LineChart,
@@ -22,6 +23,7 @@ const NAV = [
   { to: "/", label: "HQ", icon: LayoutDashboard },
   { to: "/catalog", label: "Catalog", icon: Package },
   { to: "/trends", label: "Trends", icon: LineChart },
+  { to: "/rising", label: "Rising", icon: Flame },
   { to: "/shortlist", label: "Shortlist", icon: Sparkles },
   { to: "/criteria", label: "Criteria", icon: Settings2 },
   { to: "/history", label: "History", icon: History },

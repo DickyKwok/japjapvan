@@ -17,6 +17,7 @@ import { Route as LanesRouteImport } from './routes/lanes'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PreordersRouteImport } from './routes/preorders'
 import { Route as ProcurementRouteImport } from './routes/procurement'
+import { Route as RisingRouteImport } from './routes/rising'
 import { Route as ShortlistRouteImport } from './routes/shortlist'
 import { Route as TrendsRouteImport } from './routes/trends'
 import { Route as ApiSignalsRouteImport } from './routes/api/signals'
@@ -63,6 +64,11 @@ const ProcurementRoute = ProcurementRouteImport.update({
   path: '/procurement',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RisingRoute = RisingRouteImport.update({
+  id: '/rising',
+  path: '/rising',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ShortlistRoute = ShortlistRouteImport.update({
   id: '/shortlist',
   path: '/shortlist',
@@ -98,6 +104,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/preorders': typeof PreordersRoute
   '/procurement': typeof ProcurementRoute
+  '/rising': typeof RisingRoute
   '/shortlist': typeof ShortlistRoute
   '/trends': typeof TrendsRoute
   '/api/signals': typeof ApiSignalsRoute
@@ -113,6 +120,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/preorders': typeof PreordersRoute
   '/procurement': typeof ProcurementRoute
+  '/rising': typeof RisingRoute
   '/shortlist': typeof ShortlistRoute
   '/trends': typeof TrendsRoute
   '/api/signals': typeof ApiSignalsRoute
@@ -129,6 +137,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/preorders': typeof PreordersRoute
   '/procurement': typeof ProcurementRoute
+  '/rising': typeof RisingRoute
   '/shortlist': typeof ShortlistRoute
   '/trends': typeof TrendsRoute
   '/api/signals': typeof ApiSignalsRoute
@@ -146,6 +155,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/preorders'
     | '/procurement'
+    | '/rising'
     | '/shortlist'
     | '/trends'
     | '/api/signals'
@@ -161,6 +171,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/preorders'
     | '/procurement'
+    | '/rising'
     | '/shortlist'
     | '/trends'
     | '/api/signals'
@@ -176,6 +187,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/preorders'
     | '/procurement'
+    | '/rising'
     | '/shortlist'
     | '/trends'
     | '/api/signals'
@@ -192,6 +204,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   PreordersRoute: typeof PreordersRoute
   ProcurementRoute: typeof ProcurementRoute
+  RisingRoute: typeof RisingRoute
   ShortlistRoute: typeof ShortlistRoute
   TrendsRoute: typeof TrendsRoute
   ApiSignalsRoute: typeof ApiSignalsRoute
@@ -257,6 +270,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProcurementRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/rising': {
+      id: '/rising'
+      path: '/rising'
+      fullPath: '/rising'
+      preLoaderRoute: typeof RisingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/shortlist': {
       id: '/shortlist'
       path: '/shortlist'
@@ -304,6 +324,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   PreordersRoute: PreordersRoute,
   ProcurementRoute: ProcurementRoute,
+  RisingRoute: RisingRoute,
   ShortlistRoute: ShortlistRoute,
   TrendsRoute: TrendsRoute,
   ApiSignalsRoute: ApiSignalsRoute,

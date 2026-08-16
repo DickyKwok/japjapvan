@@ -1,0 +1,490 @@
+{
+  "generatedAt": "2026-08-16T02:43:16.823949+00:00",
+  "method": "Google Trends Trending RSS (https://trends.google.com/trending/rss?geo=CA|JP|HK) — live search topics with approximate traffic. Wikimedia pageviews top-per-country as a second public source (HK proxied via TW).",
+  "markets": {
+    "CA": {
+      "geo": "CA",
+      "source": "google-trends-rss",
+      "sourceUrl": "https://trends.google.com/trending/rss?geo=CA",
+      "exploreUrl": "https://trends.google.com/trending?geo=CA",
+      "fetchedAt": "2026-08-16T02:43:16.222386+00:00",
+      "topics": [
+        {
+          "title": "san diego vs lafc",
+          "traffic": 200,
+          "trafficLabel": "200+",
+          "pubDate": "Sat, 15 Aug 2026 19:20:00 -0700",
+          "news": "San Diego - LAFC: best picks, odds + stats 08/16/2026",
+          "newsUrl": "https://basketball.realgm.com/betting/picks/san-diego-fc-vs-los-angeles-fc-prediction-08-15-2026/",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=CA&q=san%20diego%20vs%20lafc",
+          "matchedSkuIds": [
+            "sana-soy"
+          ]
+        },
+        {
+          "title": "camden brown",
+          "traffic": 200,
+          "trafficLabel": "200+",
+          "pubDate": "Sat, 15 Aug 2026 19:10:00 -0700",
+          "news": "Cole Payton buys extra time to find Erik Ezukanma and PHI's first TD vs. Ravens",
+          "newsUrl": "https://www.nfl.com/videos/cole-payton-buys-extra-time-to-find-erik-ezukanma-and-phi-s-first-td-vs-ravens",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=CA&q=camden%20brown",
+          "matchedSkuIds": []
+        },
+        {
+          "title": "joe rogan",
+          "traffic": 100,
+          "trafficLabel": "100+",
+          "pubDate": "Sat, 15 Aug 2026 19:30:00 -0700",
+          "news": "Trump sued over Truth Social advance access sale",
+          "newsUrl": "https://www.cnbc.com/2026/08/12/trump-truth-social-lawsuit.html",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=CA&q=joe%20rogan",
+          "matchedSkuIds": []
+        },
+        {
+          "title": "claressa shields",
+          "traffic": 100,
+          "trafficLabel": "100+",
+          "pubDate": "Sat, 15 Aug 2026 19:20:00 -0700",
+          "news": "Will Claressa Shields get any resistance from Kaye Scott?",
+          "newsUrl": "https://www.dazn.com/en-CA/news/boxing/keys-to-victory-claressa-shields-vs-kaye-scott-fight-preview-fight-analysis/14pinvk57tmk01cj4oy4pqsoaa",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=CA&q=claressa%20shields",
+          "matchedSkuIds": []
+        },
+        {
+          "title": "monterrey vs juarez",
+          "traffic": 100,
+          "trafficLabel": "100+",
+          "pubDate": "Sat, 15 Aug 2026 19:10:00 -0700",
+          "news": "Cómo ver Rayados de Monterrey vs Juárez en vivo: canales, streaming y horarios del Apertura de la Liga MX para España, México, Latinoamérica y USA",
+          "newsUrl": "https://www.dazn.com/es-MX/news/f%C3%BAtbol/como-ver-rayados-de-monterrey-vs-juarez-vivo-canales-streaming-horarios-liga-mx/11vzsk5m3uvm51bjo4uwrhi4lt",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=CA&q=monterrey%20vs%20juarez",
+          "matchedSkuIds": []
+        },
+        {
+          "title": "strikeout",
+          "traffic": 100,
+          "trafficLabel": "100+",
+          "pubDate": "Sat, 15 Aug 2026 19:10:00 -0700",
+          "news": "August 16, 2026: New York Y vs Toronto: Strikeouts Baseball Prediction Market",
+          "newsUrl": "https://robinhood.com/us/en/prediction-markets/baseball/events/new-york-y-vs-toronto-strikeouts-aug-16-2026/",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=CA&q=strikeout",
+          "matchedSkuIds": []
+        },
+        {
+          "title": "my brilliant career netflix",
+          "traffic": 100,
+          "trafficLabel": "100+",
+          "pubDate": "Sat, 15 Aug 2026 19:00:00 -0700",
+          "news": "My Brilliant Career review – a joyous heroine lights up this rare and beautiful period drama",
+          "newsUrl": "https://www.theguardian.com/tv-and-radio/2026/aug/13/my-brilliant-career-review-a-joyous-heroine-lights-up-this-rare-and-beautiful-period-drama",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=CA&q=my%20brilliant%20career%20netflix",
+          "matchedSkuIds": [
+            "dprogram-lotion"
+          ]
+        },
+        {
+          "title": "platense vs boca",
+          "traffic": 100,
+          "trafficLabel": "100+",
+          "pubDate": "Sat, 15 Aug 2026 19:00:00 -0700",
+          "news": "Boca toma decisión de última hora con Álvaro Montero: es oficial",
+          "newsUrl": "https://www.deportesrcn.com/futbol/que-decision-tomo-boca-juniors-con-alvaro-montero-155724",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=CA&q=platense%20vs%20boca",
+          "matchedSkuIds": []
+        },
+        {
+          "title": "rafael jódar",
+          "traffic": 100,
+          "trafficLabel": "100+",
+          "pubDate": "Sat, 15 Aug 2026 19:00:00 -0700",
+          "news": "Alejandro Tabilo vence con claridad a Jan-Lennard Struff, 43 del mundo, y avanza en el Masters 1.000 de Cincinnati",
+          "newsUrl": "https://www.emol.com/noticias/Deportes/2026/08/15/1208612/tabilo-struff-masters-cincinnati.html",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=CA&q=rafael%20j%C3%B3dar",
+          "matchedSkuIds": []
+        },
+        {
+          "title": "grand theft auto vi",
+          "traffic": 100,
+          "trafficLabel": "100+",
+          "pubDate": "Sat, 15 Aug 2026 19:00:00 -0700",
+          "news": "Grand Theft Auto VI: An Extended Look",
+          "newsUrl": "https://www.rockstargames.com/newswire/article/9k2kaa1o3297k9/grand-theft-auto-vi-an-extended-look",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=CA&q=grand%20theft%20auto%20vi",
+          "matchedSkuIds": []
+        }
+      ],
+      "wikiTop": [
+        {
+          "title": "2026 Clacton by-election",
+          "views": 21900
+        },
+        {
+          "title": "Jason Arday",
+          "views": 21000
+        },
+        {
+          "title": "Prichard Colón",
+          "views": 15300
+        },
+        {
+          "title": "Spider-Man: Brand New Day",
+          "views": 10300
+        },
+        {
+          "title": "Deaths in 2026",
+          "views": 9600
+        },
+        {
+          "title": "The End of Oak Street",
+          "views": 9400
+        },
+        {
+          "title": "Luigi Mangione",
+          "views": 8800
+        },
+        {
+          "title": "Count Binface",
+          "views": 8800
+        },
+        {
+          "title": "The Odyssey (2026 film)",
+          "views": 8500
+        },
+        {
+          "title": "Big Brother 28 (American season)",
+          "views": 8300
+        },
+        {
+          "title": "The Campaign for North Africa",
+          "views": 7500
+        },
+        {
+          "title": "Ben Shelton",
+          "views": 6900
+        }
+      ],
+      "wikiNote": "Wikimedia most-viewed pages requested from CA."
+    },
+    "JP": {
+      "geo": "JP",
+      "source": "google-trends-rss",
+      "sourceUrl": "https://trends.google.com/trending/rss?geo=JP",
+      "exploreUrl": "https://trends.google.com/trending?geo=JP",
+      "fetchedAt": "2026-08-16T02:43:16.488197+00:00",
+      "topics": [
+        {
+          "title": "東日本国際大昌平",
+          "traffic": 10000,
+          "trafficLabel": "10000+",
+          "pubDate": "Sat, 15 Aug 2026 18:40:00 -0700",
+          "news": "",
+          "newsUrl": "",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=JP&q=%E6%9D%B1%E6%97%A5%E6%9C%AC%E5%9B%BD%E9%9A%9B%E5%A4%A7%E6%98%8C%E5%B9%B3",
+          "matchedSkuIds": []
+        },
+        {
+          "title": "有明高校 甲子園",
+          "traffic": 1000,
+          "trafficLabel": "1000+",
+          "pubDate": "Sat, 15 Aug 2026 18:50:00 -0700",
+          "news": "有明の選手、なぜバットをその場に置くのか? 夏の甲子園（毎日新聞）",
+          "newsUrl": "https://news.yahoo.co.jp/articles/4c2bffb9235bd728d350d62199a76957d2fdc045",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=JP&q=%E6%9C%89%E6%98%8E%E9%AB%98%E6%A0%A1%20%E7%94%B2%E5%AD%90%E5%9C%92",
+          "matchedSkuIds": []
+        },
+        {
+          "title": "火災",
+          "traffic": 1000,
+          "trafficLabel": "1000+",
+          "pubDate": "Sat, 15 Aug 2026 18:30:00 -0700",
+          "news": "住宅街で朝火事 住宅１棟が全焼 山形県山形市（YBC山形放送）",
+          "newsUrl": "https://news.yahoo.co.jp/articles/3c1cc3fd1508d8659380ae59f8eb3df87ca9c690",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=JP&q=%E7%81%AB%E7%81%BD",
+          "matchedSkuIds": []
+        },
+        {
+          "title": "出没!アド街ック天国",
+          "traffic": 500,
+          "trafficLabel": "500+",
+          "pubDate": "Sat, 15 Aug 2026 18:50:00 -0700",
+          "news": "山田五郎さん死去後の『出没！アド街ック天国』次回ゲストに反響「泣けてきます」「レギュラーにして欲しいわ」（オリコン）",
+          "newsUrl": "https://news.yahoo.co.jp/articles/1f6f226dc5c07d256d6612b67644acce2fe86e51",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=JP&q=%E5%87%BA%E6%B2%A1%21%E3%82%A2%E3%83%89%E8%A1%97%E3%83%83%E3%82%AF%E5%A4%A9%E5%9B%BD",
+          "matchedSkuIds": []
+        },
+        {
+          "title": "ホウオウワールド",
+          "traffic": 200,
+          "trafficLabel": "200+",
+          "pubDate": "Sat, 15 Aug 2026 19:10:00 -0700",
+          "news": "【中京3R新馬戦結果】ロードカナロア産駒ホウオウワールドが接戦を制す（netkeiba）",
+          "newsUrl": "https://news.yahoo.co.jp/articles/665aaebe1a675883c3b8c2ff6bc4aaabf0721308",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=JP&q=%E3%83%9B%E3%82%A6%E3%82%AA%E3%82%A6%E3%83%AF%E3%83%BC%E3%83%AB%E3%83%89",
+          "matchedSkuIds": []
+        },
+        {
+          "title": "小林美駒",
+          "traffic": 200,
+          "trafficLabel": "200+",
+          "pubDate": "Sat, 15 Aug 2026 19:00:00 -0700",
+          "news": "小林美駒騎手が病気のため札幌３Ｒ以降で乗り替わり １Ｒの勝利でＪＲＡ通算１００勝まであと「２」（馬トク報知）",
+          "newsUrl": "https://news.yahoo.co.jp/articles/407367e3d0866511209836f78dabf45e5249503a",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=JP&q=%E5%B0%8F%E6%9E%97%E7%BE%8E%E9%A7%92",
+          "matchedSkuIds": []
+        },
+        {
+          "title": "パドレス",
+          "traffic": 200,
+          "trafficLabel": "200+",
+          "pubDate": "Sat, 15 Aug 2026 19:00:00 -0700",
+          "news": "松井裕樹が1回無安打無失点で2試合連続無失点！パドレスも6連勝！（スポニチアネックス）",
+          "newsUrl": "https://news.yahoo.co.jp/articles/2c39bcf38a4ae1e4e1a98c650c7eadfc357699ac",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=JP&q=%E3%83%91%E3%83%89%E3%83%AC%E3%82%B9",
+          "matchedSkuIds": []
+        },
+        {
+          "title": "tgc松山",
+          "traffic": 200,
+          "trafficLabel": "200+",
+          "pubDate": "Sat, 15 Aug 2026 18:30:00 -0700",
+          "news": "",
+          "newsUrl": "",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=JP&q=tgc%E6%9D%BE%E5%B1%B1",
+          "matchedSkuIds": []
+        },
+        {
+          "title": "ニクソン・ショック",
+          "traffic": 100,
+          "trafficLabel": "100+",
+          "pubDate": "Sat, 15 Aug 2026 19:20:00 -0700",
+          "news": "金価格１６０倍、再び脚光 中銀積み増し、揺らぐドル一極―「ニクソン・ショック」５５年",
+          "newsUrl": "https://www.jiji.com/jc/article?k=2026081500315&g=int",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=JP&q=%E3%83%8B%E3%82%AF%E3%82%BD%E3%83%B3%E3%83%BB%E3%82%B7%E3%83%A7%E3%83%83%E3%82%AF",
+          "matchedSkuIds": []
+        },
+        {
+          "title": "やすとも",
+          "traffic": 100,
+          "trafficLabel": "100+",
+          "pubDate": "Sat, 15 Aug 2026 18:20:00 -0700",
+          "news": "",
+          "newsUrl": "",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=JP&q=%E3%82%84%E3%81%99%E3%81%A8%E3%82%82",
+          "matchedSkuIds": []
+        }
+      ],
+      "wikiTop": [
+        {
+          "title": "風の谷のナウシカ",
+          "views": 130100
+        },
+        {
+          "title": "ハマ・オカモト",
+          "views": 72000
+        },
+        {
+          "title": "風の谷のナウシカ (映画)",
+          "views": 55700
+        },
+        {
+          "title": "OKAMOTO'S",
+          "views": 39900
+        },
+        {
+          "title": "風の谷のナウシカの登場人物",
+          "views": 39600
+        },
+        {
+          "title": "山中竹春",
+          "views": 34100
+        },
+        {
+          "title": "安達祐実",
+          "views": 34000
+        },
+        {
+          "title": "マイク眞木",
+          "views": 31700
+        },
+        {
+          "title": "水森亜土",
+          "views": 29900
+        },
+        {
+          "title": "島本須美",
+          "views": 29200
+        },
+        {
+          "title": "岡田将生",
+          "views": 26400
+        },
+        {
+          "title": "VIVANT",
+          "views": 25000
+        }
+      ],
+      "wikiNote": "Wikimedia most-viewed pages requested from JP."
+    },
+    "HK": {
+      "geo": "HK",
+      "source": "google-trends-rss",
+      "sourceUrl": "https://trends.google.com/trending/rss?geo=HK",
+      "exploreUrl": "https://trends.google.com/trending?geo=HK",
+      "fetchedAt": "2026-08-16T02:43:16.784739+00:00",
+      "topics": [
+        {
+          "title": "低氣壓",
+          "traffic": 2000,
+          "trafficLabel": "2000+",
+          "pubDate": "Sat, 15 Aug 2026 14:40:00 -0700",
+          "news": "下周中期有風打？ 天文台：若2條件配合有機會進一步發展 路徑仍存在分歧（附各電腦模式預測）",
+          "newsUrl": "https://www.stheadline.com/society/3604648/%E4%B8%8B%E5%91%A8%E4%B8%AD%E6%9C%9F%E6%9C%89%E9%A2%A8%E6%89%93-%E5%A4%A9%E6%96%87%E5%8F%B0%E8%8B%A52%E6%A2%9D%E4%BB%B6%E9%85%8D%E5%90%88%E6%9C%89%E6%A9%9F%E6%9C%83%E9%80%B2%E4%B8%80%E6%AD%A5%E7%99%BC%E5%B1%95-%E8%B7%AF%E5%BE%91%E4%BB%8D%E5%AD%98%E5%9C%A8%E5%88%86%E6%AD%A7%E9%99%84%E5%90%84%E9%9B%BB%E8%85%A6%E6%A8%A1%E5%BC%8F%E9%A0%90%E6%B8%AC",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=HK&q=%E4%BD%8E%E6%B0%A3%E5%A3%93",
+          "matchedSkuIds": []
+        },
+        {
+          "title": "ufc",
+          "traffic": 500,
+          "trafficLabel": "500+",
+          "pubDate": "Sat, 15 Aug 2026 16:40:00 -0700",
+          "news": "'Split wide open'... Edson Barboza left in tears after sustaining horror injury in final fight at UFC 330",
+          "newsUrl": "https://www.sporf.com/split-wide-open-edson-barboza-left-in-tears-after-sustaining-horror-injury-in-final-fight-at-ufc-330/",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=HK&q=ufc",
+          "matchedSkuIds": []
+        },
+        {
+          "title": "李嘉誠",
+          "traffic": 500,
+          "trafficLabel": "500+",
+          "pubDate": "Sat, 15 Aug 2026 14:30:00 -0700",
+          "news": "香港首富嗅到什麼訊號？李嘉誠家族狂賣資產 今年已套現6820億",
+          "newsUrl": "https://ec.ltn.com.tw/article/breakingnews/5541199",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=HK&q=%E6%9D%8E%E5%98%89%E8%AA%A0",
+          "matchedSkuIds": []
+        },
+        {
+          "title": "ufc 330",
+          "traffic": 200,
+          "trafficLabel": "200+",
+          "pubDate": "Sat, 15 Aug 2026 16:50:00 -0700",
+          "news": "Main Card Results | UFC 330: Makhachev vs Machado Garry",
+          "newsUrl": "https://www.ufc.com/news/ufc-330-islam-makhachev-vs-ian-machado-garry-results",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=HK&q=ufc%20330",
+          "matchedSkuIds": []
+        },
+        {
+          "title": "吳若希",
+          "traffic": 200,
+          "trafficLabel": "200+",
+          "pubDate": "Sat, 15 Aug 2026 16:40:00 -0700",
+          "news": "吳若希曝曬趕拍《愛回家之三代同糖》 網民勸收工唔好辛苦觀眾 親回15字寸爆負評者",
+          "newsUrl": "https://www.stheadline.com/film-drama/3604718/%E5%90%B3%E8%8B%A5%E5%B8%8C%E6%9B%9D%E6%9B%AC%E8%B6%95%E6%8B%8D%E6%84%9B%E5%9B%9E%E5%AE%B6%E4%B9%8B%E4%B8%89%E4%BB%A3%E5%90%8C%E7%B3%96-%E7%B6%B2%E6%B0%91%E5%8B%B8%E6%94%B6%E5%B7%A5%E5%94%94%E5%A5%BD%E8%BE%9B%E8%8B%A6%E8%A7%80%E7%9C%BE-%E8%A6%AA%E5%9B%9E15%E5%AD%97%E5%AF%B8%E7%88%86%E8%B2%A0%E8%A9%95%E8%80%85",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=HK&q=%E5%90%B3%E8%8B%A5%E5%B8%8C",
+          "matchedSkuIds": []
+        },
+        {
+          "title": "戴耀明",
+          "traffic": 200,
+          "trafficLabel": "200+",
+          "pubDate": "Sat, 15 Aug 2026 16:00:00 -0700",
+          "news": "戴耀明曾去茶餐厅打工帮补家用吗？",
+          "newsUrl": "https://ent.sina.cn/2026-08-16/detail-ininncxv1675635.d.html?oid=cv88%E3%80%908S.LC%E3%80%91.bahu&vt=4",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=HK&q=%E6%88%B4%E8%80%80%E6%98%8E",
+          "matchedSkuIds": []
+        },
+        {
+          "title": "房屋署",
+          "traffic": 200,
+          "trafficLabel": "200+",
+          "pubDate": "Sat, 15 Aug 2026 15:00:00 -0700",
+          "news": "空置單位翻新津貼2026｜公屋入伙裝修預算不足 申請資助最多獲$1.8萬 即睇資格/流程/金額",
+          "newsUrl": "https://www.stheadline.com/lifetips/3604377/%E7%A9%BA%E7%BD%AE%E5%96%AE%E4%BD%8D%E7%BF%BB%E6%96%B0%E6%B4%A5%E8%B2%BC2026%E5%85%AC%E5%B1%8B%E5%85%A5%E4%BC%99%E8%A3%9D%E4%BF%AE%E9%A0%90%E7%AE%97%E4%B8%8D%E8%B6%B3-%E7%94%B3%E8%AB%8B%E8%B3%87%E5%8A%A9%E6%9C%80%E5%A4%9A%E7%8D%B218%E8%90%AC%E5%8D%B3%E7%9D%87%E8%B3%87%E6%A0%BC%E6%B5%81%E7%A8%8B%E9%87%91%E9%A1%8D",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=HK&q=%E6%88%BF%E5%B1%8B%E7%BD%B2",
+          "matchedSkuIds": []
+        },
+        {
+          "title": "施永青",
+          "traffic": 100,
+          "trafficLabel": "100+",
+          "pubDate": "Sat, 15 Aug 2026 17:10:00 -0700",
+          "news": "施永青指港樓見底回升步入高漲期 「投資者勿試圖賺盡最後一蚊」料內地去庫存需時",
+          "newsUrl": "https://www.stheadline.com/realtime-property/3604704/%E6%96%BD%E6%B0%B8%E9%9D%92%E6%8C%87%E6%B8%AF%E6%A8%93%E8%A6%8B%E5%BA%95%E5%9B%9E%E5%8D%87%E6%AD%A5%E5%85%A5%E9%AB%98%E6%BC%B2%E6%9C%9F-%E6%8A%95%E8%B3%87%E8%80%85%E5%8B%BF%E8%A9%A6%E5%9C%96%E8%B3%BA%E7%9B%A1%E6%9C%80%E5%BE%8C%E4%B8%80%E8%9A%8A%E6%96%99%E5%85%A7%E5%9C%B0%E5%8E%BB%E5%BA%AB%E5%AD%98%E9%9C%80%E6%99%82",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=HK&q=%E6%96%BD%E6%B0%B8%E9%9D%92",
+          "matchedSkuIds": []
+        },
+        {
+          "title": "中年好聲音",
+          "traffic": 100,
+          "trafficLabel": "100+",
+          "pubDate": "Sat, 15 Aug 2026 16:00:00 -0700",
+          "news": "中年好聲音4｜「中4炸彈」尤淑情秒變少女激罕柔情唱《離家出走》 吳亦偉挑戰高難度神曲《驗傷》",
+          "newsUrl": "https://www.tvb.com/varietynews-c/%E4%B8%AD%E5%B9%B4%E5%A5%BD%E8%81%B2%E9%9F%B34--%E4%B8%AD4%E7%82%B8%E5%BD%88-%E5%B0%A4%E6%B7%91%E6%83%85%E7%A7%92%E8%AE%8A%E5%B0%91%E5%A5%B3%E6%BF%80%E7%BD%95%E6%9F%94%E6%83%85%E5%94%B1-%E9%9B%A2%E5%AE%B6%E5%87%BA%E8%B5%B0--%E5%90%B3%E4%BA%A6%E5%81%89%E6%8C%91%E6%88%B0%E9%AB%98%E9%9B%A3%E5%BA%A6%E7%A5%9E%E6%9B%B2-%E9%A9%97%E5%82%B7--1015371",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=HK&q=%E4%B8%AD%E5%B9%B4%E5%A5%BD%E8%81%B2%E9%9F%B3",
+          "matchedSkuIds": []
+        },
+        {
+          "title": "西甲",
+          "traffic": 100,
+          "trafficLabel": "100+",
+          "pubDate": "Sat, 15 Aug 2026 10:40:00 -0700",
+          "news": "世界杯后西甲联赛烽烟再起，新赛季有何看点？",
+          "newsUrl": "https://finance.sina.cn/2026-08-15/detail-ininkfht2372002.d.html?vt=4&cid=72310&node_id=72310",
+          "exploreUrl": "https://trends.google.com/trends/explore?geo=HK&q=%E8%A5%BF%E7%94%B2",
+          "matchedSkuIds": []
+        }
+      ],
+      "wikiTop": [
+        {
+          "title": "陳幸妤",
+          "views": 52700
+        },
+        {
+          "title": "趙建銘",
+          "views": 35900
+        },
+        {
+          "title": "陳致中",
+          "views": 18500
+        },
+        {
+          "title": "趙玉柱",
+          "views": 14100
+        },
+        {
+          "title": "陳盈潔",
+          "views": 13800
+        },
+        {
+          "title": "陳水扁",
+          "views": 13100
+        },
+        {
+          "title": "姜厚任",
+          "views": 12700
+        },
+        {
+          "title": "我的荒糖戀愛",
+          "views": 11300
+        },
+        {
+          "title": "吳淑珍",
+          "views": 10900
+        },
+        {
+          "title": "奧德賽 (電影)",
+          "views": 8800
+        },
+        {
+          "title": "杀人者的购物中心",
+          "views": 8600
+        },
+        {
+          "title": "愛你致死不渝",
+          "views": 8000
+        }
+      ],
+      "wikiNote": "Wikimedia top pages in Taiwan (HK country code is not published)."
+    }
+  }
+}

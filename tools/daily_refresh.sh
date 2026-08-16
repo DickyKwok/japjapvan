@@ -1,6 +1,7 @@
 #!/bin/sh
 set -eu
 cd "$(dirname "$0")/.."
+python3 tools/fetch_rising.py || true
 python3 tools/fetch_live_signals.py || true
 python3 tools/fetch_trends.py || true
 python3 tools/score.py
