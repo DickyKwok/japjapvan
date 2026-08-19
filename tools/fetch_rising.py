@@ -122,11 +122,13 @@ def load_products() -> list[dict]:
 
 
 def match_skus(title: str, products: list[dict]) -> list[str]:
-    t = title.lower()
+    t = f" {title.lower()} "
     hits = []
     for p in products:
-        tokens = [p["brand"].lower(), p["keyword"].lower(), *p["brand"].lower().split(), *p["keyword"].lower().split()]
-        if any(len(tok) >= 3 and tok in t for tok in tokens) or any(len(tok) >= 3 and tok in p["keyword"].lower() for tok in t.split()):
+        brand = (p.get("brand") or "").lower().strip()
+        if len(brand) < 4:
+            continue
+        if f" {brand} " in t:
             hits.append(p["id"])
     return hits[:4]
 

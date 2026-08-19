@@ -2,6 +2,7 @@ import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-r
 import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import { AppErrorComponent } from "@/lib/error-component";
+import { DemandHydrator } from "@/components/demand-hydrator";
 import { useLocaleStore, LOCALES } from "@/lib/locale-store";
 import { useEffect } from "react";
 import appCss from "../styles.css?url";
@@ -61,6 +62,7 @@ export const Route = createRootRoute({
       <body>
         <PreviewHostBridge />
         <LocaleSync />
+        <DemandHydrator />
         <AuthProvider>
           <Outlet />
         </AuthProvider>

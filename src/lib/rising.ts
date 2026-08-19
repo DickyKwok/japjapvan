@@ -31,8 +31,25 @@ export type RisingBundle = {
   markets: Record<"CA" | "JP" | "HK", RisingMarket>;
 };
 
+let memoryRising: RisingBundle | null = null;
+
+export function setRisingBundle(bundle: RisingBundle) {
+  memoryRising = bundle;
+}
+
 export function risingData(): RisingBundle {
-  return risingBundle as RisingBundle;
+  return memoryRising ?? (risingBundle as RisingBundle);
+}
+
+export function matchSkus(title: string) {
+  const t = ` ${title.toLowerCase()} `;
+  const hits: string[] = [];
+  for (const p of PRODUCTS) {
+    const brand = p.brand.toLowerCase().trim();
+    if (brand.length < 4) continue;
+    if (t.includes(` ${brand} `)) hits.push(p.id);
+  }
+  return hits.slice(0, 4);
 }
 
 export function skuRisers(geo: Geo, limit = 8) {

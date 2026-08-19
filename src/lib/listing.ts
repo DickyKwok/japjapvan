@@ -48,11 +48,15 @@ export function evaluateListing(
   const live = Boolean(snap?.hasLiveDemand);
   const latest = live && snap ? snap.latest : { CA: 0, JP: 0, HK: 0 };
   const caGrowth = live && snap ? snap.caGrowth12w : 0;
-  const gate = evaluateGate(latest, caGrowth, criteria, live);
+  const gate = evaluateGate(latest, caGrowth, criteria, live, {
+    origin: p.origin,
+    source: snap?.source,
+  });
   const copy = buildReasons(p.keyword, latest, caGrowth, criteria, {
     hasLiveDemand: live,
     source: snap?.source ?? "none",
-    brandTitle: snap?.evidenceLabel || undefined,
+    brandTitle: (snap?.evidenceLabel || "").replace(/^(Google Trends|Wikipedia) · /, "") || p.keyword,
+    origin: p.origin,
   });
   const filterFail = filterFailReason(p, criteria);
   const listed = gate.eligible && !filterFail;

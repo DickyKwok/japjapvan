@@ -219,7 +219,7 @@ def candidate_from_topic(topic: dict) -> dict:
         "incoming": 0,
         "weeklyVelocity": 1,
         "preorders": 0,
-        "notes": f"Discovered from Google Trends {topic['geo']}: {title}. {topic.get('news','')[:160]}",
+        "notes": f"Rising Google Trends search in {topic['geo']}: {title}. {topic.get('news','')[:160]}",
         "discovered": True,
         "sourceTopic": title,
         "sourceGeo": topic["geo"],

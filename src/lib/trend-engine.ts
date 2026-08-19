@@ -63,7 +63,7 @@ export function growth12w(series: TrendPoint[], geo: Geo) {
   if (series.length < 16) return 0;
   const recent = mean(series.slice(-4).map((p) => p[geo]));
   const prior = mean(series.slice(-16, -12).map((p) => p[geo]));
-  if (prior <= 0) return 0;
+  if (prior <= 0) return recent > 0 ? 100 : 0;
   return Math.round(((recent - prior) / prior) * 1000) / 10;
 }
 
@@ -119,11 +119,16 @@ export function evaluateGate(
   caGrowth: number,
   criteria: ListingCriteria = DEFAULT_CRITERIA,
   hasLiveDemand = false,
+  extras?: { origin?: "JP" | "HK"; source?: SnapshotSource },
 ) {
   if (!hasLiveDemand) {
     return { eligible: false, growing: false, stableDemand: false, sourceAlive: false };
   }
-  const sourceAlive = latest.JP >= criteria.minJpIndex;
+  let sourceAlive = latest.JP >= criteria.minJpIndex;
+  // Localized JP keyword sometimes returns empty while CA brand query has volume.
+  if (!sourceAlive && extras?.source === "google-trends" && extras.origin === "JP" && latest.CA > 0) {
+    sourceAlive = true;
+  }
   const growing = caGrowth >= criteria.minCaGrowth12w;
   const stableDemand = latest.CA >= criteria.minCaIndex && caGrowth >= criteria.stableFloor;
   const eligible = sourceAlive && (growing || stableDemand);
@@ -144,27 +149,36 @@ export function buildReasons(
   latest: { CA: number; JP: number; HK: number },
   caGrowth: number,
   criteria: ListingCriteria = DEFAULT_CRITERIA,
-  opts?: { hasLiveDemand?: boolean; source?: SnapshotSource; brandTitle?: string },
+  opts?: { hasLiveDemand?: boolean; source?: SnapshotSource; brandTitle?: string; origin?: "JP" | "HK" },
 ) {
   const live = Boolean(opts?.hasLiveDemand);
   if (!live) return unverifiedCopy(keyword);
 
-  const { eligible, growing, sourceAlive } = evaluateGate(latest, caGrowth, criteria, true);
+  const { eligible, growing, sourceAlive } = evaluateGate(latest, caGrowth, criteria, true, {
+    origin: opts?.origin,
+    source: opts?.source,
+  });
   const g = `${caGrowth > 0 ? "+" : ""}${caGrowth.toFixed(0)}%`;
   const brand = opts?.brandTitle || keyword;
   const srcNote =
     opts?.source === "wikipedia-pageviews"
       ? `Wikipedia pageviews for “${brand}” (brand article — not the SKU phrase, which has no Google Trends volume in Canada)`
       : opts?.source === "google-trends"
-        ? `Google Trends for “${keyword}”`
+        ? `Google Trends for “${brand}” (brand query, geo=CA / JP / HK)`
         : `Live series for “${keyword}”`;
+  const extra =
+    opts?.source === "google-trends"
+      ? ` Brand query, not the exact SKU phrase “${keyword}”.`
+      : opts?.source === "wikipedia-pageviews"
+        ? " This is not a Google Trends SKU chart — that phrase has insufficient Canada volume."
+        : "";
 
   if (!sourceAlive) {
     return {
       eligible: false,
       gate: "watch" as const,
       reason: `Watch — Japan source index ${latest.JP} is below your JP ≥ ${criteria.minJpIndex} floor. Source: ${srcNote}.`,
-      whyListed: `Not listed. ${srcNote} shows Japan ${latest.JP}/100. Your rule requires JP ≥ ${criteria.minJpIndex}.`,
+      whyListed: `Not listed. ${srcNote} shows Japan ${latest.JP}/100. Your rule requires JP ≥ ${criteria.minJpIndex}.${extra}`,
     };
   }
   if (growing) {
@@ -172,7 +186,11 @@ export function buildReasons(
       eligible: true,
       gate: "pass" as const,
       reason: `${srcNote}: ${g} over 12 weeks (rule ≥ +${criteria.minCaGrowth12w}%)`,
-      whyListed: `Listed because ${srcNote} grew ${g} over 12 weeks. Your rule lists at ≥ +${criteria.minCaGrowth12w}% while Japan stays ≥ ${criteria.minJpIndex} (now ${latest.JP}/100). This is not a Google Trends SKU chart — that phrase has insufficient Canada volume.`,
+      whyListed: `Listed because ${srcNote} grew ${g} over 12 weeks. Rule ≥ +${criteria.minCaGrowth12w}%. ${
+        latest.JP >= criteria.minJpIndex
+          ? `Japan index ${latest.JP}/100.`
+          : "Japan-origin SKU; the JP keyword had no Trends volume."
+      }${extra}`,
     };
   }
   if (eligible) {
@@ -180,7 +198,7 @@ export function buildReasons(
       eligible: true,
       gate: "pass" as const,
       reason: `${srcNote}: index ${latest.CA}/100 (12w ${g}) meets ≥ ${criteria.minCaIndex} stable rule`,
-      whyListed: `Listed because ${srcNote} holds index ${latest.CA}/100 with a 12-week change of ${g}. Not Google Trends for the exact SKU phrase.`,
+      whyListed: `Listed because ${srcNote} holds index ${latest.CA}/100 with a 12-week change of ${g}.${extra}`,
     };
   }
   return {
@@ -201,9 +219,13 @@ export function snapshotFromProduct(
     evidenceUrl?: string;
     evidenceLabel?: string;
     brandTitle?: string;
+    googleTrendsUrl?: string;
   },
 ): ProductSnapshot {
-  const live = Boolean(opts?.series && opts.series.length >= 16);
+  const rawSeries = opts?.series ?? [];
+  const sourceHint = opts?.source ?? "wikipedia-pageviews";
+  const caWeeks = rawSeries.filter((p) => p.CA > 0).length;
+  const live = rawSeries.length >= 16 && (sourceHint !== "google-trends" || caWeeks >= 8);
   const series = live ? opts!.series! : [];
   const latest = live
     ? series[series.length - 1]
@@ -221,7 +243,7 @@ export function snapshotFromProduct(
     source,
     hasLiveDemand: live,
     fetchedAt: opts?.fetchedAt ?? new Date().toISOString(),
-    googleTrendsUrl: "",
+    googleTrendsUrl: opts?.googleTrendsUrl ?? (live && source === "google-trends" ? trendsExploreUrl(p.keyword) : ""),
     evidenceUrl: live ? (opts?.evidenceUrl ?? "") : "",
     evidenceLabel: live ? (opts?.evidenceLabel ?? "Live public series") : "No public series",
     series,
@@ -267,7 +289,7 @@ export function buildBundle(
   return {
     generatedAt: fetchedAt,
     method:
-      "Demand is live Wikipedia pageviews (brand article) only. Exact SKU Google Trends queries with no Canada volume are not used. No invented seed +%.",
+      "Demand is live Google Trends (brand query, CA/JP/HK) when the endpoint returns a Canada series. Wikipedia pageviews only fill gaps. No invented seed +%.",
     products: productsMap,
   };
 }

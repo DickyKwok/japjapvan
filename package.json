@@ -17,7 +17,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "score": "python3 tools/score.py",
-    "trends": "python3 tools/fetch_trends.py",
+    "trends": "node tools/pull-google-trends.mjs",
     "refresh": "sh tools/daily_refresh.sh",
     "shopify": "python3 tools/shopify_export.py"
   },

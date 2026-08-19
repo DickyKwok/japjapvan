@@ -5,14 +5,15 @@ import type { Product, ProductSignal } from "@/data/types";
 import { evaluateListing, signalFromListing } from "@/lib/listing";
 import {
   buildBundle,
-  growth12w,
   snapshotFromProduct,
   snapshotFromReverse,
   type ProductSnapshot,
   type SnapshotBundle,
   type TrendPoint,
 } from "@/lib/trend-engine";
+import { googleTrendsExploreUrl, trendQueryFor } from "@/data/trend-queries";
 import liveSignals from "@/data/live-signals.json";
+import { useEffect, useState } from "react";
 
 type LiveFile = {
   generatedAt?: string;
@@ -24,36 +25,78 @@ type LiveFile = {
       fetchedAt?: string;
       series?: TrendPoint[];
       titles?: { en?: string; ja?: string; zh?: string };
+      query?: { ca?: string; jp?: string; hk?: string };
+      googleTrendsUrl?: string;
+      caVolume?: boolean;
     }
   >;
 };
 
 let memoryBundle: SnapshotBundle | null = null;
+let demandVersion = 0;
+const demandListeners = new Set<() => void>();
 
 export function setSignalBundle(bundle: SnapshotBundle) {
   memoryBundle = bundle;
+  demandVersion += 1;
+  demandListeners.forEach((fn) => fn());
+}
+
+export function useDemandVersion() {
+  const [v, setV] = useState(demandVersion);
+  useEffect(() => {
+    const fn = () => setV(demandVersion);
+    demandListeners.add(fn);
+    return () => {
+      demandListeners.delete(fn);
+    };
+  }, []);
+  return v;
 }
 
 export function applyLiveOverlay(bundle: SnapshotBundle): SnapshotBundle {
   return overlayLive(bundle);
 }
 
+export function applyLiveRows(
+  bundle: SnapshotBundle,
+  rows: NonNullable<LiveFile["products"]>,
+  method?: string,
+  generatedAt?: string,
+): SnapshotBundle {
+  return overlayRows(bundle, rows, method, generatedAt);
+}
+
 function overlayLive(bundle: SnapshotBundle): SnapshotBundle {
   const live = liveSignals as LiveFile;
-  const rows = live.products ?? {};
+  return overlayRows(bundle, live.products ?? {}, live.method, live.generatedAt);
+}
+
+function overlayRows(
+  bundle: SnapshotBundle,
+  rows: NonNullable<LiveFile["products"]>,
+  method?: string,
+  generatedAt?: string,
+): SnapshotBundle {
   let hits = 0;
+  let gt = 0;
   for (const [id, row] of Object.entries(rows)) {
     if (!row.series?.length) continue;
+    if (row.source === "google-trends" && row.caVolume === false) continue;
     const existing = bundle.products[id];
     if (!existing) continue;
-    // Use the live series only — never blend with invented seed points.
     const series = row.series;
     const latest = series[series.length - 1];
+    const source = row.source ?? "wikipedia-pageviews";
+    const q = row.query?.ca || trendQueryFor(id, existing.keyword).ca;
     const titles = row.titles;
-    const brand = titles?.en?.replaceAll("_", " ") ?? existing.keyword;
-    const evidenceUrl = titles?.en
-      ? `https://pageviews.wmcloud.org/?project=en.wikipedia.org&pages=${encodeURIComponent(titles.en)}`
-      : "";
+    const wikiTitle = titles?.en?.replaceAll("_", " ") ?? q;
+    const isGt = source === "google-trends";
+    const evidenceUrl = isGt
+      ? (row.googleTrendsUrl || googleTrendsExploreUrl(q, "CA"))
+      : titles?.en
+        ? `https://pageviews.wmcloud.org/?project=en.wikipedia.org&pages=${encodeURIComponent(titles.en)}`
+        : "";
     const rebuilt = snapshotFromProduct(
       {
         id,
@@ -64,22 +107,24 @@ function overlayLive(bundle: SnapshotBundle): SnapshotBundle {
         rising: true,
       },
       {
-        source: row.source ?? "wikipedia-pageviews",
+        source,
         fetchedAt: row.fetchedAt ?? existing.fetchedAt,
         series,
         evidenceUrl,
-        evidenceLabel: `Wikipedia · ${brand}`,
-        brandTitle: brand,
+        evidenceLabel: isGt ? `Google Trends · ${q}` : `Wikipedia · ${wikiTitle}`,
+        brandTitle: isGt ? q : wikiTitle,
+        googleTrendsUrl: isGt ? row.googleTrendsUrl || googleTrendsExploreUrl(q, "CA") : "",
       },
     );
     bundle.products[id] = rebuilt;
     hits += 1;
+    if (isGt) gt += 1;
   }
   if (hits > 0) {
     bundle.method =
-      live.method ??
-      "Live Wikipedia pageviews only. Google Trends SKU phrases with no Canada volume are not used as +%.";
-    bundle.generatedAt = live.generatedAt ?? bundle.generatedAt;
+      method ??
+      `Live demand: ${gt} Google Trends brand series, ${hits - gt} Wikipedia fallbacks. No invented seed +%.`;
+    bundle.generatedAt = generatedAt ?? bundle.generatedAt;
   }
   return bundle;
 }

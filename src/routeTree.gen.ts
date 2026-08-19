@@ -20,6 +20,7 @@ import { Route as ProcurementRouteImport } from './routes/procurement'
 import { Route as RisingRouteImport } from './routes/rising'
 import { Route as ShortlistRouteImport } from './routes/shortlist'
 import { Route as TrendsRouteImport } from './routes/trends'
+import { Route as ApiDemandRouteImport } from './routes/api/demand'
 import { Route as ApiSignalsRouteImport } from './routes/api/signals'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
@@ -80,6 +81,11 @@ const TrendsRoute = TrendsRouteImport.update({
   path: '/trends',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiDemandRoute = ApiDemandRouteImport.update({
+  id: '/api/demand',
+  path: '/api/demand',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiSignalsRoute = ApiSignalsRouteImport.update({
   id: '/api/signals',
   path: '/api/signals',
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/rising': typeof RisingRoute
   '/shortlist': typeof ShortlistRoute
   '/trends': typeof TrendsRoute
+  '/api/demand': typeof ApiDemandRoute
   '/api/signals': typeof ApiSignalsRoute
   '/product/$id': typeof ProductIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -130,6 +137,7 @@ export interface FileRoutesByTo {
   '/rising': typeof RisingRoute
   '/shortlist': typeof ShortlistRoute
   '/trends': typeof TrendsRoute
+  '/api/demand': typeof ApiDemandRoute
   '/api/signals': typeof ApiSignalsRoute
   '/product/$id': typeof ProductIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -148,6 +156,7 @@ export interface FileRoutesById {
   '/rising': typeof RisingRoute
   '/shortlist': typeof ShortlistRoute
   '/trends': typeof TrendsRoute
+  '/api/demand': typeof ApiDemandRoute
   '/api/signals': typeof ApiSignalsRoute
   '/product/$id': typeof ProductIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -167,6 +176,7 @@ export interface FileRouteTypes {
     | '/rising'
     | '/shortlist'
     | '/trends'
+    | '/api/demand'
     | '/api/signals'
     | '/product/$id'
     | '/api/auth/$'
@@ -184,6 +194,7 @@ export interface FileRouteTypes {
     | '/rising'
     | '/shortlist'
     | '/trends'
+    | '/api/demand'
     | '/api/signals'
     | '/product/$id'
     | '/api/auth/$'
@@ -201,6 +212,7 @@ export interface FileRouteTypes {
     | '/rising'
     | '/shortlist'
     | '/trends'
+    | '/api/demand'
     | '/api/signals'
     | '/product/$id'
     | '/api/auth/$'
@@ -219,6 +231,7 @@ export interface RootRouteChildren {
   RisingRoute: typeof RisingRoute
   ShortlistRoute: typeof ShortlistRoute
   TrendsRoute: typeof TrendsRoute
+  ApiDemandRoute: typeof ApiDemandRoute
   ApiSignalsRoute: typeof ApiSignalsRoute
   ProductIdRoute: typeof ProductIdRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
@@ -304,6 +317,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TrendsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/demand': {
+      id: '/api/demand'
+      path: '/api/demand'
+      fullPath: '/api/demand'
+      preLoaderRoute: typeof ApiDemandRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/signals': {
       id: '/api/signals'
       path: '/api/signals'
@@ -347,6 +367,7 @@ const rootRouteChildren: RootRouteChildren = {
   RisingRoute: RisingRoute,
   ShortlistRoute: ShortlistRoute,
   TrendsRoute: TrendsRoute,
+  ApiDemandRoute: ApiDemandRoute,
   ApiSignalsRoute: ApiSignalsRoute,
   ProductIdRoute: ProductIdRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
