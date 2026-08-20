@@ -1,5 +1,6 @@
 import type { Product } from "./types";
 import discoveredBundle from "./discovered-products.json";
+import drugstoreWave from "./drugstore-wave.json";
 
 export const CORE_PRODUCTS: Product[] = [
   { id: "sk2-essence", brand: "SK-II", name: "Facial Treatment Essence 230ml", category: "skincare", origin: "JP", sku: "SN-SK2-FTE230", keyword: "SK-II Facial Treatment Essence", landedCad: 148, sellCad: 248, weightG: 420, bulky: 3, regulatory: "cnf", uniqueness: 6, repeat: 8, preorderFit: 8, supplier: "Tokyo Cosme Wholesale", moq: 6, leadDays: 21, caTrend: 72, jpTrend: 88, hkTrend: 81, rising: true, stock: 4, incoming: 0, weeklyVelocity: 3.2, preorders: 9, notes: "Hero prestige SKU. Pre-order in 6-packs." },
@@ -59,9 +60,10 @@ export const CORE_PRODUCTS: Product[] = [
   { id: "excel-uv-essence", brand: "excel", name: "Protective UV Essence SPF50+", category: "sunscreen", origin: "JP", sku: "SN-EX-PUVE", keyword: "SANA excel UV Essence", landedCad: 11.5, sellCad: 24, weightG: 70, bulky: 1, regulatory: "cnf", uniqueness: 7, repeat: 9, preorderFit: 9, supplier: "Matsukiyo Export", moq: 12, leadDays: 16, caTrend: 46, jpTrend: 78, hkTrend: 60, rising: true, stock: 0, incoming: 12, weeklyVelocity: 5.0, preorders: 0, notes: "Official #2 after the palette. JP ¥1,540. Same CAD 24 shelf as Biore Aqua Rich." },
 ];
 
-const extra = ((discoveredBundle as { products?: Product[] }).products ?? []).filter(
-  (p) => !CORE_PRODUCTS.some((c) => c.id === p.id),
-);
+const extra = [
+  ...((discoveredBundle as { products?: Product[] }).products ?? []),
+  ...((drugstoreWave as { products?: Product[] }).products ?? []),
+].filter((p) => !CORE_PRODUCTS.some((c) => c.id === p.id));
 
 export const PRODUCTS: Product[] = [...CORE_PRODUCTS, ...extra];
 
