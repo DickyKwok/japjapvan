@@ -6,6 +6,8 @@ import { ProductThumb } from "@/components/product-thumb";
 import { SignalReason } from "@/components/signal-reason";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { aisleFor } from "@/data/aisles";
+import { drugstoreShelf } from "@/data/drugstore";
 import { PRODUCTS, productById } from "@/data/products";
 import { useListing } from "@/lib/use-listing";
 import { useI18n } from "@/lib/i18n";
@@ -52,7 +54,7 @@ function ProductPage() {
           <div className="space-y-4">
             <div>
               <p className="text-xs tracking-[0.16em] text-subtle uppercase">
-                {p.brand} · {p.origin} · {t(`cat.${p.category}`)}
+                {p.brand} · {p.origin} · {t(`aisle.${aisleFor(p.id)}`)} · {t(`drug.${drugstoreShelf(p.id)}`)}
               </p>
               <h1 className="mt-1 font-display text-3xl tracking-tight">{p.name}</h1>
               <p className="mt-2 text-sm text-muted">{p.notes}</p>

@@ -19,8 +19,7 @@ function Discover() {
   const { catalog, picks, watch, summary } = useListing();
   const { t } = useI18n();
   const rising = risingData();
-  const picksSorted = picks.slice().sort((a, b) => b.signal.caGrowth12w - a.signal.caGrowth12w);
-  const hero = picksSorted[0];
+  const hero = picks[0];
   const miss = watch
     .filter((p) => p.signal.caGrowth12w >= 12)
     .sort((a, b) => b.signal.caGrowth12w - a.signal.caGrowth12w)
@@ -44,8 +43,8 @@ function Discover() {
         </div>
 
         <section className="grid gap-3 sm:grid-cols-3">
-          <Stat label={t("disc.listed")} value={summary.listed} hint={t("disc.listedHint")} />
-          <Stat label={t("disc.watch")} value={summary.watch} hint={t("disc.watchHint")} />
+          <Stat label={t("disc.listed")} value={summary.top50} hint={t("disc.listedHint")} />
+          <Stat label={t("disc.watch")} value={watch.length} hint={t("disc.watchHint")} />
           <Stat label={t("disc.fresh")} value={fresh.length} hint={t("disc.freshHint")} />
         </section>
 
@@ -133,7 +132,7 @@ function Discover() {
           <h2 className="font-display text-xl">{t("disc.picks")}</h2>
           <p className="mt-1 text-sm text-muted">{t("disc.picksLede")}</p>
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
-            {picksSorted.slice(0, 6).map((p) => (
+            {picks.slice(0, 6).map((p) => (
               <ProductCard
                 key={p.id}
                 id={p.id}

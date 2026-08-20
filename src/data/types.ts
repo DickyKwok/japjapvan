@@ -52,6 +52,7 @@ export type ScoreBreakdown = {
   uniqueness: number;
   repeat: number;
   brandDiversity: number;
+  drugstore: number;
   total: number;
   selected: boolean;
   reasons: string[];

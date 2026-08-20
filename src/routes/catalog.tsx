@@ -9,49 +9,44 @@ import { SignalReason } from "@/components/signal-reason";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import type { Category } from "@/data/types";
+import { ALL_AISLES, aisleFor, type Aisle } from "@/data/aisles";
+import { drugstoreShelf } from "@/data/drugstore";
 import { downloadCatalogCsv, downloadSearchPack } from "@/lib/export";
+import { loadScanHealth } from "@/lib/listing-history-fns";
 import { lastSignalsAt } from "@/lib/signals";
 import { useListing } from "@/lib/use-listing";
 import { useI18n } from "@/lib/i18n";
-import { growthLabel, pct } from "@/lib/utils";
+import { growthLabel } from "@/lib/utils";
 
-export const Route = createFileRoute("/catalog")({ component: CatalogPage });
+export const Route = createFileRoute("/catalog")({
+  loader: () => loadScanHealth(),
+  component: CatalogPage,
+});
 
-const CATS: Array<Category | "all"> = [
-  "all",
-  "skincare",
-  "sunscreen",
-  "hair",
-  "tools",
-  "stationery",
-  "makeup",
-  "daily",
-];
-
-type GateFilter = "shop" | "watch" | "all";
+type GateFilter = "top" | "watch" | "all";
 
 function CatalogPage() {
   const [q, setQ] = useState("");
-  const [cat, setCat] = useState<Category | "all">("all");
-  const [gate, setGate] = useState<GateFilter>("shop");
+  const [aisle, setAisle] = useState<Aisle | "all">("all");
+  const [gate, setGate] = useState<GateFilter>("top");
   const [busy, setBusy] = useState<"csv" | "pack" | null>(null);
-  const { catalog, summary } = useListing();
+  const { catalog, summary, picks, watch } = useListing();
+  const health = Route.useLoaderData();
   const { t } = useI18n();
   const fetched = lastSignalsAt().slice(0, 10);
 
   const rows = useMemo(() => {
     return catalog.filter((p) => {
-      if (gate === "shop" && !p.signal.eligible) return false;
-      if (gate === "watch" && p.signal.eligible) return false;
-      if (cat !== "all" && p.category !== cat) return false;
-      const hay = `${p.brand} ${p.name} ${p.keyword} ${p.sku} ${p.signal.reason}`.toLowerCase();
+      if (gate === "top" && !p.score.selected) return false;
+      if (gate === "watch" && p.score.selected) return false;
+      if (aisle !== "all" && aisleFor(p.id) !== aisle) return false;
+      const hay = `${p.brand} ${p.name} ${p.keyword} ${p.sku} ${p.signal.reason} ${aisleFor(p.id)}`.toLowerCase();
       return hay.includes(q.toLowerCase());
     });
-  }, [catalog, q, cat, gate]);
+  }, [catalog, q, aisle, gate]);
 
   function slug() {
-    const bits = [gate, cat === "all" ? "all" : cat];
+    const bits = [gate, aisle === "all" ? "all" : aisle];
     if (q.trim()) bits.push(q.trim().replace(/\s+/g, "-").toLowerCase().slice(0, 24));
     return bits.join("-");
   }
@@ -82,11 +77,18 @@ function CatalogPage() {
             <h1 className="font-display text-3xl tracking-tight">{t("catalog.title")}</h1>
             <p className="mt-1 max-w-2xl text-sm text-muted">
               {t("catalog.lede", {
-                listed: summary.listed,
-                watch: summary.watch,
+                listed: summary.top50,
+                watch: watch.length,
                 live: summary.live,
                 date: fetched,
               })}
+            </p>
+            <p className={`mt-1 text-xs ${health.stale ? "text-warn" : "text-subtle"}`}>
+              {health.lastFullSweepAt
+                ? t(health.stale ? "catalog.stale" : "catalog.freshScan", {
+                    date: health.lastFullSweepAt.slice(0, 10),
+                  })
+                : t("catalog.scanning", { done: health.scannedThisCycle, total: health.queryCount })}
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -106,8 +108,8 @@ function CatalogPage() {
         <div className="flex flex-wrap gap-1.5">
           {(
             [
-              ["shop", t("catalog.shop", { n: summary.listed })],
-              ["watch", t("catalog.watch", { n: summary.watch })],
+              ["top", t("catalog.top50", { n: picks.length })],
+              ["watch", t("catalog.watch", { n: watch.length })],
               ["all", t("catalog.all", { n: summary.total })],
             ] as const
           ).map(([id, label]) => (
@@ -130,14 +132,14 @@ function CatalogPage() {
             className="md:max-w-sm"
           />
           <div className="flex flex-wrap gap-1.5">
-            {CATS.map((c) => (
+            {(["all", ...ALL_AISLES] as const).map((c) => (
               <button
                 key={c}
                 type="button"
-                onClick={() => setCat(c)}
-                className={`h-8 rounded-full px-3 text-xs ${cat === c ? "bg-fg text-bg" : "bg-surface text-muted"}`}
+                onClick={() => setAisle(c)}
+                className={`h-8 rounded-full px-3 text-xs ${aisle === c ? "bg-fg text-bg" : "bg-surface text-muted"}`}
               >
-                {c === "all" ? t("catalog.allCats") : t(`cat.${c}`)}
+                {c === "all" ? t("catalog.allCats") : t(`aisle.${c}`)}
               </button>
             ))}
           </div>
@@ -165,7 +167,8 @@ function CatalogPage() {
                     </div>
                   </Link>
                   <div className="flex flex-wrap items-center gap-1.5">
-                    <Badge tone="muted">{t(`cat.${p.category}`)}</Badge>
+                    <Badge tone="muted">{t(`aisle.${aisleFor(p.id)}`)}</Badge>
+                    <Badge tone="muted">{t(`drug.${drugstoreShelf(p.id)}`)}</Badge>
                     {p.score.selected ? <Badge>{t("catalog.shortlist")}</Badge> : null}
                     {p.discovered ? <Badge>{t("product.newFind")}</Badge> : null}
                   </div>

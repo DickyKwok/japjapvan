@@ -2,23 +2,20 @@ import { DEFAULT_CRITERIA, type ListingCriteria } from "@/data/criteria";
 import { PRODUCTS } from "@/data/products";
 import type { PoLine, ScoredProduct, WeekPlan } from "@/data/types";
 import { rankProducts, suggestedQty } from "@/lib/scoring";
-import { signalFor } from "@/lib/signals";
 import { isoWeekLabel } from "@/lib/utils";
 
-export const TARGET_SHORTLIST = 20;
+export const TARGET_SHORTLIST = 50;
 
 export function scoredCatalog(criteria: ListingCriteria = DEFAULT_CRITERIA) {
   return rankProducts(PRODUCTS, TARGET_SHORTLIST, criteria);
 }
 
 export function shortlist(criteria: ListingCriteria = DEFAULT_CRITERIA): ScoredProduct[] {
-  const eligible = PRODUCTS.filter((p) => signalFor(p, criteria).eligible);
-  const pool = eligible.length >= 8 ? eligible : PRODUCTS;
-  return rankProducts(pool, TARGET_SHORTLIST, criteria).filter((p) => p.score.selected);
+  return rankProducts(PRODUCTS, TARGET_SHORTLIST, criteria).filter((p) => p.score.selected);
 }
 
 export function watchlist(criteria: ListingCriteria = DEFAULT_CRITERIA): ScoredProduct[] {
-  return scoredCatalog(criteria).filter((p) => !p.signal.eligible);
+  return scoredCatalog(criteria).filter((p) => !p.score.selected);
 }
 
 export function defaultWeekPlan(criteria: ListingCriteria = DEFAULT_CRITERIA): WeekPlan {

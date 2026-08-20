@@ -1,3 +1,5 @@
+import { aisleFor } from "@/data/aisles";
+import { drugstoreShelf } from "@/data/drugstore";
 import type { Product, ScoredProduct, WeekPlan } from "@/data/types";
 import { imageFileName, productImageUrl } from "@/lib/images";
 import { wholesaleJpyFromLandedCad } from "@/lib/money";
@@ -30,6 +32,8 @@ export function catalogCsv(products: Array<Product & { score?: ScoredProduct["sc
     "brand",
     "name",
     "category",
+    "aisle",
+    "drugstore",
     "origin",
     "keyword",
     "landed_cad",
@@ -74,6 +78,8 @@ export function catalogCsv(products: Array<Product & { score?: ScoredProduct["sc
       csvEscape(p.brand),
       csvEscape(p.name),
       p.category,
+      aisleFor(p.id),
+      drugstoreShelf(p.id),
       p.origin,
       csvEscape(p.keyword),
       p.landedCad,

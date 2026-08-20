@@ -17,7 +17,11 @@ export const Route = createFileRoute("/api/cron/refresh-trends")({
           return Response.json({ error: "Unauthorized" }, { status: 401 });
         }
         const { refreshTrendSnapshots } = await import("@/lib/refresh-trends.server");
-        const { state, bundle } = await refreshTrendSnapshots();
+        const url = new URL(request.url);
+        const batchRaw = Number(url.searchParams.get("batch") || "");
+        const { state, bundle } = await refreshTrendSnapshots({
+          batch: Number.isFinite(batchRaw) && batchRaw > 0 ? batchRaw : undefined,
+        });
         const top = Object.values(bundle.products)
           .filter((p) => p.eligible)
           .sort((a, b) => b.caGrowth12w - a.caGrowth12w)

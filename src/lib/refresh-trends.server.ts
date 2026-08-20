@@ -10,9 +10,10 @@ import { fetchRisingRss } from "@/lib/rising-rss.server";
 import { saveDemandBundle, saveRisingBundle } from "@/lib/demand-store.server";
 import { setRisingBundle } from "@/lib/rising";
 import liveSignals from "@/data/live-signals.json";
+import { lockDailyTop50, readCronCursor, saveCronCursor, type CronCursor } from "@/lib/listing-history.server";
 
 const ROOT = process.cwd();
-const BATCH = Math.max(1, Number(process.env.GOOGLE_TRENDS_BATCH || 8));
+const BATCH = Math.max(1, Number(process.env.GOOGLE_TRENDS_BATCH || 12));
 
 export type CronState = {
   lastRunAt: string;
@@ -20,6 +21,11 @@ export type CronState = {
   watch: number;
   liveHits: number;
   total: number;
+  scanned: number;
+  remaining: number;
+  lastFullSweepAt: string | null;
+  top50Count: number;
+  cycleComplete: boolean;
 };
 
 type LiveRow = {
@@ -33,7 +39,9 @@ type LiveRow = {
   titles?: { en?: string; ja?: string; zh?: string };
 };
 
-export async function refreshTrendSnapshots(): Promise<{ bundle: SnapshotBundle; state: CronState }> {
+export async function refreshTrendSnapshots(opts?: {
+  batch?: number;
+}): Promise<{ bundle: SnapshotBundle; state: CronState }> {
   const extras = REVERSE_SKUS.map((p) => snapshotFromReverse(p));
   const existing = (liveSignals as { products?: Record<string, LiveRow> }).products ?? {};
   const rows: Record<string, LiveRow> = { ...existing };
@@ -47,45 +55,86 @@ export async function refreshTrendSnapshots(): Promise<{ bundle: SnapshotBundle;
   }
 
   const groups = uniqueTrendQueries(PRODUCTS);
-  const stale = groups.filter((g) => {
-    const sample = rows[g.productIds[0] ?? ""];
-    if (sample?.source !== "google-trends" || !sample.series?.length) return true;
-    const age = Date.now() - Date.parse(sample.fetchedAt ?? "");
-    return !Number.isFinite(age) || age > 20 * 60 * 60 * 1000;
-  });
-  const batch = stale.slice(0, BATCH);
+  const batchSize = Math.max(1, opts?.batch ?? BATCH);
   const fetchedAt = new Date().toISOString();
+  let cursor: CronCursor = (await readCronCursor()) ?? {
+    nextIndex: 0,
+    cycleStartedAt: fetchedAt,
+    lastFullSweepAt: null,
+    scannedThisCycle: [],
+    failedThisCycle: [],
+  };
+
+  const batch = [];
+  for (let i = 0; i < batchSize && i < groups.length; i++) {
+    const g = groups[(cursor.nextIndex + i) % groups.length];
+    if (g) batch.push(g);
+  }
+
+  const scannedKeys = new Set(cursor.scannedThisCycle);
   for (const g of batch) {
+    const key = `${g.ca}|${g.jp}|${g.hk}`;
     const hit = await fetchGoogleTrendsSeries(g);
-    if (!hit?.series?.length) continue;
+    scannedKeys.add(key);
+    if (!hit?.series?.length) {
+      cursor.failedThisCycle = [...new Set([...cursor.failedThisCycle, key])];
+      continue;
+    }
     const url = googleTrendsExploreUrl(g.ca, "CA");
     for (const id of g.productIds) {
-      rows[id] = {
-        source: "google-trends",
-        fetchedAt,
-        query: { ca: g.ca, jp: g.jp, hk: g.hk },
-        googleTrendsUrl: url,
-        caVolume: hit.caVolume,
-        jpVolume: hit.jpVolume,
-        series: hit.series,
-      };
+      if (hit.caVolume) {
+        rows[id] = {
+          source: "google-trends",
+          fetchedAt,
+          query: { ca: g.ca, jp: g.jp, hk: g.hk },
+          googleTrendsUrl: url,
+          caVolume: hit.caVolume,
+          jpVolume: hit.jpVolume,
+          series: hit.series,
+        };
+      }
     }
   }
+
+  cursor.scannedThisCycle = [...scannedKeys];
+  cursor.nextIndex = (cursor.nextIndex + batch.length) % Math.max(1, groups.length);
+  const cycleComplete = cursor.scannedThisCycle.length >= groups.length;
+  if (cycleComplete) {
+    cursor.lastFullSweepAt = fetchedAt;
+    cursor.scannedThisCycle = [];
+    cursor.failedThisCycle = [];
+    cursor.cycleStartedAt = fetchedAt;
+    cursor.nextIndex = 0;
+  }
+  await saveCronCursor(cursor);
 
   const method =
     "Google Trends interest-over-time (brand query, geo=CA/JP/HK). Wikipedia fills gaps only. No invented seed +%.";
   const bundle = applyLiveRows(buildBundle(PRODUCTS, extras), rows, method, fetchedAt);
   setSignalBundle(bundle);
   await saveDemandBundle(bundle);
+  if (cycleComplete) {
+    try {
+      await lockDailyTop50(fetchedAt);
+    } catch {
+      /* history write is best-effort */
+    }
+  }
 
   const listed = PRODUCTS.filter((p) => bundle.products[p.id]?.eligible).length;
   const liveHits = PRODUCTS.filter((p) => bundle.products[p.id]?.hasLiveDemand).length;
+  const remaining = cycleComplete ? 0 : Math.max(0, groups.length - cursor.scannedThisCycle.length);
   const state: CronState = {
     lastRunAt: bundle.generatedAt,
     listed,
     watch: PRODUCTS.length - listed,
     liveHits,
     total: PRODUCTS.length,
+    scanned: batch.length,
+    remaining,
+    lastFullSweepAt: cursor.lastFullSweepAt,
+    top50Count: 50,
+    cycleComplete,
   };
 
   const targets = [

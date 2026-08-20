@@ -1,4 +1,5 @@
 import { DEFAULT_CRITERIA, type ListingCriteria } from "@/data/criteria";
+import { drugstoreScore, drugstoreShelf } from "@/data/drugstore";
 import type { Product, ScoreBreakdown, ScoredProduct } from "@/data/types";
 import { signalFor } from "@/lib/signals";
 import { growthLabel } from "@/lib/utils";
@@ -7,13 +8,14 @@ import { marginPct } from "@/lib/scoring-core";
 export { marginPct, profitCad } from "@/lib/scoring-core";
 
 export const WEIGHTS = {
-  trends: 0.25,
-  margin: 0.2,
-  shipping: 0.15,
-  regulatory: 0.1,
-  uniqueness: 0.1,
-  repeat: 0.1,
-  brandDiversity: 0.1,
+  trends: 0.22,
+  margin: 0.18,
+  shipping: 0.12,
+  regulatory: 0.08,
+  uniqueness: 0.08,
+  repeat: 0.08,
+  brandDiversity: 0.09,
+  drugstore: 0.15,
 };
 
 function clamp01(n: number) {
@@ -58,6 +60,7 @@ export function scoreProduct(
   const brandPenalty = Math.max(0, (brandCount[p.brand] ?? 1) - 1) * 0.35;
   const b = clamp01(1 - brandPenalty);
   const signal = signalFor(p, criteria);
+  const d = drugstoreScore(p.id);
 
   const total =
     t * WEIGHTS.trends +
@@ -66,7 +69,8 @@ export function scoreProduct(
     r * WEIGHTS.regulatory +
     u * WEIGHTS.uniqueness +
     rp * WEIGHTS.repeat +
-    b * WEIGHTS.brandDiversity;
+    b * WEIGHTS.brandDiversity +
+    d * WEIGHTS.drugstore;
 
   const reasons: string[] = [];
   if (signal.caGrowth12w >= criteria.minCaGrowth12w) {
@@ -74,6 +78,10 @@ export function scoreProduct(
   } else if (signal.eligible) {
     reasons.push(`Canada index ${signal.latest.CA}/100 (stable)`);
   }
+  const shelf = drugstoreShelf(p.id);
+  if (shelf === "both") reasons.push("Hero on Mannings + Matsukiyo");
+  else if (shelf === "matsukiyo") reasons.push("Matsukiyo shelf");
+  else if (shelf === "mannings") reasons.push("Mannings shelf");
   if (marginPct(p) >= 0.5) reasons.push("Gross margin ≥ 50%");
   if (p.uniqueness >= 8) reasons.push("Hard to find locally");
   if (p.preorderFit >= 8) reasons.push("Strong pre-order fit");
@@ -89,6 +97,7 @@ export function scoreProduct(
     uniqueness: u,
     repeat: rp,
     brandDiversity: b,
+    drugstore: d,
     total,
     selected: false,
     reasons,

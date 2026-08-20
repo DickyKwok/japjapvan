@@ -7,6 +7,7 @@ import { isoWeekLabel } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import {
   Flame,
+  History,
   Package,
   Settings2,
 } from "lucide-react";
@@ -14,6 +15,7 @@ import {
 const NAV = [
   { to: "/", key: "nav.discover", icon: Flame },
   { to: "/catalog", key: "nav.board", icon: Package },
+  { to: "/history", key: "nav.history", icon: History },
   { to: "/criteria", key: "nav.settings", icon: Settings2 },
 ] as const;
 
