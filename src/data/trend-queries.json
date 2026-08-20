@@ -56,5 +56,10 @@
   "pocky-giant": { "ca": "Pocky", "jp": "ポッキー", "hk": "Pocky" },
   "calbee-jagabee": { "ca": "Calbee", "jp": "カルビー", "hk": "Calbee" },
   "kate-liner": { "ca": "KATE cosmetics", "jp": "ケイト カネボウ", "hk": "KATE" },
-  "haba-squa": { "ca": "HABA", "jp": "ハーバー", "hk": "HABA" }
+  "haba-squa": { "ca": "HABA", "jp": "ハーバー", "hk": "HABA" },
+  "excel-skinny-shadow": { "ca": "SANA excel", "jp": "エクセル コスメ", "hk": "SANA excel" },
+  "excel-prime-brow": { "ca": "SANA excel", "jp": "エクセル コスメ", "hk": "SANA excel" },
+  "excel-color-brow": { "ca": "SANA excel", "jp": "エクセル コスメ", "hk": "SANA excel" },
+  "excel-serum-powder": { "ca": "SANA excel", "jp": "エクセル コスメ", "hk": "SANA excel" },
+  "excel-uv-essence": { "ca": "SANA excel", "jp": "エクセル コスメ", "hk": "SANA excel" }
 }
