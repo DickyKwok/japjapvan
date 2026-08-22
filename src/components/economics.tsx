@@ -1,5 +1,5 @@
-import { ExternalLink } from "lucide-react";
 import { Price } from "@/components/price";
+import { BuyLinks } from "@/components/buy-links";
 import { applyQuote, unitEcon } from "@/lib/pricing";
 import { formatMoney } from "@/lib/money";
 import { useI18n } from "@/lib/i18n";
@@ -10,28 +10,12 @@ export function Economics({
   product,
   compact,
 }: {
-  product: Pick<Product, "id" | "sellCad" | "landedCad" | "weightG">;
+  product: Pick<Product, "id" | "sellCad" | "landedCad" | "weightG" | "brand" | "name" | "keyword">;
   compact?: boolean;
 }) {
   const { t } = useI18n();
   const priced = applyQuote(product);
   const { margin, profit, coversFloor } = unitEcon(priced);
-  const q = priced.buyQuote;
-
-  const buyLine = q ? (
-    <a
-      href={q.url}
-      target="_blank"
-      rel="noreferrer"
-      className="inline-flex items-center gap-1 text-[11px] text-primary hover:underline"
-    >
-      {t("econ.buyAt")} {q.sourceLabel} · {formatMoney(q.shelf, q.currency, { compact: q.currency === "JPY" })}
-      {q.regular != null ? ` (${t("econ.was")} ${formatMoney(q.regular, q.currency, { compact: q.currency === "JPY" })})` : ""}
-      <ExternalLink className="size-3" />
-    </a>
-  ) : (
-    <p className="text-[11px] text-subtle">{t("econ.deskEstimate")}</p>
-  );
 
   if (compact) {
     return (
@@ -56,7 +40,7 @@ export function Economics({
             </p>
           </div>
         </div>
-        {buyLine}
+        <BuyLinks product={product} compact />
       </div>
     );
   }
@@ -86,7 +70,7 @@ export function Economics({
           })}
         </p>
       ) : null}
-      {buyLine}
+      <BuyLinks product={product} />
     </div>
   );
 }

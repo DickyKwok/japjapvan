@@ -412,16 +412,40 @@
       "asOf": "2026-08-22",
       "note": "Morning mask 32pcs JP tax-in."
     },
-    "curel-cream": {
-      "source": "watsons",
-      "sourceLabel": "Watsons HK",
-      "url": "https://www.watsons.com.hk/zh-hk/curel-%E6%B7%B1%E5%B1%A4%E9%AB%98%E6%95%88%E4%BF%9D%E6%BF%95%E9%9D%A2%E9%9C%9C-40%E5%85%8B/p/BP_221702",
-      "currency": "HKD",
-      "shelf": 135,
-      "regular": 180,
-      "asOf": "2026-08-22",
-      "note": "75折. Same HKD 135 at Mannings. JP drugstore ~¥1,760 is cheaper if you can buy there."
-    },
+    "minon-lotion": [
+      {
+        "source": "amazon-jp",
+        "sourceLabel": "Amazon.co.jp",
+        "url": "https://www.amazon.co.jp/%E3%83%9F%E3%83%8E%E3%83%B3-%E3%82%A2%E3%83%9F%E3%83%8E%E3%83%A2%E3%82%A4%E3%82%B9%E3%83%88-%E3%83%A2%E3%82%A4%E3%82%B9%E3%83%88%E3%83%81%E3%83%A3%E3%83%BC%E3%82%B8-%E3%83%AD%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3I-%E3%81%97%E3%81%A3%E3%81%A8%E3%82%8A%E3%82%BF%E3%82%A4%E3%83%97/dp/B00SAS18AU",
+        "currency": "JPY",
+        "shelf": 1880,
+        "regular": 2017,
+        "asOf": "2026-08-22",
+        "note": "Amino Moist Charge Lotion I 150ml."
+      }
+    ],
+    "curel-cream": [
+      {
+        "source": "watsons",
+        "sourceLabel": "Watsons HK",
+        "url": "https://www.watsons.com.hk/zh-hk/curel-%E6%B7%B1%E5%B1%A4%E9%AB%98%E6%95%88%E4%BF%9D%E6%BF%95%E9%9D%A2%E9%9C%9C-40%E5%85%8B/p/BP_221702",
+        "currency": "HKD",
+        "shelf": 135,
+        "regular": 180,
+        "asOf": "2026-08-22",
+        "note": "75折."
+      },
+      {
+        "source": "mannings",
+        "sourceLabel": "Mannings HK",
+        "url": "https://www.mannings.com.hk/en/curel-intensive-moisture-facial-cream-40g/p/309773",
+        "currency": "HKD",
+        "shelf": 135,
+        "regular": 180,
+        "asOf": "2026-08-22",
+        "note": "Same promo as Watsons."
+      }
+    ],
     "fancl-oil": {
       "source": "watsons",
       "sourceLabel": "Watsons HK",

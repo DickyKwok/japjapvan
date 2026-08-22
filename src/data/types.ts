@@ -28,6 +28,13 @@ export type BuyQuote = {
   regular?: number;
   asOf: string;
   note?: string;
+  /** `search` = store search page, not a live shelf price. Does not ground 入貨. */
+  kind?: "shelf" | "search";
+};
+
+export type RankedOffer = BuyQuote & {
+  buyCad: number | null;
+  kind: "shelf" | "search";
 };
 
 export type Product = {
