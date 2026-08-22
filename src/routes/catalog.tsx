@@ -83,6 +83,7 @@ function CatalogPage() {
                 date: fetched,
               })}
             </p>
+            <p className="mt-2 max-w-2xl text-xs text-muted">{t("catalog.priceNote")}</p>
             <p className={`mt-1 text-xs ${health.stale ? "text-warn" : "text-subtle"}`}>
               {health.lastFullSweepAt
                 ? t(health.stale ? "catalog.stale" : "catalog.freshScan", {

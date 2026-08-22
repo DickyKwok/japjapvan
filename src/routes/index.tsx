@@ -190,7 +190,7 @@ function ProductCard({
   reason: string;
   growth: number;
   live: boolean;
-  product: { sellCad: number; landedCad: number };
+  product: { id: string; sellCad: number; landedCad: number; weightG: number };
   badge?: string;
 }) {
   const { t } = useI18n();

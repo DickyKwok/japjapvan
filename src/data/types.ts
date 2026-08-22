@@ -11,6 +11,25 @@ export type Origin = "JP" | "HK";
 export type Regulatory = "none" | "cnf" | "food";
 export type Lane = "jp-to-ca" | "ca-to-hk";
 
+export type BuySource =
+  | "mannings"
+  | "watsons"
+  | "matsukiyo-hk"
+  | "amazon-jp"
+  | "official"
+  | "cosme";
+
+export type BuyQuote = {
+  source: BuySource;
+  sourceLabel: string;
+  url: string;
+  currency: "HKD" | "JPY";
+  shelf: number;
+  regular?: number;
+  asOf: string;
+  note?: string;
+};
+
 export type Product = {
   id: string;
   brand: string;
@@ -42,6 +61,7 @@ export type Product = {
   discovered?: boolean;
   sourceTopic?: string;
   sourceGeo?: "CA" | "JP" | "HK";
+  buyQuote?: BuyQuote;
 };
 
 export type ScoreBreakdown = {

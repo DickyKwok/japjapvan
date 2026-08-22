@@ -1,6 +1,7 @@
 import type { Product } from "./types";
 import discoveredBundle from "./discovered-products.json";
 import drugstoreWave from "./drugstore-wave.json";
+import { applyQuote } from "@/lib/pricing";
 
 export const CORE_PRODUCTS: Product[] = [
   { id: "sk2-essence", brand: "SK-II", name: "Facial Treatment Essence 230ml", category: "skincare", origin: "JP", sku: "SN-SK2-FTE230", keyword: "SK-II Facial Treatment Essence", landedCad: 148, sellCad: 248, weightG: 420, bulky: 3, regulatory: "cnf", uniqueness: 6, repeat: 8, preorderFit: 8, supplier: "Tokyo Cosme Wholesale", moq: 6, leadDays: 21, caTrend: 72, jpTrend: 88, hkTrend: 81, rising: true, stock: 4, incoming: 0, weeklyVelocity: 3.2, preorders: 9, notes: "Hero prestige SKU. Pre-order in 6-packs." },
@@ -65,7 +66,7 @@ const extra = [
   ...((drugstoreWave as { products?: Product[] }).products ?? []),
 ].filter((p) => !CORE_PRODUCTS.some((c) => c.id === p.id));
 
-export const PRODUCTS: Product[] = [...CORE_PRODUCTS, ...extra];
+export const PRODUCTS: Product[] = [...CORE_PRODUCTS, ...extra].map(applyQuote);
 
 export const CATEGORY_LABEL: Record<Product["category"], string> = {
   skincare: "Skincare",

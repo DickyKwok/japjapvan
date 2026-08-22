@@ -1,6 +1,7 @@
+import { ExternalLink } from "lucide-react";
 import { Price } from "@/components/price";
-import { wholesaleJpyFromLandedCad } from "@/lib/money";
-import { marginPct, profitCad } from "@/lib/scoring-core";
+import { applyQuote, unitEcon } from "@/lib/pricing";
+import { formatMoney } from "@/lib/money";
 import { useI18n } from "@/lib/i18n";
 import { pct } from "@/lib/utils";
 import type { Product } from "@/data/types";
@@ -9,54 +10,83 @@ export function Economics({
   product,
   compact,
 }: {
-  product: Pick<Product, "sellCad" | "landedCad">;
+  product: Pick<Product, "id" | "sellCad" | "landedCad" | "weightG">;
   compact?: boolean;
 }) {
   const { t } = useI18n();
-  const profit = profitCad(product);
-  const margin = marginPct(product);
-  const wholesale = wholesaleJpyFromLandedCad(product.landedCad);
+  const priced = applyQuote(product);
+  const { margin, profit, coversFloor } = unitEcon(priced);
+  const q = priced.buyQuote;
+
+  const buyLine = q ? (
+    <a
+      href={q.url}
+      target="_blank"
+      rel="noreferrer"
+      className="inline-flex items-center gap-1 text-[11px] text-primary hover:underline"
+    >
+      {t("econ.buyAt")} {q.sourceLabel} · {formatMoney(q.shelf, q.currency, { compact: q.currency === "JPY" })}
+      {q.regular != null ? ` (${t("econ.was")} ${formatMoney(q.regular, q.currency, { compact: q.currency === "JPY" })})` : ""}
+      <ExternalLink className="size-3" />
+    </a>
+  ) : (
+    <p className="text-[11px] text-subtle">{t("econ.deskEstimate")}</p>
+  );
 
   if (compact) {
     return (
-      <div className="grid grid-cols-3 gap-2 text-xs">
-        <div>
-          <p className="text-[10px] tracking-wide text-subtle uppercase">{t("econ.cost")}</p>
-          <p className="mt-0.5 font-medium">
-            <Price amount={product.landedCad} currency="CAD" compact />
-          </p>
+      <div className="space-y-1.5">
+        <div className="grid grid-cols-3 gap-2 text-xs">
+          <div>
+            <p className="text-[10px] tracking-wide text-subtle uppercase">{t("econ.cost")}</p>
+            <p className="mt-0.5 font-medium">
+              <Price amount={priced.landedCad} currency="CAD" compact />
+            </p>
+          </div>
+          <div>
+            <p className="text-[10px] tracking-wide text-subtle uppercase">{t("econ.sell")}</p>
+            <p className="mt-0.5 font-medium">
+              <Price amount={priced.sellCad} currency="CAD" compact />
+            </p>
+          </div>
+          <div>
+            <p className="text-[10px] tracking-wide text-subtle uppercase">{t("econ.margin")}</p>
+            <p className={`mt-0.5 font-medium ${coversFloor ? "text-ok" : "text-warn"}`}>
+              {pct(margin)}
+            </p>
+          </div>
         </div>
-        <div>
-          <p className="text-[10px] tracking-wide text-subtle uppercase">{t("econ.sell")}</p>
-          <p className="mt-0.5 font-medium">
-            <Price amount={product.sellCad} currency="CAD" compact />
-          </p>
-        </div>
-        <div>
-          <p className="text-[10px] tracking-wide text-subtle uppercase">{t("econ.profit")}</p>
-          <p className="mt-0.5 font-medium text-ok">
-            <Price amount={profit} currency="CAD" compact />
-            <span className="ml-1 text-[10px] text-muted">{pct(margin)}</span>
-          </p>
-        </div>
+        {buyLine}
       </div>
     );
   }
 
   return (
-    <div className="grid gap-3 sm:grid-cols-4">
-      <EconCell label={t("econ.costCad")} value={<Price amount={product.landedCad} currency="CAD" />} />
-      <EconCell label={t("econ.wholesale")} value={<Price amount={wholesale} currency="JPY" />} />
-      <EconCell label={t("econ.sellCad")} value={<Price amount={product.sellCad} currency="CAD" />} />
-      <EconCell
-        label={t("econ.profitCad")}
-        value={
-          <span className="text-ok">
-            <Price amount={profit} currency="CAD" />
-            <span className="ml-1.5 text-sm text-muted">{pct(margin)}</span>
-          </span>
-        }
-      />
+    <div className="space-y-3">
+      <div className="grid gap-3 sm:grid-cols-4">
+        <EconCell label={t("econ.costCad")} value={<Price amount={priced.landedCad} currency="CAD" />} />
+        <EconCell label={t("econ.sellCad")} value={<Price amount={priced.sellCad} currency="CAD" />} />
+        <EconCell
+          label={t("econ.margin")}
+          value={
+            <span className={coversFloor ? "text-ok" : "text-warn"}>
+              {pct(margin)}
+              {!coversFloor ? <span className="ml-1.5 text-sm text-muted">{t("econ.belowFloor")}</span> : null}
+            </span>
+          }
+        />
+        <EconCell label={t("econ.profitCad")} value={<Price amount={profit} currency="CAD" />} />
+      </div>
+      {priced.shelfLinked && priced.buyCad != null ? (
+        <p className="text-xs text-muted">
+          {t("econ.landedBreakdown", {
+            buy: formatMoney(priced.buyCad, "CAD"),
+            freight: formatMoney(priced.freightCad ?? 0, "CAD"),
+            gst: formatMoney(priced.gstCad ?? 0, "CAD"),
+          })}
+        </p>
+      ) : null}
+      {buyLine}
     </div>
   );
 }

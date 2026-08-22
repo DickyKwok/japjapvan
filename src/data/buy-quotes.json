@@ -1,0 +1,416 @@
+{
+  "asOf": "2026-08-22",
+  "method": "Payable online shelf. Promo used when the store currently shows it. FX CAD/HKD 5.7, CAD/JPY 108. Landed = shelf CAD + air CAD 20/kg + GST 5% of shelf.",
+  "quotes": {
+    "tsubaki-shampoo": {
+      "source": "mannings",
+      "sourceLabel": "Mannings HK",
+      "url": "https://www.mannings.com.hk/en/tsubaki-premium-moist-repair-shampoo-450ml/p/393470",
+      "currency": "HKD",
+      "shelf": 69,
+      "regular": 88,
+      "asOf": "2026-08-22",
+      "note": "Promo 21% off Premium Moist Repair 450ml."
+    },
+    "tsubaki-cond": {
+      "source": "mannings",
+      "sourceLabel": "Mannings HK",
+      "url": "https://www.mannings.com.hk/en/tsubaki-premium-moist-repair-shampoo-450ml/p/393470",
+      "currency": "HKD",
+      "shelf": 69,
+      "regular": 88,
+      "asOf": "2026-08-22",
+      "note": "Same Tsubaki 450ml family as the shampoo promo."
+    },
+    "fino-mask": {
+      "source": "mannings",
+      "sourceLabel": "Mannings HK",
+      "url": "https://www.mannings.com.hk/fino-premium-touch-hair-mask-230g/p/767111",
+      "currency": "HKD",
+      "shelf": 42,
+      "regular": 62.9,
+      "asOf": "2026-08-22",
+      "note": "Promo 33% off 230g. Sold 1000+."
+    },
+    "fino-shampoo": {
+      "source": "mannings",
+      "sourceLabel": "Mannings HK",
+      "url": "https://www.mannings.com.hk/zh-hant/fino-premium-touch-shampoo-550ml/p/444224",
+      "currency": "HKD",
+      "shelf": 96,
+      "asOf": "2026-08-22",
+      "note": "Mannings lists 550ml. Our SKU is 450ml — cost is conservative."
+    },
+    "curel-foam": {
+      "source": "mannings",
+      "sourceLabel": "Mannings HK",
+      "url": "https://www.mannings.com.hk/curel-foaming-face-wash-150ml/p/434894",
+      "currency": "HKD",
+      "shelf": 69,
+      "regular": 150,
+      "asOf": "2026-08-22",
+      "note": "Promo 54% off. Sold 2000+."
+    },
+    "senka-whip": {
+      "source": "mannings",
+      "sourceLabel": "Mannings HK",
+      "url": "https://www.mannings.com.hk/en/senka-perfect-whip-120g/p/214874",
+      "currency": "HKD",
+      "shelf": 28,
+      "regular": 36,
+      "asOf": "2026-08-22",
+      "note": "Promo 22% off Perfect Whip 120g."
+    },
+    "melano-cc": {
+      "source": "mannings",
+      "sourceLabel": "Mannings HK",
+      "url": "https://www.mannings.com.hk/zh-hant/brands/MELANO%20CC",
+      "currency": "HKD",
+      "shelf": 99,
+      "asOf": "2026-08-22",
+      "note": "Mannings Melano CC 美白淡斑維C精華 20ml."
+    },
+    "suisai-powder": {
+      "source": "amazon-jp",
+      "sourceLabel": "Amazon.co.jp",
+      "url": "https://www.amazon.co.jp/-/en/suisai-Cleansing-Removes-Blackheads-Exfoliation/dp/B0831M4M3B",
+      "currency": "JPY",
+      "shelf": 2090,
+      "asOf": "2026-08-22",
+      "note": "32-puck Beauty Clear Powder N. Same as @cosme ￥2,090."
+    },
+    "opera-tint": {
+      "source": "cosme",
+      "sourceLabel": "@cosme Shopping",
+      "url": "https://www.cosme.net/variations/1168876/",
+      "currency": "JPY",
+      "shelf": 1760,
+      "asOf": "2026-08-22",
+      "note": "OPERA Lip Tint N 05. Official tax-in."
+    },
+    "cezanne-cheek": {
+      "source": "amazon-jp",
+      "sourceLabel": "Amazon.co.jp",
+      "url": "https://www.amazon.co.jp/%E3%82%BB%E3%82%B6%E3%83%B3%E3%83%8C-%E3%83%8A%E3%83%81%E3%83%A5%E3%83%A9%E3%83%AB-%E3%83%81%E3%83%BC%E3%82%AFN-10/dp/B002NSXD74",
+      "currency": "JPY",
+      "shelf": 396,
+      "asOf": "2026-08-22",
+      "note": "Natural Cheek N. @cosme ￥396 tax-in."
+    },
+    "cezanne-blue": {
+      "source": "cosme",
+      "sourceLabel": "@cosme",
+      "url": "https://www.sorra.net/blog/matsukiyo-2026-recommendation/",
+      "currency": "JPY",
+      "shelf": 495,
+      "asOf": "2026-08-22",
+      "note": "Highlight concealer family ~¥450+tax. Matsukiyo HK staff pick."
+    },
+    "excel-skinny-shadow": {
+      "source": "official",
+      "sourceLabel": "excel official",
+      "url": "https://noevirgroup.jp/excel/g/g78310/",
+      "currency": "JPY",
+      "shelf": 1650,
+      "asOf": "2026-08-22",
+      "note": "Skinny Rich Shadow N. Official ranking #1."
+    },
+    "excel-prime-brow": {
+      "source": "official",
+      "sourceLabel": "excel official",
+      "url": "https://noevirgroup.jp/excel/g/g78287/",
+      "currency": "JPY",
+      "shelf": 1650,
+      "asOf": "2026-08-22",
+      "note": "The Prime Eyebrow. Official ranking #4."
+    },
+    "excel-color-brow": {
+      "source": "official",
+      "sourceLabel": "excel official",
+      "url": "https://noevirgroup.jp/excel/g/g78016/",
+      "currency": "JPY",
+      "shelf": 1320,
+      "asOf": "2026-08-22",
+      "note": "Color On Eyebrow CO02. Official tax-in."
+    },
+    "excel-serum-powder": {
+      "source": "official",
+      "sourceLabel": "excel official",
+      "url": "https://noevirgroup.jp/excel/g/g78315/",
+      "currency": "JPY",
+      "shelf": 2640,
+      "asOf": "2026-08-22",
+      "note": "Extra Rich Serum in Powder. Official ranking #5."
+    },
+    "excel-uv-essence": {
+      "source": "official",
+      "sourceLabel": "excel official",
+      "url": "https://noevirgroup.jp/excel/g/g78301/",
+      "currency": "JPY",
+      "shelf": 1540,
+      "asOf": "2026-08-22",
+      "note": "貨盤 only — Health Canada treats SPF as NHP/drug."
+    },
+    "curel-body-wash": {
+      "source": "cosme",
+      "sourceLabel": "Kao drugstore JP",
+      "url": "https://www.mannings.com.hk/curel-foaming-face-wash-150ml/p/434894",
+      "currency": "JPY",
+      "shelf": 1430,
+      "asOf": "2026-08-22",
+      "note": "JP tax-in typical for Curel body 420ml. Same Kao family as the Mannings foam."
+    },
+    "hada-body-milk": {
+      "source": "cosme",
+      "sourceLabel": "Rohto drugstore JP",
+      "url": "https://www.amazon.co.jp/",
+      "currency": "JPY",
+      "shelf": 990,
+      "asOf": "2026-08-22",
+      "note": "Gokujyun body milk JP tax-in. Do not use Mannings Hada Labo 化妝水 — that listing is made in China."
+    },
+    "hada-lotion": {
+      "source": "amazon-jp",
+      "sourceLabel": "Amazon.co.jp / Matsukiyo JP",
+      "url": "https://www.amazon.co.jp/",
+      "currency": "JPY",
+      "shelf": 1100,
+      "asOf": "2026-08-22",
+      "note": "Buy JP JAN. Mannings HK lotion is China-origin — skip that listing."
+    },
+    "hada-foam": {
+      "source": "cosme",
+      "sourceLabel": "Rohto drugstore JP",
+      "url": "https://www.amazon.co.jp/",
+      "currency": "JPY",
+      "shelf": 880,
+      "asOf": "2026-08-22",
+      "note": "Gokujyun foaming wash JP tax-in."
+    },
+    "biore-marshmallow": {
+      "source": "cosme",
+      "sourceLabel": "Kao drugstore JP",
+      "url": "https://www.amazon.co.jp/",
+      "currency": "JPY",
+      "shelf": 605,
+      "asOf": "2026-08-22",
+      "note": "Marshmallow Whip ~¥550–660 tax-in."
+    },
+    "minon-foam": {
+      "source": "cosme",
+      "sourceLabel": "Matsukiyo JP",
+      "url": "https://www.amazon.co.jp/",
+      "currency": "JPY",
+      "shelf": 1320,
+      "asOf": "2026-08-22",
+      "note": "Amino Moist Gentle Wash JP tax-in."
+    },
+    "cow-facial": {
+      "source": "amazon-jp",
+      "sourceLabel": "Amazon.co.jp",
+      "url": "https://www.amazon.co.jp/s?k=%E3%82%AB%E3%82%A6%E3%83%96%E3%83%A9%E3%83%B3%E3%83%89",
+      "currency": "JPY",
+      "shelf": 330,
+      "asOf": "2026-08-22",
+      "note": "Additive-free facial foam."
+    },
+    "rosette-pasta": {
+      "source": "cosme",
+      "sourceLabel": "Matsukiyo JP",
+      "url": "https://www.amazon.co.jp/",
+      "currency": "JPY",
+      "shelf": 715,
+      "asOf": "2026-08-22",
+      "note": "Gommage pasta JP tax-in."
+    },
+    "fancl-powder-wash": {
+      "source": "cosme",
+      "sourceLabel": "FANCL JP",
+      "url": "https://www.fancl.co.jp/",
+      "currency": "JPY",
+      "shelf": 990,
+      "asOf": "2026-08-22",
+      "note": "Facial washing powder 50g."
+    },
+    "ichikami-shampoo": {
+      "source": "amazon-jp",
+      "sourceLabel": "Amazon.co.jp",
+      "url": "https://www.amazon.co.jp/stores/%E3%81%84%E3%81%A1%E9%AB%AA/page/46BEED52-270C-4DCC-834A-E98A0BDBE1E0",
+      "currency": "JPY",
+      "shelf": 880,
+      "asOf": "2026-08-22",
+      "note": "Smooth Care pump. Sets list ~¥1,325 for shampoo+cond."
+    },
+    "honey-treatment": {
+      "source": "cosme",
+      "sourceLabel": "Matsukiyo JP",
+      "url": "https://www.amazon.co.jp/",
+      "currency": "JPY",
+      "shelf": 1650,
+      "asOf": "2026-08-22",
+      "note": "&honey Melty Moist treatment JP tax-in."
+    },
+    "honey-shampoo": {
+      "source": "cosme",
+      "sourceLabel": "Matsukiyo JP",
+      "url": "https://www.amazon.co.jp/",
+      "currency": "JPY",
+      "shelf": 1650,
+      "asOf": "2026-08-22",
+      "note": "&honey shampoo JP tax-in."
+    },
+    "kuyura-body": {
+      "source": "cosme",
+      "sourceLabel": "Matsukiyo JP (MSRP)",
+      "url": "https://www.amazon.co.jp/%E3%82%AF%E3%83%A6%E3%83%A9-%E3%83%9C%E3%83%87%E3%82%A3%E3%82%B1%E3%82%A2%E3%82%BD%E3%83%BC%E3%83%97-%E5%BF%83%E3%82%84%E3%81%99%E3%82%89%E3%81%90%E9%A6%99%E3%82%8A-%E3%82%B8%E3%83%A3%E3%83%B3%E3%83%9C%E3%82%B5%E3%82%A4%E3%82%BA-550ml/dp/B000FQNP9W",
+      "currency": "JPY",
+      "shelf": 660,
+      "asOf": "2026-08-22",
+      "note": "Do not buy Amazon JP at ¥7,920 (scalped). Only list if Matsukiyo/Donki still has drugstore price."
+    },
+    "biore-u-foam": {
+      "source": "cosme",
+      "sourceLabel": "Kao drugstore JP",
+      "url": "https://www.amazon.co.jp/",
+      "currency": "JPY",
+      "shelf": 498,
+      "asOf": "2026-08-22",
+      "note": "Biore u body foam pump ~¥400–550."
+    },
+    "cow-red-soap": {
+      "source": "amazon-jp",
+      "sourceLabel": "Amazon.co.jp",
+      "url": "https://www.amazon.co.jp/s?k=%E8%B5%A4%E7%AE%B1+%E7%89%9B%E4%B9%B3%E7%9F%B3%E9%B9%B8",
+      "currency": "JPY",
+      "shelf": 330,
+      "asOf": "2026-08-22",
+      "note": "3-pack share of a 6-pack (~¥580). Iconic 赤箱."
+    },
+    "naive-body": {
+      "source": "cosme",
+      "sourceLabel": "Kakaku / drugstore JP",
+      "url": "https://kakaku.com/item/S0000908768/",
+      "currency": "JPY",
+      "shelf": 440,
+      "asOf": "2026-08-22",
+      "note": "Naive 530ml jumbo. Kakaku ~¥372–539."
+    },
+    "canmake-powder": {
+      "source": "cosme",
+      "sourceLabel": "Canmake JP",
+      "url": "https://www.canmake.com/",
+      "currency": "JPY",
+      "shelf": 880,
+      "asOf": "2026-08-22",
+      "note": "Marshmallow Finish Powder JP tax-in."
+    },
+    "canmake-liner": {
+      "source": "cosme",
+      "sourceLabel": "Canmake JP",
+      "url": "https://www.canmake.com/",
+      "currency": "JPY",
+      "shelf": 770,
+      "asOf": "2026-08-22",
+      "note": "Creamy Touch Liner JP tax-in."
+    },
+    "canmake-cheek": {
+      "source": "cosme",
+      "sourceLabel": "Canmake JP",
+      "url": "https://www.canmake.com/",
+      "currency": "JPY",
+      "shelf": 770,
+      "asOf": "2026-08-22",
+      "note": "Cream Cheek JP tax-in."
+    },
+    "canmake-stayon": {
+      "source": "cosme",
+      "sourceLabel": "Canmake JP",
+      "url": "https://www.canmake.com/",
+      "currency": "JPY",
+      "shelf": 880,
+      "asOf": "2026-08-22",
+      "note": "Stay-On Balm Rouge JP tax-in."
+    },
+    "heavy-rotation": {
+      "source": "cosme",
+      "sourceLabel": "Kiss Me JP",
+      "url": "https://www.kissme.co.jp/",
+      "currency": "JPY",
+      "shelf": 880,
+      "asOf": "2026-08-22",
+      "note": "Coloring Eyebrow JP tax-in."
+    },
+    "fasio-mascara": {
+      "source": "cosme",
+      "sourceLabel": "Kose Fasio JP",
+      "url": "https://www.kose.co.jp/",
+      "currency": "JPY",
+      "shelf": 1210,
+      "asOf": "2026-08-22",
+      "note": "Powerful Curl mascara JP tax-in."
+    },
+    "dup-liner": {
+      "source": "cosme",
+      "sourceLabel": "D-UP JP",
+      "url": "https://www.d-up.co.jp/",
+      "currency": "JPY",
+      "shelf": 1320,
+      "asOf": "2026-08-22",
+      "note": "Silky Liquid Eyeliner JP tax-in."
+    },
+    "kate-lip": {
+      "source": "cosme",
+      "sourceLabel": "Kanebo KATE JP",
+      "url": "https://www.kate-tokyo.jp/",
+      "currency": "JPY",
+      "shelf": 1650,
+      "asOf": "2026-08-22",
+      "note": "Lip Monster JP tax-in."
+    },
+    "kate-liner": {
+      "source": "cosme",
+      "sourceLabel": "Kanebo KATE JP",
+      "url": "https://www.kate-tokyo.jp/",
+      "currency": "JPY",
+      "shelf": 1320,
+      "asOf": "2026-08-22",
+      "note": "Super Sharp Liner EX JP tax-in."
+    },
+    "integrate-liner": {
+      "source": "cosme",
+      "sourceLabel": "Shiseido Integrate JP",
+      "url": "https://www.integrate-net.jp/",
+      "currency": "JPY",
+      "shelf": 1100,
+      "asOf": "2026-08-22",
+      "note": "Nuance Eyebrow Mascara JP tax-in."
+    },
+    "heroine-liner": {
+      "source": "cosme",
+      "sourceLabel": "Kiss Me JP",
+      "url": "https://www.kissme.co.jp/",
+      "currency": "JPY",
+      "shelf": 1100,
+      "asOf": "2026-08-22",
+      "note": "Smooth Liquid Eyeliner JP tax-in."
+    },
+    "heroine-mascara": {
+      "source": "cosme",
+      "sourceLabel": "Kiss Me JP",
+      "url": "https://www.kissme.co.jp/",
+      "currency": "JPY",
+      "shelf": 1210,
+      "asOf": "2026-08-22",
+      "note": "Long & Curl mascara JP tax-in."
+    },
+    "saborino-morning": {
+      "source": "cosme",
+      "sourceLabel": "BCL / Matsukiyo JP",
+      "url": "https://www.amazon.co.jp/",
+      "currency": "JPY",
+      "shelf": 880,
+      "asOf": "2026-08-22",
+      "note": "Morning mask 32pcs JP tax-in."
+    }
+  }
+}
