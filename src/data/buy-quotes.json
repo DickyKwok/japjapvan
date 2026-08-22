@@ -411,6 +411,71 @@
       "shelf": 880,
       "asOf": "2026-08-22",
       "note": "Morning mask 32pcs JP tax-in."
+    },
+    "curel-cream": {
+      "source": "watsons",
+      "sourceLabel": "Watsons HK",
+      "url": "https://www.watsons.com.hk/zh-hk/curel-%E6%B7%B1%E5%B1%A4%E9%AB%98%E6%95%88%E4%BF%9D%E6%BF%95%E9%9D%A2%E9%9C%9C-40%E5%85%8B/p/BP_221702",
+      "currency": "HKD",
+      "shelf": 135,
+      "regular": 180,
+      "asOf": "2026-08-22",
+      "note": "75折. Same HKD 135 at Mannings. JP drugstore ~¥1,760 is cheaper if you can buy there."
+    },
+    "fancl-oil": {
+      "source": "watsons",
+      "sourceLabel": "Watsons HK",
+      "url": "https://www.watsons.com.hk/zh-hk/fancl-%E7%B4%8D%E7%B1%B3%E5%8D%B8%E7%B2%A7%E6%B2%B9120ml-%E5%AD%96%E8%A3%9D/p/BP_112945",
+      "currency": "HKD",
+      "shelf": 115,
+      "regular": 134,
+      "asOf": "2026-08-22",
+      "note": "Twin pack HKD 229 for 2×120ml → HKD 114.50/bottle. Quoted as 115."
+    },
+    "dhc-oil": {
+      "source": "cosme",
+      "sourceLabel": "Matsukiyo JP / DHC",
+      "url": "https://www.dhc.co.jp/",
+      "currency": "JPY",
+      "shelf": 1430,
+      "asOf": "2026-08-22",
+      "note": "Deep Cleansing Oil 200ml JP tax-in. Mannings/Watsons also stock it."
+    },
+    "kose-softymo": {
+      "source": "cosme",
+      "sourceLabel": "Matsukiyo JP",
+      "url": "https://www.kose.co.jp/",
+      "currency": "JPY",
+      "shelf": 825,
+      "asOf": "2026-08-22",
+      "note": "Softymo Speedy 230ml JP tax-in. Drugstore staple at 松本清."
+    },
+    "naturie-gel": {
+      "source": "cosme",
+      "sourceLabel": "Matsukiyo JP",
+      "url": "https://www.imju.jp/",
+      "currency": "JPY",
+      "shelf": 880,
+      "asOf": "2026-08-22",
+      "note": "Hatomugi gel. Matsukiyo + Mannings summer staple."
+    },
+    "lululun-mask": {
+      "source": "cosme",
+      "sourceLabel": "Matsukiyo JP",
+      "url": "https://www.lululun.com/",
+      "currency": "JPY",
+      "shelf": 715,
+      "asOf": "2026-08-22",
+      "note": "Precious White 7s. Matsukiyo / 萬寧 mask wall."
+    },
+    "tsubaki-oil": {
+      "source": "mannings",
+      "sourceLabel": "Mannings HK",
+      "url": "https://www.mannings.com.hk/en/tsubaki-premium-moist-repair-shampoo-450ml/p/393470",
+      "currency": "JPY",
+      "shelf": 1430,
+      "asOf": "2026-08-22",
+      "note": "Premium Repair Hair Oil 50ml JP tax-in. Light, ships cheaper than the 450ml shampoo."
     }
   }
 }
